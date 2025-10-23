@@ -1,11 +1,4 @@
-# PowerShell script to generate the complete project structure for the Java Sudoku game.
 
-$projectName = "sudoku-project"
-
-# --- Create Root Directory ---
-if (Test-Path $projectName) {
-    Write-Host "Project directory '$projectName' already exists. Aborting." -ForegroundColor Yellow
-    exit
 }
 New-Item -ItemType Directory -Name $projectName
 Set-Location $projectName
