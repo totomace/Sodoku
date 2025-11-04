@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lịch Sử Đấu</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            padding: 20px;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: #fff;
+            padding: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            text-align: center;
+            border-bottom: 2px solid #eee;
+            padding-bottom: 10px;
+            margin-bottom: 0px; /* Sửa lại cho đẹp */
+        }
+        
+        /* === DÒNG MỚI ĐỂ HIỆN TÊN USER === */
+        #history-title {
+            text-align: center;
+            color: #555;
+            font-weight: normal;
+            font-size: 1.2rem;
+            margin-top: 10px;
+        }
+        /* === HẾT PHẦN MỚI === */
+
+        #history-list {
+            list-style-type: none;
+            padding: 0;
+        }
+        .history-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px;
+            border-bottom: 1px solid #f0f0f0;
+        }
+        .history-item:last-child {
+            border-bottom: none;
+        }
+        .mode { font-weight: bold; font-size: 1.1rem; }
+        .mode-DỄ { color: #28a745; }
+        .mode-THƯỜNG { color: #ffc107; }
+        .mode-KHÓ { color: #dc3545; }
+        .score { font-size: 1.2rem; font-weight: bold; color: #007bff; }
+        .date { font-size: 0.9rem; color: #777; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Lịch Sử Đấu</h1>
+        
+        <h2 id="history-title">...</h2>
+        
+        <a href="/index.html" style="text-align: center; display: block; margin-bottom: 20px;">&larr; Quay lại Menu</a>
+        
+        <ul id="history-list">
+            </ul>
+    </div>
+    <script src="/js/history.js"></script>
+</body>
+</html>

@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sudoku - Chơi Đơn</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            background-color: #f0f0f0;
+            padding-top: 20px;
+        }
+        #difficulty-screen {
+            text-align: center;
+            background: #fff;
+            padding: 2rem 3rem;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+        #difficulty-screen h1 { margin-top: 0; }
+        #difficulty-screen button {
+            display: block; width: 100%; padding: 15px;
+            margin-bottom: 10px; font-size: 1.2rem; cursor: pointer;
+            border: none; border-radius: 5px; color: white;
+        }
+        #btn-easy { background-color: #28a745; }
+        #btn-medium { background-color: #ffc107; color: #333; }
+        #btn-hard { background-color: #dc3545; }
+
+        #game-screen {
+            display: none; 
+            flex-direction: column;
+            align-items: center;
+        }
+        #stats-bar {
+            display: flex; justify-content: space-between;
+            width: 450px; margin-bottom: 15px; font-size: 1.5rem;
+        }
+        #stats-bar div {
+            background: #fff; padding: 10px 20px;
+            border-radius: 5px; box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        #timer { font-weight: bold; color: #dc3545; }
+        #score { font-weight: bold; color: #007bff; }
+
+        #sudoku-board {
+            display: grid;
+            grid-template-columns: repeat(9, 50px);
+            grid-template-rows: repeat(9, 50px);
+            border: 3px solid #333;
+            margin-bottom: 20px;
+        }
+        .cell {
+            width: 50px; height: 50px; border: 1px solid #ccc;
+            text-align: center; font-size: 24px; line-height: 50px;
+            box-sizing: border-box; cursor: pointer;
+        }
+        .cell:nth-child(3n) { border-right: 2px solid #333; }
+        .cell:nth-child(9n) { border-right: 1px solid #ccc; }
+        .cell:nth-child(n+19):nth-child(-n+27),
+        .cell:nth-child(n+46):nth-child(-n+54) {
+            border-bottom: 2px solid #333;
+        }
+        .cell.given { background-color: #eee; color: #333; font-weight: bold; cursor: not-allowed; }
+        .cell.selected { background-color: #a8deff; }
+        .cell.error { background-color: #ffcccc; color: red; }
+        .cell.correct { color: #007bff; }
+
+        #number-palette { display: flex; }
+        .number {
+            width: 40px; height: 40px; border: 1px solid #555;
+            margin: 5px; display: flex; justify-content: center;
+            align-items: center; font-size: 20px;
+            cursor: pointer; border-radius: 5px;
+        }
+        .number:hover { background-color: #ddd; }
+
+        .controls { margin-top: 10px; }
+        .controls button {
+            padding: 8px 12px; font-size: 14px;
+            margin: 0 5px; cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="difficulty-screen">
+        <h1>Chọn độ khó</h1>
+        <button id="btn-easy">Dễ</button>
+        <button id="btn-medium">Thường</button>
+        <button id="btn-hard">Khó</button>
+    </div>
+
+    <div id="game-screen">
+        <h1>Sudoku - Chơi Đơn</h1>
+        
+        <div id="stats-bar">
+            <div id="score-box">Điểm: <span id="score">5000</span></div>
+            <div id="timer-box">Thời gian: <span id="timer">10:00</span></div>
+        </div>
+
+        <div id="sudoku-board"></div>
+        <div id="number-palette"></div>
+
+        <div class="controls">
+            <button id="check-btn">Kiểm Tra</button>
+            <button id="solve-btn">Giải</button>
+            <button id="quit-btn">Thoát</button>
+        </div>
+    </div>
+
+    <script src="/js/game.js"></script>
+</body>
+</html>

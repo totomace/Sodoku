@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chọn Chế Độ</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            text-align: center;
+            background-color: #f0f0f0;
+        }
+        .menu-container {
+            background: #fff;
+            padding: 3rem;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        .menu-container h1 {
+            margin-bottom: 2rem;
+        }
+        .btn-link {
+            display: block;
+            text-decoration: none;
+            color: white;
+            padding: 1rem 2rem;
+            margin-bottom: 1rem;
+            border-radius: 5px;
+            font-size: 1.2rem;
+            transition: background-color 0.3s;
+        }
+        
+        .btn-link.solo { background-color: #28a745; }
+        .btn-link.solo:hover { background-color: #218838; }
+        
+        .btn-link.pvp { background-color: #dc3545; }
+        .btn-link.pvp:hover { background-color: #c82333; }
+
+        /* NÚT LỊCH SỬ MỚI */
+        .btn-link.history { background-color: #ffc107; color: #333; }
+        .btn-link.history:hover { background-color: #e0a800; }
+
+    </style>
+</head>
+<body>
+
+    <div class="menu-container">
+        <h1>Chào mừng bạn!</h1>
+        <p>Vui lòng chọn chế độ chơi:</p>
+        
+        <a href="/game.html" class="btn-link solo">
+            Chơi Đơn (Solo)
+        </a>
+        
+        <a href="/pvp.html" class="btn-link pvp">
+            Thách Đấu (PvP)
+        </a>
+
+        <a href="/history.html" class="btn-link history">
+            Lịch sử đấu
+        </a>
+    </div>
+
+</body>
+</html>
