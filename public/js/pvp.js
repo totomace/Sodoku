@@ -28,7 +28,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // === BIẾN TRẠNG THÁI GAME ===
     let selectedCell = null, puzzle = [], myBoard = [], solution = [], myPlayerNum = 0;
     let gameStartTime = 0, myScore = 1000, opponentScore = 1000, myMistakes = 0, opponentMistakes = 0;
-    let currentTurn = 1, myTimeLeft = 600, opponentTimeLeft = 600;
+    let currentTurn = 1, turnTimeLeft = 30; // Thời gian suy nghĩ mỗi lượt
 
     // === HÀM VẼ VÀ TIỆN ÍCH ===
     
@@ -185,8 +185,15 @@ document.addEventListener('DOMContentLoaded', () => {
             p2ScoreEl.textContent = opponentScore;
             p1MistakesEl.textContent = myMistakes;
             p2MistakesEl.textContent = opponentMistakes;
-            p1TimeEl.textContent = formatTime(myTimeLeft);
-            p2TimeEl.textContent = formatTime(opponentTimeLeft);
+            
+            // Hiển thị thời gian suy nghĩ của lượt hiện tại
+            if (currentTurn === 1) {
+                p1TimeEl.textContent = formatTime(turnTimeLeft);
+                p2TimeEl.textContent = '--:--';
+            } else {
+                p1TimeEl.textContent = '--:--';
+                p2TimeEl.textContent = formatTime(turnTimeLeft);
+            }
             
             // Highlight lượt chơi
             if (currentTurn === 1) {
@@ -201,8 +208,15 @@ document.addEventListener('DOMContentLoaded', () => {
             p2ScoreEl.textContent = myScore;
             p1MistakesEl.textContent = opponentMistakes;
             p2MistakesEl.textContent = myMistakes;
-            p1TimeEl.textContent = formatTime(opponentTimeLeft);
-            p2TimeEl.textContent = formatTime(myTimeLeft);
+            
+            // Hiển thị thời gian suy nghĩ của lượt hiện tại
+            if (currentTurn === 1) {
+                p1TimeEl.textContent = formatTime(turnTimeLeft);
+                p2TimeEl.textContent = '--:--';
+            } else {
+                p1TimeEl.textContent = '--:--';
+                p2TimeEl.textContent = formatTime(turnTimeLeft);
+            }
             
             // Highlight lượt chơi
             if (currentTurn === 2) {
@@ -220,7 +234,15 @@ document.addEventListener('DOMContentLoaded', () => {
     findRandomBtn.addEventListener('click', () => {
         findRandomBtn.disabled = true;
         waitingMessage.style.display = 'block';
-        socket.emit('findMatch');
+        
+        // Lấy settings từ localStorage (hoặc dùng mặc định)
+        const settings = {
+            turnTimeLimit: parseInt(localStorage.getItem('turnTimeLimit')) || 30,
+            timeoutPenalty: parseInt(localStorage.getItem('timeoutPenalty')) || 50,
+            mistakePenalty: parseInt(localStorage.getItem('mistakePenalty')) || 100
+        };
+        
+        socket.emit('findMatch', settings);
     });
     
     chatForm.addEventListener('submit', (e) => {
@@ -283,8 +305,7 @@ document.addEventListener('DOMContentLoaded', () => {
         opponentMistakes = 0;
         myPlayerNum = (data.p1.username === myUsername) ? 1 : 2;
         currentTurn = 1; // Player 1 đi trước
-        myTimeLeft = 600;
-        opponentTimeLeft = 600;
+        turnTimeLeft = data.turnTimeLeft || 30; // Thời gian lượt đầu
         
         if(data.p1.username === myUsername) {
             p1Name.textContent = `Bạn (${data.p1.username})`;
@@ -301,28 +322,16 @@ document.addEventListener('DOMContentLoaded', () => {
         updateScoreDisplay();
     });
 
-    socket.on('updateTimer', (data) => {
-        if (myPlayerNum === 1) {
-            myTimeLeft = data.p1TimeLeft;
-            opponentTimeLeft = data.p2TimeLeft;
-        } else {
-            myTimeLeft = data.p2TimeLeft;
-            opponentTimeLeft = data.p1TimeLeft;
-        }
+    // Cập nhật đồng hồ đếm lượt
+    socket.on('updateTurnTimer', (data) => {
+        turnTimeLeft = data.turnTimeLeft;
         currentTurn = data.currentTurn;
         updateScoreDisplay();
     });
     
     socket.on('turnChanged', (data) => {
         currentTurn = data.currentTurn;
-        
-        if (myPlayerNum === 1) {
-            myTimeLeft = data.p1TimeLeft;
-            opponentTimeLeft = data.p2TimeLeft;
-        } else {
-            myTimeLeft = data.p2TimeLeft;
-            opponentTimeLeft = data.p1TimeLeft;
-        }
+        turnTimeLeft = data.turnTimeLeft;
         
         if (currentTurn === myPlayerNum) {
             addChatMessage({ isSystem: true, message: '🎮 Đến lượt bạn!' });
@@ -331,6 +340,14 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         
         updateScoreDisplay();
+    });
+    
+    // Xử lý hết giờ lượt
+    socket.on('turnTimeout', (data) => {
+        addChatMessage({ 
+            isSystem: true, 
+            message: `⏰ ${data.message} Trừ ${data.penalty} điểm!` 
+        });
     });
 
     socket.on('opponentMove', (data) => {
