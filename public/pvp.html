@@ -170,6 +170,21 @@
             color: #666;
             margin-top: 15px;
         }
+        .cancel-btn {
+            margin-top: 25px;
+            padding: 12px 30px;
+            background-color: #ff6b6b;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .cancel-btn:hover {
+            background-color: #ff5252;
+            transform: scale(1.05);
+        }
         
         /* Đồng hồ đếm ngược hiển thị lớn */
         #countdown-overlay {
@@ -305,6 +320,7 @@
             <h2>🔍 Đang tìm đối thủ...</h2>
             <div class="spinner"></div>
             <div class="match-status" id="match-status">Vui lòng chờ...</div>
+            <button id="cancel-match-btn" class="cancel-btn">❌ Hủy tìm</button>
         </div>
     </div>
     
