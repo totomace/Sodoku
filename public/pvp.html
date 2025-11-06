@@ -96,11 +96,37 @@
             justify-content: space-around; align-items: flex-start;
         }
         #game-area { display: flex; flex-direction: column; align-items: center; }
-        #stats-bar { display: flex; justify-content: space-between; width: 500px; margin-bottom: 15px; font-size: 1.2rem; }
-        .player-stat { padding: 10px; background: #fff; border-radius: 5px; }
-        #player1-stat { border-bottom: 3px solid #007bff; }
-        #player2-stat { border-bottom: 3px solid #dc3545; }
-        .player-stat .time { font-weight: bold; }
+        #stats-bar { display: flex; justify-content: space-between; width: 500px; margin-bottom: 15px; font-size: 1.1rem; }
+        .player-stat { 
+            padding: 15px; 
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); 
+            border-radius: 10px; 
+            color: white;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            min-width: 200px;
+        }
+        #player1-stat { 
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); 
+        }
+        #player2-stat { 
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); 
+        }
+        .player-stat .name { 
+            font-weight: bold; 
+            font-size: 1.2rem; 
+            display: block; 
+            margin-bottom: 8px;
+        }
+        .player-stat .time { 
+            font-weight: bold; 
+            font-size: 1.4rem; 
+            display: block;
+            margin-bottom: 5px;
+        }
+        .player-stat .score-info { 
+            font-size: 0.9rem; 
+            opacity: 0.9;
+        }
         #shared-board { display: grid; grid-template-columns: repeat(9, 50px); grid-template-rows: repeat(9, 50px); border: 3px solid #333; margin-bottom: 20px; }
         .cell { width: 50px; height: 50px; border: 1px solid #ccc; text-align: center; font-size: 24px; line-height: 50px; box-sizing: border-box; cursor: pointer; }
         .cell.given { background-color: #eee; font-weight: bold; }
@@ -143,12 +169,20 @@
         <div id="game-area">
             <div id="stats-bar">
                 <div id="player1-stat" class="player-stat">
-                    <span id="player1-name">Bạn</span>: <span id="player1-score">0</span>
-                    (<span id="player1-time">10:00</span>)
+                    <span class="name" id="player1-name">Bạn</span>
+                    <span class="time" id="player1-time">10:00</span>
+                    <div class="score-info">
+                        <span>💰 Điểm: <span id="player1-score">1000</span></span><br>
+                        <span>❌ Sai: <span id="player1-mistakes">0</span> lần</span>
+                    </div>
                 </div>
                 <div id="player2-stat" class="player-stat">
-                    <span id="player2-name">Đối thủ</span>: <span id="player2-score">0</span>
-                    (<span id="player2-time">10:00</span>)
+                    <span class="name" id="player2-name">Đối thủ</span>
+                    <span class="time" id="player2-time">10:00</span>
+                    <div class="score-info">
+                        <span>💰 Điểm: <span id="player2-score">1000</span></span><br>
+                        <span>❌ Sai: <span id="player2-mistakes">0</span> lần</span>
+                    </div>
                 </div>
             </div>
             <div id="shared-board"></div>

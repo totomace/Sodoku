@@ -21,10 +21,14 @@ document.addEventListener('DOMContentLoaded', () => {
     const checkBtn = document.getElementById('check-btn'), surrenderBtn = document.getElementById('surrender-btn');
     const p1Name = document.getElementById('player1-name'), p2Name = document.getElementById('player2-name');
     const p1TimeEl = document.getElementById('player1-time'), p2TimeEl = document.getElementById('player2-time');
+    const p1ScoreEl = document.getElementById('player1-score'), p2ScoreEl = document.getElementById('player2-score');
+    const p1MistakesEl = document.getElementById('player1-mistakes'), p2MistakesEl = document.getElementById('player2-mistakes');
     const chatWindow = document.getElementById('chat-window'), chatForm = document.getElementById('chat-form'), chatInput = document.getElementById('chat-input');
 
     // === BIẾN TRẠNG THÁI GAME ===
     let selectedCell = null, puzzle = [], myBoard = [], solution = [], myPlayerNum = 0;
+    let gameStartTime = 0, myScore = 1000, opponentScore = 1000, myMistakes = 0, opponentMistakes = 0;
+    let currentTurn = 1, myTimeLeft = 600, opponentTimeLeft = 600;
 
     // === HÀM VẼ VÀ TIỆN ÍCH ===
     
@@ -129,6 +133,12 @@ document.addEventListener('DOMContentLoaded', () => {
             
             numEl.addEventListener('click', () => {
                 if (selectedCell) {
+                    // Kiểm tra xem có phải lượt của mình không
+                    if (currentTurn !== myPlayerNum) {
+                        addChatMessage({ isSystem: true, message: '⏸️ Chưa đến lượt của bạn!' });
+                        return;
+                    }
+                    
                     let r = parseInt(selectedCell.dataset.row);
                     let c = parseInt(selectedCell.dataset.col);
                     if (puzzle[r][c] === 0) {
@@ -156,6 +166,53 @@ document.addEventListener('DOMContentLoaded', () => {
         
         chatWindow.appendChild(li);
         chatWindow.scrollTop = chatWindow.scrollHeight; 
+    }
+    
+    function calculateEstimatedScore(startingScore, mistakes) {
+        const PENALTY = 100;
+        return Math.max(0, startingScore - (mistakes * PENALTY));
+    }
+    
+    function formatTime(seconds) {
+        const mins = Math.floor(seconds / 60);
+        const secs = seconds % 60;
+        return `${mins}:${secs < 10 ? '0' : ''}${secs}`;
+    }
+    
+    function updateScoreDisplay() {
+        if (myPlayerNum === 1) {
+            p1ScoreEl.textContent = myScore;
+            p2ScoreEl.textContent = opponentScore;
+            p1MistakesEl.textContent = myMistakes;
+            p2MistakesEl.textContent = opponentMistakes;
+            p1TimeEl.textContent = formatTime(myTimeLeft);
+            p2TimeEl.textContent = formatTime(opponentTimeLeft);
+            
+            // Highlight lượt chơi
+            if (currentTurn === 1) {
+                document.getElementById('player1-stat').style.boxShadow = '0 0 20px #ffd700';
+                document.getElementById('player2-stat').style.boxShadow = '0 4px 6px rgba(0,0,0,0.1)';
+            } else {
+                document.getElementById('player1-stat').style.boxShadow = '0 4px 6px rgba(0,0,0,0.1)';
+                document.getElementById('player2-stat').style.boxShadow = '0 0 20px #ffd700';
+            }
+        } else {
+            p1ScoreEl.textContent = opponentScore;
+            p2ScoreEl.textContent = myScore;
+            p1MistakesEl.textContent = opponentMistakes;
+            p2MistakesEl.textContent = myMistakes;
+            p1TimeEl.textContent = formatTime(opponentTimeLeft);
+            p2TimeEl.textContent = formatTime(myTimeLeft);
+            
+            // Highlight lượt chơi
+            if (currentTurn === 2) {
+                document.getElementById('player2-stat').style.boxShadow = '0 0 20px #ffd700';
+                document.getElementById('player1-stat').style.boxShadow = '0 4px 6px rgba(0,0,0,0.1)';
+            } else {
+                document.getElementById('player2-stat').style.boxShadow = '0 4px 6px rgba(0,0,0,0.1)';
+                document.getElementById('player1-stat').style.boxShadow = '0 0 20px #ffd700';
+            }
+        }
     }
 
     // === GỬI SỰ KIỆN LÊN SERVER ===
@@ -196,6 +253,11 @@ document.addEventListener('DOMContentLoaded', () => {
         renderUserList(userList);
     });
 
+    // === SỰ KIỆN: NHẬN TIN NHẮN ===
+    socket.on('chatMessage', (data) => {
+        addChatMessage(data);
+    });
+
     // === SỰ KIỆN MỚI: NHẬN LỜI MỜI ===
     socket.on('receiveInvite', (data) => {
         // data = { fromUsername }
@@ -213,23 +275,62 @@ document.addEventListener('DOMContentLoaded', () => {
         puzzle = stringToBoard(data.puzzle);
         solution = stringToBoard(data.solution); 
         
+        // Khởi tạo game
+        gameStartTime = Date.now();
+        myScore = 1000;
+        opponentScore = 1000;
+        myMistakes = 0;
+        opponentMistakes = 0;
+        myPlayerNum = (data.p1.username === myUsername) ? 1 : 2;
+        currentTurn = 1; // Player 1 đi trước
+        myTimeLeft = 600;
+        opponentTimeLeft = 600;
+        
         if(data.p1.username === myUsername) {
             p1Name.textContent = `Bạn (${data.p1.username})`;
             p2Name.textContent = data.p2.username;
+            addChatMessage({ isSystem: true, message: '🎮 Lượt của bạn! Hãy đi nước đầu tiên.' });
         } else {
             p1Name.textContent = data.p1.username;
             p2Name.textContent = `Bạn (${data.p2.username})`;
+            addChatMessage({ isSystem: true, message: '⏸️ Đối thủ đang suy nghĩ...' });
         }
+        
         createBoard();
         createPalette();
+        updateScoreDisplay();
     });
 
     socket.on('updateTimer', (data) => {
-        const minutes = Math.floor(data.timeLeft / 60);
-        const seconds = data.timeLeft % 60;
-        const timeString = `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
-        p1TimeEl.textContent = timeString;
-        p2TimeEl.textContent = timeString;
+        if (myPlayerNum === 1) {
+            myTimeLeft = data.p1TimeLeft;
+            opponentTimeLeft = data.p2TimeLeft;
+        } else {
+            myTimeLeft = data.p2TimeLeft;
+            opponentTimeLeft = data.p1TimeLeft;
+        }
+        currentTurn = data.currentTurn;
+        updateScoreDisplay();
+    });
+    
+    socket.on('turnChanged', (data) => {
+        currentTurn = data.currentTurn;
+        
+        if (myPlayerNum === 1) {
+            myTimeLeft = data.p1TimeLeft;
+            opponentTimeLeft = data.p2TimeLeft;
+        } else {
+            myTimeLeft = data.p2TimeLeft;
+            opponentTimeLeft = data.p1TimeLeft;
+        }
+        
+        if (currentTurn === myPlayerNum) {
+            addChatMessage({ isSystem: true, message: '🎮 Đến lượt bạn!' });
+        } else {
+            addChatMessage({ isSystem: true, message: '⏸️ Đối thủ đang suy nghĩ...' });
+        }
+        
+        updateScoreDisplay();
     });
 
     socket.on('opponentMove', (data) => {
@@ -250,6 +351,44 @@ document.addEventListener('DOMContentLoaded', () => {
                 cell.classList.add('error');
             }
         });
+        
+        // Cập nhật số lần sai và điểm
+        if (data.mistakes !== undefined) {
+            myMistakes = data.mistakes;
+            myScore = data.score || myScore;
+            updateScoreDisplay();
+            
+            if (data.errors.length > 0) {
+                addChatMessage({ 
+                    isSystem: true, 
+                    message: `❌ Có ${data.errors.length} lỗi! Điểm còn: ${myScore} (-${100})` 
+                });
+                
+                // Cảnh báo nếu sắp hết điểm
+                if (myScore <= 200) {
+                    addChatMessage({ 
+                        isSystem: true, 
+                        message: `⚠️ CẢNH BÁO: Bạn chỉ còn ${myScore} điểm!` 
+                    });
+                }
+            }
+        }
+    });
+    
+    // Nhận cập nhật điểm từ server
+    socket.on('updateScores', (data) => {
+        if (myPlayerNum === 1) {
+            myScore = data.p1Score;
+            opponentScore = data.p2Score;
+            myMistakes = data.p1Mistakes;
+            opponentMistakes = data.p2Mistakes;
+        } else {
+            myScore = data.p2Score;
+            opponentScore = data.p1Score;
+            myMistakes = data.p2Mistakes;
+            opponentMistakes = data.p1Mistakes;
+        }
+        updateScoreDisplay();
     });
 
     socket.on('gameAlert', (data) => {
@@ -259,13 +398,28 @@ document.addEventListener('DOMContentLoaded', () => {
     socket.on('gameResult', (data) => {
         let message = "";
         if (data.draw) {
-            message = "Hết giờ! Trận đấu hòa!";
+            message = "⏰ Hết giờ! Trận đấu hòa!";
         } else if (data.winner === myUsername) {
-            message = `Chúc mừng! Bạn đã thắng ${data.loser}!`;
+            const reason = data.reason || 'Hoàn thành bảng!';
+            message = `🎉 Chúc mừng! Bạn đã thắng ${data.loser}!\n\n` +
+                     `🏆 Lý do: ${reason}\n` +
+                     `⭐ Điểm của bạn: ${data.score}\n` +
+                     `❌ Số lần sai: ${data.winnerMistakes || 0}`;
         } else {
-            message = `Bạn đã thua! Người thắng: ${data.winner}.`;
+            const reason = data.reason || '';
+            message = `😢 Bạn đã thua! Người thắng: ${data.winner}\n\n` +
+                     (reason ? `🏆 Lý do: ${reason}\n` : '') +
+                     `⭐ Điểm của ${data.winner}: ${data.score}\n` +
+                     `❌ Số lần sai của bạn: ${data.loserMistakes || 0}`;
         }
         alert(message);
+        
+        // Reset game state
+        gameStartTime = 0;
+        myScore = 1000;
+        opponentScore = 1000;
+        myMistakes = 0;
+        opponentMistakes = 0;
         
         gameScreen.style.display = 'none';
         lobbyScreen.style.display = 'block';

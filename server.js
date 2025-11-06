@@ -12,6 +12,9 @@ const io = new Server(server);
 const PORT = 3000;
 const DB_FILE = path.join(__dirname, 'db.json');
 const PUZZLE_FILE = path.join(__dirname, 'puzzles.json'); 
+const GAME_DURATION = 600; // Thời gian mỗi trận: 600 giây (10 phút)
+const STARTING_SCORE = 1000; // Điểm khởi đầu
+const PENALTY_PER_MISTAKE = 100; // Mỗi lần sai trừ 100 điểm
 
 // --- Middlewares ---
 app.use(express.json()); 
@@ -73,6 +76,10 @@ function stringToBoard(str) {
     }
     return board;
 }
+function calculateScore(startingScore, mistakes) {
+    // Điểm = Điểm ban đầu - (số lần sai × 100)
+    return Math.max(0, startingScore - (mistakes * PENALTY_PER_MISTAKE));
+}
 function broadcastUserList() {
     const userList = Object.values(connectedUsers).map(u => ({
         username: u.username,
@@ -97,11 +104,35 @@ setInterval(() => {
     const now = Date.now();
     for (const roomName in activeGames) {
         const game = activeGames[roomName];
-        const timeElapsed = Math.floor((now - game.startTime) / 1000);
-        const timeLeft = game.duration - timeElapsed;
-        io.to(roomName).emit('updateTimer', { timeLeft: timeLeft });
-        if (timeLeft <= 0) {
-            io.to(roomName).emit('gameResult', { draw: true, winner: null, loser: null });
+        
+        // Tính thời gian đã trôi qua từ lần chuyển lượt cuối
+        const timeSinceLastTurn = Math.floor((now - game.lastTurnTime) / 1000);
+        
+        // Trừ thời gian của người đang chơi
+        const currentPlayer = (game.currentTurn === 1) ? game.p1 : game.p2;
+        currentPlayer.timeLeft = Math.max(0, currentPlayer.timeLeft - 1);
+        
+        // Gửi cập nhật timer cho cả 2 người
+        io.to(roomName).emit('updateTimer', { 
+            p1TimeLeft: game.p1.timeLeft,
+            p2TimeLeft: game.p2.timeLeft,
+            currentTurn: game.currentTurn
+        });
+        
+        // Kiểm tra nếu hết giờ
+        if (currentPlayer.timeLeft <= 0) {
+            const winner = (game.currentTurn === 1) ? game.p2 : game.p1;
+            const loser = currentPlayer;
+            
+            io.to(roomName).emit('gameResult', { 
+                winner: winner.username, 
+                loser: loser.username,
+                score: winner.score,
+                winnerMistakes: winner.mistakes,
+                loserMistakes: loser.mistakes,
+                reason: `${loser.username} hết thời gian!`
+            });
+            
             if(connectedUsers[game.p1.id]) connectedUsers[game.p1.id].status = 'online';
             if(connectedUsers[game.p2.id]) connectedUsers[game.p2.id].status = 'online';
             broadcastUserList();
@@ -146,11 +177,13 @@ io.on('connection', (socket) => {
             const gameData = allPuzzles[Math.floor(Math.random() * allPuzzles.length)];
             const matchData = {
                 room: roomName, puzzle: gameData.puzzle, solution: gameData.solution,
-                p1: { id: player1_socket.id, username: player1_socket.username },
-                p2: { id: player2_socket.id, username: player2_socket.username },
+                p1: { id: player1_socket.id, username: player1_socket.username, mistakes: 0, timeLeft: GAME_DURATION, score: STARTING_SCORE },
+                p2: { id: player2_socket.id, username: player2_socket.username, mistakes: 0, timeLeft: GAME_DURATION, score: STARTING_SCORE },
                 boardState: stringToBoard(gameData.puzzle),
                 solutionBoard: stringToBoard(gameData.solution),
-                startTime: Date.now(), duration: 600
+                startTime: Date.now(), 
+                currentTurn: 1, // 1 = player1, 2 = player2
+                lastTurnTime: Date.now()
             };
             activeGames[roomName] = matchData;
             io.to(roomName).emit('matchFound', matchData);
@@ -194,11 +227,13 @@ io.on('connection', (socket) => {
             const gameData = allPuzzles[Math.floor(Math.random() * allPuzzles.length)];
             const matchData = {
                 room: roomName, puzzle: gameData.puzzle, solution: gameData.solution,
-                p1: { id: player1_socket.id, username: player1_socket.username },
-                p2: { id: player2_socket.id, username: player2_socket.username },
+                p1: { id: player1_socket.id, username: player1_socket.username, mistakes: 0, timeLeft: GAME_DURATION, score: STARTING_SCORE },
+                p2: { id: player2_socket.id, username: player2_socket.username, mistakes: 0, timeLeft: GAME_DURATION, score: STARTING_SCORE },
                 boardState: stringToBoard(gameData.puzzle),
                 solutionBoard: stringToBoard(gameData.solution),
-                startTime: Date.now(), duration: 600
+                startTime: Date.now(),
+                currentTurn: 1,
+                lastTurnTime: Date.now()
             };
             activeGames[roomName] = matchData;
             io.to(roomName).emit('matchFound', matchData);
@@ -214,9 +249,17 @@ io.on('connection', (socket) => {
     socket.on('chatMessage', (message) => {
         const gameRoom = getSocketRoom(socket);
         if (gameRoom) {
+            // Nếu đang trong game, chỉ gửi cho người trong phòng
             io.to(gameRoom).emit('chatMessage', {
                 username: socket.username,
                 message: message
+            });
+        } else {
+            // Nếu đang ở lobby, gửi lại cho chính mình (chat cá nhân)
+            socket.emit('chatMessage', {
+                username: socket.username,
+                message: message,
+                isSystem: false
             });
         }
     });
@@ -225,8 +268,29 @@ io.on('connection', (socket) => {
     socket.on('makeMove', (data) => {
         const gameRoom = getSocketRoom(socket);
         if (!gameRoom || !activeGames[gameRoom]) return;
-        activeGames[gameRoom].boardState[data.row][data.col] = data.num;
+        const game = activeGames[gameRoom];
+        
+        // Kiểm tra xem có phải lượt của người này không
+        const playerNum = (game.p1.id === socket.id) ? 1 : 2;
+        if (playerNum !== game.currentTurn) {
+            socket.emit('gameAlert', { message: 'Chưa đến lượt của bạn!' });
+            return;
+        }
+        
+        // Cập nhật bảng
+        game.boardState[data.row][data.col] = data.num;
         socket.to(gameRoom).emit('opponentMove', data);
+        
+        // Chuyển lượt
+        game.currentTurn = (game.currentTurn === 1) ? 2 : 1;
+        game.lastTurnTime = Date.now();
+        
+        // Thông báo chuyển lượt
+        io.to(gameRoom).emit('turnChanged', { 
+            currentTurn: game.currentTurn,
+            p1TimeLeft: game.p1.timeLeft,
+            p2TimeLeft: game.p2.timeLeft
+        });
     });
 
     // 7. User kiểm tra
@@ -243,14 +307,93 @@ io.on('connection', (socket) => {
                 }
             }
         }
+        
+        const currentPlayer = (game.p1.id === socket.id) ? game.p1 : game.p2;
+        const opponent = (game.p1.id === socket.id) ? game.p2 : game.p1;
+        
+        // Nếu có lỗi, trừ điểm
+        if (errors.length > 0) {
+            currentPlayer.mistakes++;
+            currentPlayer.score = calculateScore(STARTING_SCORE, currentPlayer.mistakes);
+            
+            // Kiểm tra nếu hết điểm = THUA
+            if (currentPlayer.score <= 0) {
+                const winnerUsername = opponent.username;
+                const loserUsername = currentPlayer.username;
+                
+                // Lưu kết quả
+                const db = readDB();
+                db.gameHistory.push({
+                    username: winnerUsername,
+                    mode: 'PvP',
+                    score: opponent.score,
+                    mistakes: opponent.mistakes,
+                    opponent: loserUsername,
+                    reason: 'Đối thủ hết điểm',
+                    date: new Date().toISOString()
+                });
+                writeDB(db);
+                
+                io.to(gameRoom).emit('gameResult', { 
+                    winner: winnerUsername, 
+                    loser: loserUsername,
+                    score: opponent.score,
+                    winnerMistakes: opponent.mistakes,
+                    loserMistakes: currentPlayer.mistakes,
+                    reason: `${loserUsername} đã hết điểm!`
+                });
+                
+                if(connectedUsers[game.p1.id]) connectedUsers[game.p1.id].status = 'online';
+                if(connectedUsers[game.p2.id]) connectedUsers[game.p2.id].status = 'online';
+                broadcastUserList();
+                delete activeGames[gameRoom];
+                return;
+            }
+            
+            // Broadcast điểm mới cho cả 2 người
+            io.to(gameRoom).emit('updateScores', {
+                p1Score: game.p1.score,
+                p2Score: game.p2.score,
+                p1Mistakes: game.p1.mistakes,
+                p2Mistakes: game.p2.mistakes
+            });
+        }
+        
+        // Nếu hoàn thành đúng hết = THẮNG
         if (isFull && errors.length === 0) {
-            io.to(gameRoom).emit('gameResult', { winner: socket.username, loser: (game.p1.username === socket.username) ? game.p2.username : game.p1.username });
+            const winnerUsername = socket.username;
+            const loserUsername = opponent.username;
+            
+            // Lưu kết quả vào database
+            const db = readDB();
+            db.gameHistory.push({
+                username: winnerUsername,
+                mode: 'PvP',
+                score: currentPlayer.score,
+                mistakes: currentPlayer.mistakes,
+                opponent: loserUsername,
+                date: new Date().toISOString()
+            });
+            writeDB(db);
+            
+            io.to(gameRoom).emit('gameResult', { 
+                winner: winnerUsername, 
+                loser: loserUsername,
+                score: currentPlayer.score,
+                winnerMistakes: currentPlayer.mistakes,
+                loserMistakes: opponent.mistakes,
+                reason: 'Hoàn thành bảng!'
+            });
             if(connectedUsers[game.p1.id]) connectedUsers[game.p1.id].status = 'online';
             if(connectedUsers[game.p2.id]) connectedUsers[game.p2.id].status = 'online';
             broadcastUserList();
             delete activeGames[gameRoom];
         } else {
-            socket.emit('checkResult', { errors: errors });
+            socket.emit('checkResult', { 
+                errors: errors,
+                mistakes: currentPlayer.mistakes,
+                score: currentPlayer.score
+            });
         }
     });
 
@@ -289,6 +432,9 @@ io.on('connection', (socket) => {
 
 
 // === Khởi động Server ===
-server.listen(PORT, () => { 
-    console.log(`OK! Server (Express + Socket.io) đang chạy tại http://localhost:${PORT}`);
+server.listen(PORT, '0.0.0.0', () => { 
+    console.log(`OK! Server (Express + Socket.io) đang chạy tại:`);
+    console.log(`  - Local:   http://localhost:${PORT}`);
+    console.log(`  - Network: http://10.216.72.91:${PORT}`);
+    console.log(`\nMáy khác có thể truy cập qua: http://10.216.72.91:${PORT}`);
 });
