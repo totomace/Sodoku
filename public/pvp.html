@@ -7,12 +7,30 @@
     <style>
         body {
             font-family: Arial, sans-serif;
-            background-color: #f0f0f0;
+            background: #f5f5f5;
             display: flex;
             justify-content: center;
             align-items: center;
             padding-top: 20px;
             height: 100vh;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        /* Hiệu ứng fade transition */
+        .fade-out {
+            animation: fadeOut 0.5s ease-out forwards;
+        }
+        .fade-in {
+            animation: fadeIn 0.5s ease-in forwards;
+        }
+        @keyframes fadeOut {
+            from { opacity: 1; transform: scale(1); }
+            to { opacity: 0; transform: scale(0.9); }
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: scale(1.1); }
+            to { opacity: 1; transform: scale(1); }
         }
         
         /* === SẢNH CHỜ === */
@@ -26,10 +44,22 @@
             width: 350px;
         }
         #lobby-screen h1 { margin-top: 0; font-size: 2rem; }
-        #lobby-screen a.home-btn {
+        .back-btn {
             position: absolute;
-            top: 20px; left: 20px;
-            font-size: 1.5rem; text-decoration: none;
+            top: 20px;
+            left: 20px;
+            padding: 10px 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: bold;
+            transition: all 0.3s;
+            font-size: 1rem;
+        }
+        .back-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
         }
         
         .search-box { display: flex; margin-bottom: 20px; }
@@ -89,11 +119,105 @@
             display: none; margin-top: 20px;
             font-style: italic; color: #555;
         }
+        
+        /* Overlay tìm trận */
+        #match-overlay {
+            display: none;
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            animation: fadeIn 0.3s ease-in;
+        }
+        #match-overlay.show {
+            display: flex;
+        }
+        .match-box {
+            background: white;
+            padding: 3rem;
+            border-radius: 20px;
+            text-align: center;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+            animation: slideDown 0.5s ease-out;
+        }
+        @keyframes slideDown {
+            from { transform: translateY(-100px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+        .match-box h2 {
+            font-size: 2rem;
+            margin-bottom: 20px;
+            color: #667eea;
+        }
+        .spinner {
+            width: 60px;
+            height: 60px;
+            border: 6px solid #f3f3f3;
+            border-top: 6px solid #667eea;
+            border-radius: 50%;
+            margin: 20px auto;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        .match-status {
+            font-size: 1.2rem;
+            color: #666;
+            margin-top: 15px;
+        }
+        
+        /* Đồng hồ đếm ngược hiển thị lớn */
+        #countdown-overlay {
+            display: none;
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            z-index: 2000;
+            justify-content: center;
+            align-items: center;
+            animation: fadeIn 0.3s ease-in;
+        }
+        #countdown-overlay.show {
+            display: flex;
+        }
+        .countdown-number {
+            font-size: 15rem;
+            font-weight: bold;
+            color: white;
+            text-shadow: 0 0 30px rgba(102, 126, 234, 0.8);
+            animation: countdownPulse 1s ease-in-out;
+        }
+        @keyframes countdownPulse {
+            0% { transform: scale(0.5); opacity: 0; }
+            50% { transform: scale(1.2); }
+            100% { transform: scale(1); opacity: 1; }
+        }
+        
+        /* Thông báo tìm thấy đối thủ */
+        .match-found-msg {
+            font-size: 1.5rem;
+            color: #28a745;
+            font-weight: bold;
+            margin-top: 20px;
+            animation: bounceIn 0.6s ease-out;
+        }
+        @keyframes bounceIn {
+            0% { transform: scale(0); }
+            50% { transform: scale(1.2); }
+            100% { transform: scale(1); }
+        }
 
         /* === MÀN HÌNH GAME === */
         #pvp-game-screen {
             display: none; width: 90vw; max-width: 1200px;
             justify-content: space-around; align-items: flex-start;
+            animation: fadeIn 0.5s ease-in;
         }
         #game-area { display: flex; flex-direction: column; align-items: center; }
         #stats-bar { display: flex; justify-content: space-between; width: 500px; margin-bottom: 15px; font-size: 1.1rem; }
@@ -104,6 +228,11 @@
             color: white;
             box-shadow: 0 4px 6px rgba(0,0,0,0.1);
             min-width: 200px;
+            transition: all 0.3s ease;
+        }
+        .player-stat.active-turn {
+            box-shadow: 0 0 20px #ffd700;
+            transform: scale(1.05);
         }
         #player1-stat { 
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); 
@@ -122,18 +251,38 @@
             font-size: 1.4rem; 
             display: block;
             margin-bottom: 5px;
+            transition: all 0.3s ease;
+        }
+        .player-stat .time.warning {
+            color: #ff6b6b;
+            animation: pulse 1s ease-in-out infinite;
+        }
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
         }
         .player-stat .score-info { 
             font-size: 0.9rem; 
             opacity: 0.9;
         }
         #shared-board { display: grid; grid-template-columns: repeat(9, 50px); grid-template-rows: repeat(9, 50px); border: 3px solid #333; margin-bottom: 20px; }
-        .cell { width: 50px; height: 50px; border: 1px solid #ccc; text-align: center; font-size: 24px; line-height: 50px; box-sizing: border-box; cursor: pointer; }
+        .cell { width: 50px; height: 50px; border: 1px solid #ccc; text-align: center; font-size: 24px; line-height: 50px; box-sizing: border-box; cursor: pointer; transition: all 0.2s ease; }
+        .cell:hover:not(.given) { background-color: #e3f2fd; transform: scale(1.05); }
         .cell.given { background-color: #eee; font-weight: bold; }
-        .cell.selected { background-color: #fff8b3; }
-        .cell.my-move { color: #007bff; font-weight: bold; }
-        .cell.opponent-move { color: #dc3545; font-weight: bold; }
-        .cell.error { background-color: #ffcccc; }
+        .cell.selected { background-color: #fff8b3; transform: scale(1.1); box-shadow: 0 0 10px rgba(255, 193, 7, 0.5); }
+        .cell.my-move { color: #007bff; font-weight: bold; animation: cellPop 0.3s ease-out; }
+        .cell.opponent-move { color: #dc3545; font-weight: bold; animation: cellPop 0.3s ease-out; }
+        .cell.error { background-color: #ffcccc; animation: shake 0.5s ease-in-out; }
+        @keyframes cellPop {
+            0% { transform: scale(0.8); }
+            50% { transform: scale(1.2); }
+            100% { transform: scale(1); }
+        }
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            75% { transform: translateX(5px); }
+        }
         #number-palette { display: flex; }
         .number { width: 40px; height: 40px; border: 1px solid #555; margin: 5px; display: flex; justify-content: center; align-items: center; font-size: 20px; cursor: pointer; border-radius: 5px; }
         #pvp-controls button { padding: 10px 15px; font-size: 1rem; margin: 0 10px; cursor: pointer; }
@@ -148,8 +297,23 @@
 </head>
 <body>
 
+    <a href="/index.html" class="back-btn">◀ Menu</a>
+    
+    <!-- Overlay tìm trận -->
+    <div id="match-overlay">
+        <div class="match-box">
+            <h2>🔍 Đang tìm đối thủ...</h2>
+            <div class="spinner"></div>
+            <div class="match-status" id="match-status">Vui lòng chờ...</div>
+        </div>
+    </div>
+    
+    <!-- Overlay đếm ngược -->
+    <div id="countdown-overlay">
+        <div class="countdown-number" id="countdown-number">3</div>
+    </div>
+    
     <div id="lobby-screen">
-        <a href="/index.html" class="home-btn">🏠</a>
         <h1>Thách đấu</h1>
         
         <div class="search-box">

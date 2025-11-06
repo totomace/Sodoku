@@ -94,7 +94,7 @@ app.post('/api/register', async (req, res) => { const { username, password } = r
 app.post('/api/login', async (req, res) => { const { username, password } = req.body; if (!username || !password) return res.status(400).json({ success: false, message: 'Vui lòng nhập đủ thông tin' }); const db = readDB(); const user = db.users.find(u => u.username === username); if (!user) return res.status(400).json({ success: false, message: 'Tên đăng nhập hoặc mật khẩu sai' }); const isMatch = await bcrypt.compare(password, user.password); if (isMatch) res.status(200).json({ success: true, message: 'Đăng nhập thành công' }); else res.status(400).json({ success: false, message: 'Tên đăng nhập hoặc mật khẩu sai' }); });
 app.post('/api/save-game', (req, res) => { const { username, mode, score } = req.body; if (!username || !mode || score === undefined) return res.status(400).json({ success: false, message: 'Thiếu thông tin game' }); const db = readDB(); const newGame = { username: username, mode: mode, score: score, date: new Date().toISOString() }; db.gameHistory.push(newGame); writeDB(db); res.status(201).json({ success: true, message: 'Đã lưu kết quả' }); });
 app.get('/api/history/:username', (req, res) => { const { username } = req.params; const db = readDB(); const userHistory = db.gameHistory.filter(game => game.username.toLowerCase() === username.toLowerCase()); res.status(200).json({ success: true, data: userHistory }); });
-app.get('/', (req, res) => { res.sendFile(path.join(__dirname, 'public', 'login.html')); });
+app.get('/', (req, res) => { res.sendFile(path.join(__dirname, 'public', 'splash.html')); });
 
 // === LOGIC GLOBAL (Timer, Lists) ===
 const allPuzzles = readPuzzles(); 
@@ -302,8 +302,8 @@ io.on('connection', (socket) => {
             const gameData = allPuzzles[Math.floor(Math.random() * allPuzzles.length)];
             const matchData = {
                 room: roomName, puzzle: gameData.puzzle, solution: gameData.solution,
-                p1: { id: player1_socket.id, username: player1_socket.username, mistakes: 0, timeLeft: GAME_DURATION, score: STARTING_SCORE },
-                p2: { id: player2_socket.id, username: player2_socket.username, mistakes: 0, timeLeft: GAME_DURATION, score: STARTING_SCORE },
+                p1: { id: player1_socket.id, username: player1_socket.username, mistakes: 0, score: STARTING_SCORE },
+                p2: { id: player2_socket.id, username: player2_socket.username, mistakes: 0, score: STARTING_SCORE },
                 boardState: stringToBoard(gameData.puzzle),
                 solutionBoard: stringToBoard(gameData.solution),
                 startTime: Date.now(),

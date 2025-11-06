@@ -13,6 +13,10 @@ document.addEventListener('DOMContentLoaded', () => {
     // === DOM ELEMENTS ===
     const lobbyScreen = document.getElementById('lobby-screen');
     const gameScreen = document.getElementById('pvp-game-screen');
+    const matchOverlay = document.getElementById('match-overlay');
+    const matchStatus = document.getElementById('match-status');
+    const countdownOverlay = document.getElementById('countdown-overlay');
+    const countdownNumber = document.getElementById('countdown-number');
     const findRandomBtn = document.getElementById('find-random-btn');
     const waitingMessage = document.getElementById('waiting-message');
     const playerList = document.getElementById('player-list'); 
@@ -180,6 +184,10 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     
     function updateScoreDisplay() {
+        // Cảnh báo thời gian < 10s
+        const player1Time = document.getElementById('player1-time');
+        const player2Time = document.getElementById('player2-time');
+        
         if (myPlayerNum === 1) {
             p1ScoreEl.textContent = myScore;
             p2ScoreEl.textContent = opponentScore;
@@ -190,18 +198,22 @@ document.addEventListener('DOMContentLoaded', () => {
             if (currentTurn === 1) {
                 p1TimeEl.textContent = formatTime(turnTimeLeft);
                 p2TimeEl.textContent = '--:--';
+                player1Time.className = turnTimeLeft <= 10 ? 'time warning' : 'time';
             } else {
                 p1TimeEl.textContent = '--:--';
                 p2TimeEl.textContent = formatTime(turnTimeLeft);
+                player2Time.className = turnTimeLeft <= 10 ? 'time warning' : 'time';
             }
             
             // Highlight lượt chơi
+            const p1Stat = document.getElementById('player1-stat');
+            const p2Stat = document.getElementById('player2-stat');
             if (currentTurn === 1) {
-                document.getElementById('player1-stat').style.boxShadow = '0 0 20px #ffd700';
-                document.getElementById('player2-stat').style.boxShadow = '0 4px 6px rgba(0,0,0,0.1)';
+                p1Stat.classList.add('active-turn');
+                p2Stat.classList.remove('active-turn');
             } else {
-                document.getElementById('player1-stat').style.boxShadow = '0 4px 6px rgba(0,0,0,0.1)';
-                document.getElementById('player2-stat').style.boxShadow = '0 0 20px #ffd700';
+                p1Stat.classList.remove('active-turn');
+                p2Stat.classList.add('active-turn');
             }
         } else {
             p1ScoreEl.textContent = opponentScore;
@@ -213,18 +225,22 @@ document.addEventListener('DOMContentLoaded', () => {
             if (currentTurn === 1) {
                 p1TimeEl.textContent = formatTime(turnTimeLeft);
                 p2TimeEl.textContent = '--:--';
+                player1Time.className = turnTimeLeft <= 10 ? 'time warning' : 'time';
             } else {
                 p1TimeEl.textContent = '--:--';
                 p2TimeEl.textContent = formatTime(turnTimeLeft);
+                player2Time.className = turnTimeLeft <= 10 ? 'time warning' : 'time';
             }
             
             // Highlight lượt chơi
+            const p1Stat = document.getElementById('player1-stat');
+            const p2Stat = document.getElementById('player2-stat');
             if (currentTurn === 2) {
-                document.getElementById('player2-stat').style.boxShadow = '0 0 20px #ffd700';
-                document.getElementById('player1-stat').style.boxShadow = '0 4px 6px rgba(0,0,0,0.1)';
+                p2Stat.classList.add('active-turn');
+                p1Stat.classList.remove('active-turn');
             } else {
-                document.getElementById('player2-stat').style.boxShadow = '0 4px 6px rgba(0,0,0,0.1)';
-                document.getElementById('player1-stat').style.boxShadow = '0 0 20px #ffd700';
+                p2Stat.classList.remove('active-turn');
+                p1Stat.classList.add('active-turn');
             }
         }
     }
@@ -233,7 +249,10 @@ document.addEventListener('DOMContentLoaded', () => {
     
     findRandomBtn.addEventListener('click', () => {
         findRandomBtn.disabled = true;
-        waitingMessage.style.display = 'block';
+        
+        // Hiện overlay tìm trận
+        matchOverlay.classList.add('show');
+        matchStatus.textContent = 'Đang tìm đối thủ xứng tầm...';
         
         // Lấy settings từ localStorage (hoặc dùng mặc định)
         const settings = {
@@ -289,10 +308,49 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     socket.on('matchFound', (data) => {
+        // Cập nhật status
+        matchStatus.innerHTML = `✅ Đã tìm thấy trận!<br><span style="color: #667eea;">Đối thủ: ${data.p1.username === myUsername ? data.p2.username : data.p1.username}</span>`;
+        
+        // Đợi 1.5s rồi đếm ngược 3-2-1
+        setTimeout(() => {
+            matchOverlay.classList.remove('show');
+            
+            // Đếm ngược
+            let count = 3;
+            countdownOverlay.classList.add('show');
+            countdownNumber.textContent = count;
+            
+            const countInterval = setInterval(() => {
+                count--;
+                if (count > 0) {
+                    countdownNumber.textContent = count;
+                    countdownNumber.style.animation = 'none';
+                    setTimeout(() => {
+                        countdownNumber.style.animation = 'countdownPulse 1s ease-in-out';
+                    }, 10);
+                } else {
+                    clearInterval(countInterval);
+                    countdownNumber.textContent = 'BẮT ĐẦU!';
+                    countdownNumber.style.animation = 'bounceIn 0.6s ease-out';
+                    
+                    setTimeout(() => {
+                        countdownOverlay.classList.remove('show');
+                        
+                        // Chuyển sang màn game với hiệu ứng
+                        lobbyScreen.classList.add('fade-out');
+                        setTimeout(() => {
+                            lobbyScreen.style.display = 'none';
+                            lobbyScreen.classList.remove('fade-out');
+                            gameScreen.style.display = 'flex';
+                            gameScreen.classList.add('fade-in');
+                        }, 500);
+                    }, 1000);
+                }
+            }, 1000);
+        }, 1500);
+        
         findRandomBtn.disabled = false;
         waitingMessage.style.display = 'none';
-        lobbyScreen.style.display = 'none';
-        gameScreen.style.display = 'flex';
         
         puzzle = stringToBoard(data.puzzle);
         solution = stringToBoard(data.solution); 
@@ -431,17 +489,22 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         alert(message);
         
-        // Reset game state
+        // Reset game state với hiệu ứng
         gameStartTime = 0;
         myScore = 1000;
         opponentScore = 1000;
         myMistakes = 0;
         opponentMistakes = 0;
         
-        gameScreen.style.display = 'none';
-        lobbyScreen.style.display = 'block';
-        findRandomBtn.disabled = false;
-        waitingMessage.style.display = 'none';
+        gameScreen.classList.add('fade-out');
+        setTimeout(() => {
+            gameScreen.style.display = 'none';
+            gameScreen.classList.remove('fade-out');
+            lobbyScreen.style.display = 'block';
+            lobbyScreen.classList.add('fade-in');
+            findRandomBtn.disabled = false;
+            waitingMessage.style.display = 'none';
+        }, 500);
     });
     
     socket.on('forceReload', (data) => {
