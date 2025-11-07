@@ -1,0 +1,98 @@
+{
+  "users": [
+    {
+      "id": "1762241817637",
+      "username": "client01",
+      "password": "$2b$10$NJV4j8tWcmv4JFpv8SLWmuw7V7Mn86RJoFmRF3/iGVBl9JO8Ji/xa"
+    },
+    {
+      "id": "1762246279848",
+      "username": "client02",
+      "password": "$2b$10$AvJUKGoT.Z8KesInzdhfDuzeezhZcLEN29NvCB5MjqksrvPd3JPBa"
+    }
+  ],
+  "gameHistory": [
+    {
+      "username": "client01",
+      "mode": "Dễ",
+      "score": 0,
+      "date": "2025-11-04T08:31:48.540Z"
+    },
+    {
+      "username": "client01",
+      "mode": "Dễ",
+      "score": 0,
+      "date": "2025-11-04T08:34:11.701Z"
+    },
+    {
+      "username": "client01",
+      "mode": "Dễ",
+      "score": 0,
+      "date": "2025-11-04T08:35:51.076Z"
+    },
+    {
+      "username": "client01",
+      "mode": "Thường",
+      "score": 0,
+      "date": "2025-11-04T08:37:10.338Z"
+    },
+    {
+      "username": "client01",
+      "mode": "Thường",
+      "score": 0,
+      "date": "2025-11-04T08:40:30.229Z"
+    },
+    {
+      "username": "client01",
+      "mode": "Thường",
+      "score": 0,
+      "date": "2025-11-04T08:41:13.862Z"
+    },
+    {
+      "username": "client01",
+      "mode": "Dễ",
+      "score": 0,
+      "date": "2025-11-04T08:43:48.175Z"
+    },
+    {
+      "username": "client02",
+      "mode": "PvP",
+      "score": 1000,
+      "mistakes": 0,
+      "opponent": "client01",
+      "result": "win",
+      "reason": "Đối thủ đầu hàng",
+      "date": "2025-11-06T03:14:44.251Z"
+    },
+    {
+      "username": "client01",
+      "mode": "PvP",
+      "score": 1000,
+      "mistakes": 0,
+      "opponent": "client02",
+      "result": "lose",
+      "reason": "Đầu hàng",
+      "date": "2025-11-06T03:14:44.251Z"
+    },
+    {
+      "username": "client02",
+      "mode": "PvP",
+      "score": 1000,
+      "mistakes": 0,
+      "opponent": "client02",
+      "result": "win",
+      "reason": "Đối thủ đầu hàng",
+      "date": "2025-11-06T03:48:56.127Z"
+    },
+    {
+      "username": "client02",
+      "mode": "PvP",
+      "score": 1000,
+      "mistakes": 0,
+      "opponent": "client02",
+      "result": "lose",
+      "reason": "Đầu hàng",
+      "date": "2025-11-06T03:48:56.127Z"
+    }
+  ]
+}
