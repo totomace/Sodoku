@@ -15,6 +15,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const gameScreen = document.getElementById('pvp-game-screen');
     const matchOverlay = document.getElementById('match-overlay');
     const matchStatus = document.getElementById('match-status');
+    const cancelMatchBtn = document.getElementById('cancel-match-btn');
     const countdownOverlay = document.getElementById('countdown-overlay');
     const countdownNumber = document.getElementById('countdown-number');
     const findRandomBtn = document.getElementById('find-random-btn');
@@ -247,21 +248,47 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // === GỬI SỰ KIỆN LÊN SERVER ===
     
+    let isSearching = false; // Trạng thái đang tìm trận
+    
+    // Nút tìm ngẫu nhiên
     findRandomBtn.addEventListener('click', () => {
-        findRandomBtn.disabled = true;
-        
-        // Hiện overlay tìm trận
-        matchOverlay.classList.add('show');
-        matchStatus.textContent = 'Đang tìm đối thủ xứng tầm...';
-        
-        // Lấy settings từ localStorage (hoặc dùng mặc định)
-        const settings = {
-            turnTimeLimit: parseInt(localStorage.getItem('turnTimeLimit')) || 30,
-            timeoutPenalty: parseInt(localStorage.getItem('timeoutPenalty')) || 50,
-            mistakePenalty: parseInt(localStorage.getItem('mistakePenalty')) || 100
-        };
-        
-        socket.emit('findMatch', settings);
+        if (isSearching) {
+            // HỦY TÌM TRẬN
+            socket.emit('cancelMatch');
+            findRandomBtn.textContent = '🎲 Ngẫu nhiên';
+            findRandomBtn.style.backgroundColor = '#ff6b6b';
+            matchOverlay.classList.remove('show');
+            isSearching = false;
+            addChatMessage({ isSystem: true, message: '❌ Đã hủy tìm trận' });
+        } else {
+            // BẮT ĐẦU TÌM TRẬN
+            isSearching = true;
+            findRandomBtn.textContent = '❌ Hủy tìm';
+            findRandomBtn.style.backgroundColor = '#666';
+            
+            // Hiện overlay tìm trận
+            matchOverlay.classList.add('show');
+            matchStatus.textContent = 'Vui lòng chờ...';
+            
+            // Dùng settings mặc định
+            const settings = {
+                turnTimeLimit: 30,
+                timeoutPenalty: 50,
+                mistakePenalty: 100
+            };
+            
+            socket.emit('findMatch', settings);
+        }
+    });
+    
+    // Nút hủy trên overlay
+    cancelMatchBtn.addEventListener('click', () => {
+        socket.emit('cancelMatch');
+        findRandomBtn.textContent = '🎲 Ngẫu nhiên';
+        findRandomBtn.style.backgroundColor = '#ff6b6b';
+        matchOverlay.classList.remove('show');
+        isSearching = false;
+        addChatMessage({ isSystem: true, message: '❌ Đã hủy tìm trận' });
     });
     
     chatForm.addEventListener('submit', (e) => {
@@ -308,6 +335,11 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     socket.on('matchFound', (data) => {
+        // Reset nút tìm trận
+        isSearching = false;
+        findRandomBtn.textContent = '🎲 Ngẫu nhiên';
+        findRandomBtn.style.backgroundColor = '#ff6b6b';
+        
         // Cập nhật status
         matchStatus.innerHTML = `✅ Đã tìm thấy trận!<br><span style="color: #667eea;">Đối thủ: ${data.p1.username === myUsername ? data.p2.username : data.p1.username}</span>`;
         
