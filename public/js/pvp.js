@@ -23,6 +23,22 @@ document.addEventListener('DOMContentLoaded', () => {
     const waitingTimeEl = document.getElementById('waiting-time');
     const playerList = document.getElementById('player-list'); 
     const searchInput = document.getElementById('search-input');
+    const inviteModal = document.getElementById('invite-modal');
+    const challengerNameEl = document.getElementById('challenger-name');
+    const acceptInviteBtn = document.getElementById('accept-invite-btn');
+    const declineInviteBtn = document.getElementById('decline-invite-btn');
+    const surrenderModal = document.getElementById('surrender-modal');
+    const confirmSurrenderBtn = document.getElementById('confirm-surrender-btn');
+    const cancelSurrenderBtn = document.getElementById('cancel-surrender-btn');
+    const resultModal = document.getElementById('result-modal');
+    const resultBox = document.getElementById('result-box');
+    const resultIcon = document.getElementById('result-icon');
+    const resultTitle = document.getElementById('result-title');
+    const resultReason = document.getElementById('result-reason');
+    const resultOpponent = document.getElementById('result-opponent');
+    const resultScore = document.getElementById('result-score');
+    const resultMistakes = document.getElementById('result-mistakes');
+    const resultCloseBtn = document.getElementById('result-close-btn');
     const boardElement = document.getElementById('shared-board'), paletteElement = document.getElementById('number-palette');
     const checkBtn = document.getElementById('check-btn'), surrenderBtn = document.getElementById('surrender-btn');
     const p1Name = document.getElementById('player1-name'), p2Name = document.getElementById('player2-name');
@@ -37,6 +53,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let currentTurn = 1, turnTimeLeft = 30; // Thời gian suy nghĩ mỗi lượt
     let waitingStartTime = 0; // Thời gian bắt đầu chờ
     let waitingTimer = null; // Timer cho thời gian chờ
+    let currentInviter = null; // Lưu tên người mời
 
     // === HÀM VẼ VÀ TIỆN ÍCH ===
     
@@ -49,28 +66,31 @@ document.addEventListener('DOMContentLoaded', () => {
             const li = document.createElement('li');
             li.className = 'player-item';
             
-            let statusText = '● Online';
+            let statusText = 'Online';
             let statusClass = 'online';
             let isBusy = false; // Đang chơi hoặc đang tìm
 
             if (user.status === 'playing') {
-                statusText = '● Đang chơi';
+                statusText = 'Đang chơi';
                 statusClass = 'playing';
                 isBusy = true;
             } else if (user.status === 'waiting') {
-                statusText = '● Đang tìm...';
+                statusText = 'Đang tìm...';
                 statusClass = 'waiting';
                 isBusy = true;
             }
 
+            // Lấy chữ cái đầu của username
+            const initial = user.username.charAt(0).toUpperCase();
+
             li.innerHTML = `
-                <div class="avatar"></div>
+                <div class="avatar">${initial}</div>
                 <div class="info">
-                    <div class="username">${user.username}</div>
+                    <div class="player-name">${user.username}</div>
                     <div class="status ${statusClass}">${statusText}</div>
                 </div>
                 <button class="challenge-btn" data-username="${user.username}" ${isBusy ? 'disabled' : ''}>
-                    Thách đấu
+                    ⚔️ Thách đấu
                 </button>
             `;
             playerList.appendChild(li);
@@ -92,7 +112,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const items = playerList.getElementsByTagName('li');
         
         Array.from(items).forEach(item => {
-            const username = item.querySelector('.username').textContent.toLowerCase();
+            const username = item.querySelector('.player-name').textContent.toLowerCase();
             if (username.includes(filter)) {
                 item.style.display = 'flex';
             } else {
@@ -135,32 +155,78 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     function createPalette() {
         paletteElement.innerHTML = '';
+        
+        // Tạo các nút số 1-9
         for (let i = 1; i <= 9; i++) {
             const numEl = document.createElement('div');
-            numEl.className = 'number'; numEl.textContent = i;
+            numEl.className = 'number'; 
+            numEl.textContent = i;
             
             numEl.addEventListener('click', () => {
-                if (selectedCell) {
-                    // Kiểm tra xem có phải lượt của mình không
-                    if (currentTurn !== myPlayerNum) {
-                        addChatMessage({ isSystem: true, message: '⏸️ Chưa đến lượt của bạn!' });
-                        return;
-                    }
-                    
-                    let r = parseInt(selectedCell.dataset.row);
-                    let c = parseInt(selectedCell.dataset.col);
-                    if (puzzle[r][c] === 0) {
-                        let num = parseInt(numEl.textContent);
-                        selectedCell.textContent = num;
-                        selectedCell.className = 'cell my-move';
-                        socket.emit('makeMove', { row: r, col: c, num: num });
-                        selectedCell = null;
-                    }
-                }
+                fillNumber(i);
             });
             paletteElement.appendChild(numEl);
         }
+        
+        // Thêm nút xóa
+        const eraseEl = document.createElement('div');
+        eraseEl.className = 'number erase';
+        eraseEl.textContent = '✖';
+        eraseEl.title = 'Xóa (Delete/Backspace)';
+        eraseEl.addEventListener('click', () => {
+            eraseCell();
+        });
+        paletteElement.appendChild(eraseEl);
     }
+    
+    // Hàm điền số
+    function fillNumber(num) {
+        if (!selectedCell) {
+            addChatMessage({ isSystem: true, message: '⚠️ Hãy chọn một ô trước!' });
+            return;
+        }
+        
+        // Kiểm tra xem có phải lượt của mình không
+        if (currentTurn !== myPlayerNum) {
+            addChatMessage({ isSystem: true, message: '⏸️ Chưa đến lượt của bạn!' });
+            return;
+        }
+        
+        let r = parseInt(selectedCell.dataset.row);
+        let c = parseInt(selectedCell.dataset.col);
+        
+        if (puzzle[r][c] === 0) {
+            selectedCell.textContent = num;
+            selectedCell.className = 'cell my-move';
+            socket.emit('makeMove', { row: r, col: c, num: num });
+            selectedCell = null;
+        }
+    }
+    
+    // Hàm xóa ô
+    function eraseCell() {
+        if (!selectedCell) {
+            addChatMessage({ isSystem: true, message: '⚠️ Hãy chọn một ô trước!' });
+            return;
+        }
+        
+        // Kiểm tra xem có phải lượt của mình không
+        if (currentTurn !== myPlayerNum) {
+            addChatMessage({ isSystem: true, message: '⏸️ Chưa đến lượt của bạn!' });
+            return;
+        }
+        
+        let r = parseInt(selectedCell.dataset.row);
+        let c = parseInt(selectedCell.dataset.col);
+        
+        if (puzzle[r][c] === 0) {
+            selectedCell.textContent = '';
+            selectedCell.className = 'cell';
+            socket.emit('makeMove', { row: r, col: c, num: 0 });
+            selectedCell = null;
+        }
+    }
+    
     function addChatMessage(data) {
         const li = document.createElement('li');
         let strongClass = (data.username === myUsername) ? 'style="color: green;"' : '';
@@ -313,8 +379,37 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     surrenderBtn.addEventListener('click', () => {
-        if (confirm("Bạn có chắc muốn đầu hàng?")) {
-            socket.emit('surrender');
+        surrenderModal.classList.add('show');
+    });
+    
+    // Xác nhận đầu hàng
+    confirmSurrenderBtn.addEventListener('click', () => {
+        socket.emit('surrender');
+        surrenderModal.classList.remove('show');
+    });
+    
+    // Hủy đầu hàng
+    cancelSurrenderBtn.addEventListener('click', () => {
+        surrenderModal.classList.remove('show');
+    });
+    
+    // === XỬ LÝ BÀN PHÍM ===
+    document.addEventListener('keydown', (e) => {
+        // Chỉ xử lý khi đang ở màn hình game
+        if (gameScreen.style.display !== 'flex') return;
+        
+        // Bỏ qua nếu đang focus vào input chat
+        if (e.target === chatInput) return;
+        
+        // Phím số 1-9
+        if (e.key >= '1' && e.key <= '9') {
+            e.preventDefault();
+            fillNumber(parseInt(e.key));
+        }
+        // Phím Delete hoặc Backspace để xóa
+        else if (e.key === 'Delete' || e.key === 'Backspace') {
+            e.preventDefault();
+            eraseCell();
         }
     });
 
@@ -337,8 +432,26 @@ document.addEventListener('DOMContentLoaded', () => {
     // === SỰ KIỆN MỚI: NHẬN LỜI MỜI ===
     socket.on('receiveInvite', (data) => {
         // data = { fromUsername }
-        if (confirm(`Bạn có lời mời thách đấu từ ${data.fromUsername}. Đồng ý?`)) {
-            socket.emit('acceptInvite', { targetUsername: data.fromUsername });
+        currentInviter = data.fromUsername;
+        challengerNameEl.textContent = data.fromUsername;
+        inviteModal.classList.add('show');
+    });
+    
+    // Nút chấp nhận lời mời
+    acceptInviteBtn.addEventListener('click', () => {
+        if (currentInviter) {
+            socket.emit('acceptInvite', { targetUsername: currentInviter });
+            inviteModal.classList.remove('show');
+            currentInviter = null;
+        }
+    });
+    
+    // Nút từ chối lời mời
+    declineInviteBtn.addEventListener('click', () => {
+        inviteModal.classList.remove('show');
+        if (currentInviter) {
+            addChatMessage({ isSystem: true, message: `Đã từ chối lời mời từ ${currentInviter}.` });
+            currentInviter = null;
         }
     });
 
@@ -425,6 +538,7 @@ document.addEventListener('DOMContentLoaded', () => {
     socket.on('updateTurnTimer', (data) => {
         turnTimeLeft = data.turnTimeLeft;
         currentTurn = data.currentTurn;
+        console.log('⏰ Update timer:', turnTimeLeft, 'giây, Lượt:', currentTurn);
         updateScoreDisplay();
     });
     
@@ -512,23 +626,39 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     socket.on('gameResult', (data) => {
-        let message = "";
+        // Hiển thị modal kết quả
         if (data.draw) {
-            message = "⏰ Hết giờ! Trận đấu hòa!";
+            resultBox.className = 'result-box draw';
+            resultIcon.textContent = '⏱️';
+            resultTitle.textContent = 'Hòa!';
+            resultReason.textContent = 'Hết giờ! Trận đấu hòa!';
+            resultOpponent.textContent = data.winner || 'Đối thủ';
+            resultScore.textContent = myScore;
+            resultMistakes.textContent = myMistakes;
         } else if (data.winner === myUsername) {
-            const reason = data.reason || 'Hoàn thành bảng!';
-            message = `🎉 Chúc mừng! Bạn đã thắng ${data.loser}!\n\n` +
-                     `🏆 Lý do: ${reason}\n` +
-                     `⭐ Điểm của bạn: ${data.score}\n` +
-                     `❌ Số lần sai: ${data.winnerMistakes || 0}`;
+            resultBox.className = 'result-box win';
+            resultIcon.textContent = '🏆';
+            resultTitle.textContent = 'Chúc mừng! Bạn đã thắng!';
+            resultReason.textContent = data.reason || 'Hoàn thành bảng!';
+            resultOpponent.textContent = data.loser;
+            resultScore.textContent = data.score;
+            resultMistakes.textContent = data.winnerMistakes || 0;
         } else {
-            const reason = data.reason || '';
-            message = `😢 Bạn đã thua! Người thắng: ${data.winner}\n\n` +
-                     (reason ? `🏆 Lý do: ${reason}\n` : '') +
-                     `⭐ Điểm của ${data.winner}: ${data.score}\n` +
-                     `❌ Số lần sai của bạn: ${data.loserMistakes || 0}`;
+            resultBox.className = 'result-box lose';
+            resultIcon.textContent = '😢';
+            resultTitle.textContent = 'Bạn đã thua!';
+            resultReason.textContent = data.reason || 'Đối thủ hoàn thành trước';
+            resultOpponent.textContent = data.winner;
+            resultScore.textContent = myScore;
+            resultMistakes.textContent = data.loserMistakes || 0;
         }
-        alert(message);
+        
+        resultModal.classList.add('show');
+    });
+    
+    // Nút đóng modal kết quả
+    resultCloseBtn.addEventListener('click', () => {
+        resultModal.classList.remove('show');
         
         // Reset game state với hiệu ứng
         gameStartTime = 0;

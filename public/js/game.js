@@ -73,11 +73,7 @@ document.addEventListener('DOMContentLoaded', () => {
     
     quitBtn.addEventListener('click', () => {
         if (gameInProgress) {
-            if (confirm("Bạn có chắc muốn thoát? Tiến trình sẽ không được lưu.")) {
-                stopTimer();
-                gameInProgress = false;
-                window.location.href = '/index.html'; 
-            }
+            document.getElementById('quit-modal').style.display = 'flex';
         } else {
             window.location.href = '/index.html'; 
         }
@@ -178,37 +174,58 @@ document.addEventListener('DOMContentLoaded', () => {
         for (let i = 1; i <= 9; i++) {
             const numEl = document.createElement('div');
             numEl.className = 'number'; numEl.textContent = i;
-            numEl.addEventListener('click', () => {
-                if (selectedCell && gameInProgress) {
-                    let r = parseInt(selectedCell.dataset.row);
-                    let c = parseInt(selectedCell.dataset.col);
-                    if (puzzle[r][c] === 0) {
-                        userBoard[r][c] = i;
-                        selectedCell.textContent = i;
-                        selectedCell.classList.remove('selected', 'error');
-                        selectedCell.classList.add('correct');
-                        selectedCell = null;
-                        updateScore(-10);
-                    }
-                }
-            });
+            numEl.addEventListener('click', () => fillNumber(i));
             paletteElement.appendChild(numEl);
         }
         const eraseBtn = document.createElement('div');
-        eraseBtn.className = 'number'; eraseBtn.textContent = 'X';
-        eraseBtn.addEventListener('click', () => {
-             if (selectedCell && gameInProgress) {
-                let r = parseInt(selectedCell.dataset.row);
-                let c = parseInt(selectedCell.dataset.col);
-                if (puzzle[r][c] === 0) {
-                    userBoard[r][c] = 0;
-                    selectedCell.textContent = '';
-                    selectedCell.classList.remove('error', 'correct');
-                }
-             }
-        });
+        eraseBtn.className = 'number erase'; 
+        eraseBtn.textContent = '🗑️';
+        eraseBtn.addEventListener('click', () => eraseCell());
         paletteElement.appendChild(eraseBtn);
     }
+
+    function fillNumber(num) {
+        if (selectedCell && gameInProgress) {
+            let r = parseInt(selectedCell.dataset.row);
+            let c = parseInt(selectedCell.dataset.col);
+            if (puzzle[r][c] === 0) {
+                userBoard[r][c] = num;
+                selectedCell.textContent = num;
+                selectedCell.classList.remove('selected', 'error');
+                selectedCell.classList.add('correct');
+                selectedCell = null;
+                updateScore(-10);
+            }
+        }
+    }
+
+    function eraseCell() {
+        if (selectedCell && gameInProgress) {
+            let r = parseInt(selectedCell.dataset.row);
+            let c = parseInt(selectedCell.dataset.col);
+            if (puzzle[r][c] === 0) {
+                userBoard[r][c] = 0;
+                selectedCell.textContent = '';
+                selectedCell.classList.remove('error', 'correct');
+            }
+        }
+    }
+
+    // Hỗ trợ bàn phím
+    document.addEventListener('keydown', (e) => {
+        if (!gameInProgress) return;
+        
+        // Phím số 1-9
+        if (e.key >= '1' && e.key <= '9') {
+            e.preventDefault();
+            fillNumber(parseInt(e.key));
+        }
+        // Phím Delete hoặc Backspace để xóa
+        else if (e.key === 'Delete' || e.key === 'Backspace') {
+            e.preventDefault();
+            eraseCell();
+        }
+    });
 
     // --- LOGIC NÚT BẤM (DÙNG ALERT) ---
     checkBtn.addEventListener('click', () => {
@@ -237,7 +254,9 @@ document.addEventListener('DOMContentLoaded', () => {
             gameInProgress = false;
             let timeBonus = timeLeft * 10;
             updateScore(timeBonus);
-            alert(`Thắng! Điểm: ${currentScore} (Thưởng: +${timeBonus})`);
+            document.getElementById('win-message').textContent = 
+                `Chúc mừng! Điểm: ${currentScore} (Thưởng: +${timeBonus})`;
+            document.getElementById('win-modal').style.display = 'flex';
             saveGameResult(currentScore); 
         } else {
              // Im lặng
@@ -246,14 +265,38 @@ document.addEventListener('DOMContentLoaded', () => {
 
     solveBtn.addEventListener('click', () => {
         if (!solution || !gameInProgress) return;
+        document.getElementById('solve-modal').style.display = 'flex';
+    });
+
+    // Modal functions
+    window.closeSolveModal = function() {
+        document.getElementById('solve-modal').style.display = 'none';
+    };
+
+    window.confirmSolve = function() {
+        closeSolveModal();
         stopTimer();
         gameInProgress = false;
         userBoard = solution.map(row => [...row]);
         createBoard();
         updateScore(-currentScore);
-        alert("Bạn đã xem lời giải. Điểm: 0");
-        saveGameResult(0); 
-    });
+        saveGameResult(0);
+    };
+
+    window.closeQuitModal = function() {
+        document.getElementById('quit-modal').style.display = 'none';
+    };
+
+    window.confirmQuit = function() {
+        stopTimer();
+        gameInProgress = false;
+        window.location.href = '/index.html';
+    };
+
+    window.closeWinModal = function() {
+        document.getElementById('win-modal').style.display = 'none';
+        window.location.href = '/index.html';
+    };
 
     // --- BỘ NÃO SUDOKU (isValid ĐÃ SỬA) ---
     function findEmptyCell(board) {

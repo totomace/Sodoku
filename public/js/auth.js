@@ -10,11 +10,15 @@ document.addEventListener('DOMContentLoaded', () => {
     showRegisterLink.addEventListener('click', () => {
         loginForm.style.display = 'none';
         registerForm.style.display = 'block';
+        registerForm.classList.add('fade-in');
+        setTimeout(() => registerForm.classList.remove('fade-in'), 500);
     });
 
     showLoginLink.addEventListener('click', () => {
         registerForm.style.display = 'none';
         loginForm.style.display = 'block';
+        loginForm.classList.add('fade-in');
+        setTimeout(() => loginForm.classList.remove('fade-in'), 500);
     });
 
     // --- Logic (THẬT) Đăng nhập ---
@@ -37,7 +41,6 @@ document.addEventListener('DOMContentLoaded', () => {
             
             // === PHẦN SỬA LỖI ===
             localStorage.setItem('username', username);
-            alert('Đã lưu user! Đang chuyển đến Menu...');
             // === HẾT PHẦN SỬA LỖI ===
             
             window.location.href = '/index.html'; 

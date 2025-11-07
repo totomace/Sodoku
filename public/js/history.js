@@ -47,38 +47,47 @@ document.addEventListener('DOMContentLoaded', async () => {
             let displayContent = '';
             
             if (game.mode === 'PvP') {
-                // Hiển thị cho trận PvP
-                const isWin = game.result === 'win' || game.username === username;
-                const resultIcon = isWin ? '🏆' : '💀';
+                // Xác định thắng/thua
+                const isWin = game.result === 'win';
+                li.classList.add(isWin ? 'win' : 'lose');
+                
+                const resultIcon = isWin ? '🏆' : '😢';
                 const resultText = isWin ? 'THẮNG' : 'THUA';
-                const resultColor = isWin ? '#28a745' : '#dc3545';
                 const opponent = game.opponent || 'Unknown';
-                const reason = game.reason ? ` - ${game.reason}` : '';
+                const reason = game.reason || '';
                 
                 displayContent = `
-                    <div>
-                        <div class="mode" style="color: ${resultColor}; font-weight: bold;">
-                            ${resultIcon} ${resultText} vs ${opponent}
+                    <div class="item-left">
+                        <div class="result-badge ${isWin ? 'win' : 'lose'}">
+                            ${resultIcon} ${resultText}
                         </div>
-                        <div style="font-size: 0.9rem; color: #666; margin-top: 3px;">
-                            ${reason}
+                        <div>
+                            <div class="mode mode-PvP">PvP</div>
+                            <div class="opponent-info">⚔️ vs ${opponent}</div>
+                            ${reason ? `<div class="reason">${reason}</div>` : ''}
                         </div>
-                        <div class="date">${date}</div>
-                        ${game.mistakes !== undefined ? `<div style="font-size: 0.9rem; color: #888;">❌ Sai: ${game.mistakes} lần</div>` : ''}
                     </div>
-                    <div class="score">${game.score} điểm</div>
+                    <div class="item-right">
+                        <div class="score">${game.score} 💰</div>
+                        ${game.mistakes !== undefined ? `<div style="font-size: 0.9rem; color: #888;">❌ ${game.mistakes} lần</div>` : ''}
+                        <div class="date">📅 ${date}</div>
+                    </div>
                 `;
             } else {
                 // Hiển thị cho chơi đơn
                 const modeClass = game.mode.toUpperCase(); 
                 displayContent = `
-                    <div>
-                        <div class="mode mode-${modeClass}">
-                            Chơi đơn: ${game.mode}
+                    <div class="item-left">
+                        <div>
+                            <div class="mode mode-${modeClass}">
+                                🎮 Chơi đơn: ${game.mode}
+                            </div>
                         </div>
-                        <div class="date">${date}</div>
                     </div>
-                    <div class="score">${game.score} điểm</div>
+                    <div class="item-right">
+                        <div class="score">${game.score} 💰</div>
+                        <div class="date">📅 ${date}</div>
+                    </div>
                 `;
             }
             

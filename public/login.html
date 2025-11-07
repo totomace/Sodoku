@@ -5,73 +5,212 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Đăng nhập - Sudoku</title>
     <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
         body {
-            font-family: Arial, sans-serif;
-            background-color: #f4f4f4;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: white;
             display: flex;
             justify-content: center;
             align-items: center;
-            height: 100vh;
+            min-height: 100vh;
+            padding: 20px;
         }
         .form-container {
-            background-color: #fff;
-            padding: 2rem;
-            border-radius: 8px;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-            width: 300px;
+            background: white;
+            padding: 3rem 2.5rem;
+            border-radius: 20px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+            border: 2px solid #e0e0e0;
+            width: 400px;
             text-align: center;
-            overflow: hidden; /* Giúp che form còn lại */
+            position: relative;
+            overflow: hidden;
+        }
+        .form-container::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(135deg, rgba(52, 152, 219, 0.05) 0%, rgba(41, 128, 185, 0.05) 100%);
+            transform: rotate(-45deg);
+            z-index: 0;
+        }
+        .form-container > * {
+            position: relative;
+            z-index: 1;
+        }
+        .logo {
+            font-size: 4rem;
+            margin-bottom: 0.5rem;
+            animation: bounce 2s infinite;
+        }
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
         }
         .form-container h1 {
-            margin-bottom: 1.5rem;
+            color: #3498db;
+            margin-bottom: 0.5rem;
+            font-size: 2rem;
         }
-        .form-container input {
+        .form-container p.subtitle {
+            color: #666;
+            margin-bottom: 2rem;
+            font-size: 0.95rem;
+        }
+        .input-group {
+            position: relative;
+            margin-bottom: 1.5rem;
+            text-align: left;
+        }
+        .input-group label {
+            display: block;
+            color: #333;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            font-size: 0.9rem;
+        }
+        .input-group input {
             width: 100%;
-            padding: 0.75rem;
-            margin-bottom: 1rem;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-            box-sizing: border-box; 
+            padding: 14px 18px;
+            padding-left: 45px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            background: white;
+        }
+        .input-group input:focus {
+            outline: none;
+            border-color: #3498db;
+            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
+        }
+        .input-group .icon {
+            position: absolute;
+            left: 15px;
+            top: 38px;
+            font-size: 1.2rem;
+            color: #999;
         }
         .form-container button {
             width: 100%;
-            padding: 0.75rem;
-            background-color: #007bff;
+            padding: 14px;
+            background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);
             color: white;
             border: none;
-            border-radius: 4px;
+            border-radius: 10px;
             cursor: pointer;
-            font-size: 1rem;
+            font-size: 1.1rem;
+            font-weight: bold;
+            margin-top: 1rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(52, 152, 219, 0.3);
         }
         .form-container button:hover {
-            background-color: #0056b3;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(52, 152, 219, 0.4);
         }
         .toggle-link {
-            margin-top: 1rem;
-            color: #007bff;
+            margin-top: 1.5rem;
+            color: #3498db;
             cursor: pointer;
+            font-size: 0.95rem;
+            transition: all 0.3s;
+        }
+        .toggle-link:hover {
+            color: #2980b9;
             text-decoration: underline;
+        }
+        .divider {
+            margin: 2rem 0 1.5rem 0;
+            text-align: center;
+            position: relative;
+        }
+        .divider::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 50%;
+            width: 100%;
+            height: 1px;
+            background: #e0e0e0;
+        }
+        .divider span {
+            background: white;
+            padding: 0 15px;
+            color: #999;
+            position: relative;
+            font-size: 0.85rem;
+        }
+        
+        /* Animation for form switching */
+        .fade-in {
+            animation: fadeIn 0.5s ease-in;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
         }
     </style>
 </head>
 <body>
     <div class="form-container">
+        <div class="logo">🎮</div>
         
-        <form id="login-form">
+        <form id="login-form" class="fade-in">
             <h1>Đăng Nhập</h1>
-            <input type="text" placeholder="Tên đăng nhập" id="login-username" required>
-            <input type="password" placeholder="Mật khẩu" id="login-password" required>
+            <p class="subtitle">Chào mừng trở lại!</p>
+            
+            <div class="input-group">
+                <label for="login-username">Tên đăng nhập</label>
+                <span class="icon">👤</span>
+                <input type="text" id="login-username" required>
+            </div>
+            
+            <div class="input-group">
+                <label for="login-password">Mật khẩu</label>
+                <span class="icon">🔒</span>
+                <input type="password" id="login-password" required>
+            </div>
+            
             <button type="submit">Đăng nhập</button>
-            <p class="toggle-link" id="show-register">Chưa có tài khoản? Đăng ký ngay</p>
+            
+            <div class="divider"><span>hoặc</span></div>
+            <p class="toggle-link" id="show-register">Chưa có tài khoản? <strong>Đăng ký ngay</strong></p>
         </form>
 
         <form id="register-form" style="display: none;">
-             <h1>Đăng Ký</h1>
-            <input type="text" placeholder="Tên đăng nhập" id="reg-username" required>
-            <input type="password" placeholder="Mật khẩu" id="reg-password" required>
-            <input type="password" placeholder="Nhập lại mật khẩu" id="confirm-password" required>
+            <h1>Đăng Ký</h1>
+            <p class="subtitle">Tạo tài khoản mới</p>
+            
+            <div class="input-group">
+                <label for="reg-username">Tên đăng nhập</label>
+                <span class="icon">👤</span>
+                <input type="text" id="reg-username" required>
+            </div>
+            
+            <div class="input-group">
+                <label for="reg-password">Mật khẩu</label>
+                <span class="icon">🔒</span>
+                <input type="password" id="reg-password" required>
+            </div>
+            
+            <div class="input-group">
+                <label for="confirm-password">Xác nhận mật khẩu</label>
+                <span class="icon">🔐</span>
+                <input type="password" id="confirm-password" required>
+            </div>
+            
             <button type="submit">Đăng ký</button>
-            <p class="toggle-link" id="show-login">Đã có tài khoản? Đăng nhập</p>
+            
+            <div class="divider"><span>hoặc</span></div>
+            <p class="toggle-link" id="show-login">Đã có tài khoản? <strong>Đăng nhập</strong></p>
         </form>
 
     </div>

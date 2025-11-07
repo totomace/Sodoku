@@ -60,16 +60,85 @@
             align-items: center;
             padding: 15px;
             border-bottom: 1px solid #f0f0f0;
+            border-left: 5px solid #ccc;
+            transition: all 0.3s ease;
+        }
+        .history-item:hover {
+            background: #f8f9fa;
+            transform: translateX(5px);
         }
         .history-item:last-child {
             border-bottom: none;
         }
-        .mode { font-weight: bold; font-size: 1.1rem; }
+        
+        /* Màu theo kết quả thắng/thua */
+        .history-item.win {
+            border-left-color: #28a745;
+            background: #f0fff4;
+        }
+        .history-item.lose {
+            border-left-color: #dc3545;
+            background: #fff5f5;
+        }
+        
+        .item-left {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .result-badge {
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-weight: bold;
+            font-size: 0.9rem;
+            min-width: 80px;
+            text-align: center;
+        }
+        .result-badge.win {
+            background: #28a745;
+            color: white;
+        }
+        .result-badge.lose {
+            background: #dc3545;
+            color: white;
+        }
+        
+        .mode { 
+            font-weight: bold; 
+            font-size: 1.1rem;
+        }
         .mode-DỄ { color: #28a745; }
         .mode-THƯỜNG { color: #ffc107; }
         .mode-KHÓ { color: #dc3545; }
-        .score { font-size: 1.2rem; font-weight: bold; color: #007bff; }
-        .date { font-size: 0.9rem; color: #777; }
+        .mode-PvP { color: #667eea; }
+        
+        .opponent-info {
+            font-size: 0.9rem;
+            color: #666;
+            margin-top: 5px;
+        }
+        
+        .item-right {
+            text-align: right;
+        }
+        
+        .score { 
+            font-size: 1.3rem; 
+            font-weight: bold; 
+            color: #007bff; 
+        }
+        .reason {
+            font-size: 0.85rem;
+            color: #666;
+            font-style: italic;
+            margin-top: 3px;
+        }
+        .date { 
+            font-size: 0.85rem; 
+            color: #999; 
+            margin-top: 5px;
+        }
     </style>
 </head>
 <body>

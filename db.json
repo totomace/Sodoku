@@ -113,6 +113,118 @@
       "result": "lose",
       "reason": "Đầu hàng",
       "date": "2025-11-07T18:11:59.462Z"
+    },
+    {
+      "username": "client02",
+      "mode": "PvP",
+      "score": 1000,
+      "mistakes": 0,
+      "opponent": "client01",
+      "result": "win",
+      "reason": "Đối thủ đầu hàng",
+      "date": "2025-11-07T18:47:31.351Z"
+    },
+    {
+      "username": "client01",
+      "mode": "PvP",
+      "score": 1000,
+      "mistakes": 0,
+      "opponent": "client02",
+      "result": "lose",
+      "reason": "Đầu hàng",
+      "date": "2025-11-07T18:47:31.351Z"
+    },
+    {
+      "username": "client01",
+      "mode": "PvP",
+      "score": 900,
+      "mistakes": 1,
+      "opponent": "client02",
+      "result": "win",
+      "reason": "Đối thủ đầu hàng",
+      "date": "2025-11-07T18:51:31.882Z"
+    },
+    {
+      "username": "client02",
+      "mode": "PvP",
+      "score": 1000,
+      "mistakes": 0,
+      "opponent": "client01",
+      "result": "lose",
+      "reason": "Đầu hàng",
+      "date": "2025-11-07T18:51:31.882Z"
+    },
+    {
+      "username": "client01",
+      "mode": "PvP",
+      "score": 1000,
+      "mistakes": 0,
+      "opponent": "client02",
+      "result": "win",
+      "reason": "Đối thủ đầu hàng",
+      "date": "2025-11-07T18:54:47.880Z"
+    },
+    {
+      "username": "client02",
+      "mode": "PvP",
+      "score": 1000,
+      "mistakes": 0,
+      "opponent": "client01",
+      "result": "lose",
+      "reason": "Đầu hàng",
+      "date": "2025-11-07T18:54:47.880Z"
+    },
+    {
+      "username": "client02",
+      "mode": "PvP",
+      "score": 1000,
+      "mistakes": 0,
+      "opponent": "client01",
+      "result": "win",
+      "reason": "Đối thủ đầu hàng",
+      "date": "2025-11-07T18:58:06.945Z"
+    },
+    {
+      "username": "client01",
+      "mode": "PvP",
+      "score": 1000,
+      "mistakes": 0,
+      "opponent": "client02",
+      "result": "lose",
+      "reason": "Đầu hàng",
+      "date": "2025-11-07T18:58:06.945Z"
+    },
+    {
+      "username": "client01",
+      "mode": "PvP",
+      "score": 1000,
+      "mistakes": 0,
+      "opponent": "client02",
+      "result": "win",
+      "reason": "Đối thủ đầu hàng",
+      "date": "2025-11-07T19:04:00.971Z"
+    },
+    {
+      "username": "client02",
+      "mode": "PvP",
+      "score": 1000,
+      "mistakes": 0,
+      "opponent": "client01",
+      "result": "lose",
+      "reason": "Đầu hàng",
+      "date": "2025-11-07T19:04:00.971Z"
+    },
+    {
+      "username": "client01",
+      "mode": "Dễ",
+      "score": 0,
+      "date": "2025-11-07T19:09:11.691Z"
+    },
+    {
+      "username": "client01",
+      "mode": "Dễ",
+      "score": 0,
+      "date": "2025-11-07T19:25:29.295Z"
     }
   ]
 }

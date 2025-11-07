@@ -6,13 +6,13 @@
     <title>Thách Đấu (PvP)</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
-            background: #f5f5f5;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: white;
             display: flex;
             justify-content: center;
             align-items: center;
             padding-top: 20px;
-            height: 100vh;
+            min-height: 100vh;
             position: relative;
             overflow: hidden;
         }
@@ -37,19 +37,26 @@
         #lobby-screen {
             display: block;
             text-align: center;
-            background: #fff;
-            padding: 2rem 1.5rem;
+            background: white;
+            padding: 2.5rem 2rem;
             border-radius: 20px;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
-            width: 350px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            border: 2px solid #e0e0e0;
+            width: 400px;
+            animation: fadeIn 0.5s ease-in;
         }
-        #lobby-screen h1 { margin-top: 0; font-size: 2rem; }
+        #lobby-screen h1 { 
+            margin-top: 0; 
+            font-size: 2.2rem;
+            color: #dc3545;
+            margin-bottom: 1.5rem;
+        }
         .back-btn {
             position: absolute;
             top: 20px;
             left: 20px;
             padding: 10px 20px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);
             color: white;
             text-decoration: none;
             border-radius: 8px;
@@ -59,60 +66,166 @@
         }
         .back-btn:hover {
             transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+            box-shadow: 0 5px 15px rgba(52, 152, 219, 0.4);
         }
         
-        .search-box { display: flex; margin-bottom: 20px; }
+        .search-box { 
+            display: flex; 
+            margin-bottom: 20px; 
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            border-radius: 10px;
+            overflow: hidden;
+        }
         .search-box input {
-            flex-grow: 1; padding: 12px;
-            border: 1px solid #ccc;
-            border-radius: 8px 0 0 8px;
+            flex-grow: 1; 
+            padding: 14px 18px;
+            border: 2px solid #e0e0e0;
+            border-right: none;
+            border-radius: 10px 0 0 10px;
+            font-size: 1rem;
+            outline: none;
+            transition: border-color 0.3s;
+        }
+        .search-box input:focus {
+            border-color: #3498db;
         }
         .search-box button {
-            padding: 0 15px; border: none;
-            background-color: #6c63ff; color: white;
-            border-radius: 0 8px 8px 0;
+            padding: 0 25px; 
+            border: none;
+            background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);
+            color: white;
+            border-radius: 0 10px 10px 0;
             cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s;
+        }
+        .search-box button:hover {
+            box-shadow: 0 4px 15px rgba(52, 152, 219, 0.4);
         }
         #find-random-btn {
-            width: 100%; padding: 15px;
-            font-size: 1.1rem; cursor: pointer;
-            background-color: #ff6b6b; color: white;
-            border: none; border-radius: 8px;
-            margin-bottom: 20px;
+            width: 100%; 
+            padding: 16px;
+            font-size: 1.2rem; 
+            cursor: pointer;
+            background: linear-gradient(135deg, #ff6b6b 0%, #ee5a6f 100%);
+            color: white;
+            border: none; 
+            border-radius: 10px;
+            margin-bottom: 25px;
+            font-weight: bold;
+            box-shadow: 0 4px 15px rgba(255, 107, 107, 0.3);
+            transition: all 0.3s ease;
+        }
+        #find-random-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(255, 107, 107, 0.4);
         }
         
         /* Danh sách người chơi */
         #player-list {
             list-style-type: none;
-            padding: 0; text-align: left;
-            max-height: 300px;
+            padding: 0; 
+            text-align: left;
+            max-height: 350px;
             overflow-y: auto;
         }
+        #player-list::-webkit-scrollbar {
+            width: 8px;
+        }
+        #player-list::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 10px;
+        }
+        #player-list::-webkit-scrollbar-thumb {
+            background: #3498db;
+            border-radius: 10px;
+        }
         .player-item {
-            display: flex; align-items: center;
-            padding: 10px; border: 1px solid #eee;
-            border-radius: 8px; margin-bottom: 10px;
+            display: flex; 
+            align-items: center;
+            padding: 15px; 
+            border: 2px solid #e0e0e0;
+            border-radius: 12px; 
+            margin-bottom: 12px;
+            background: #fafafa;
+            transition: all 0.3s ease;
+        }
+        .player-item:hover {
+            border-color: #3498db;
+            background: white;
+            box-shadow: 0 4px 15px rgba(52, 152, 219, 0.1);
         }
         .player-item .avatar {
-            width: 40px; height: 40px;
-            background-color: #ccc; border-radius: 50%;
-            margin-right: 10px;
+            width: 45px; 
+            height: 45px;
+            background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);
+            border-radius: 50%;
+            margin-right: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 1.2rem;
         }
-        .player-item .info { flex-grow: 1; }
-        .player-item .status { font-size: 0.8rem; }
-        .player-item .status.online { color: green; }
-        .player-item .status.waiting { color: #f0ad4e; }
-        .player-item .status.playing { color: red; }
+        .player-item .info { 
+            flex-grow: 1; 
+        }
+        .player-item .info .player-name {
+            font-weight: bold;
+            font-size: 1.1rem;
+            color: #333;
+            margin-bottom: 3px;
+        }
+        .player-item .status { 
+            font-size: 0.9rem; 
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        .player-item .status::before {
+            content: '●';
+            font-size: 1rem;
+        }
+        .player-item .status.online { 
+            color: #28a745; 
+        }
+        .player-item .status.online::before {
+            color: #28a745;
+        }
+        .player-item .status.waiting { 
+            color: #ffc107; 
+        }
+        .player-item .status.waiting::before {
+            color: #ffc107;
+        }
+        .player-item .status.playing { 
+            color: #dc3545; 
+        }
+        .player-item .status.playing::before {
+            color: #dc3545;
+        }
         
         .player-item .challenge-btn {
-            padding: 8px 12px; background-color: #6c63ff;
-            color: white; border: none;
-            border-radius: 5px; cursor: pointer; /* Cho phép bấm */
+            padding: 10px 20px; 
+            background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);
+            color: white; 
+            border: none;
+            border-radius: 8px; 
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 10px rgba(52, 152, 219, 0.3);
+        }
+        .player-item .challenge-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(52, 152, 219, 0.4);
         }
         .player-item .challenge-btn:disabled {
-            background-color: #ccc;
+            background: #ccc;
             cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
         }
         
         #waiting-message {
@@ -150,13 +263,13 @@
         .match-box h2 {
             font-size: 2rem;
             margin-bottom: 20px;
-            color: #667eea;
+            color: #3498db;
         }
         .spinner {
             width: 60px;
             height: 60px;
             border: 6px solid #f3f3f3;
-            border-top: 6px solid #667eea;
+            border-top: 6px solid #3498db;
             border-radius: 50%;
             margin: 20px auto;
             animation: spin 1s linear infinite;
@@ -190,7 +303,7 @@
             font-size: 15rem;
             font-weight: bold;
             color: white;
-            text-shadow: 0 0 30px rgba(102, 126, 234, 0.8);
+            text-shadow: 0 0 30px rgba(52, 152, 219, 0.8);
             animation: countdownPulse 1s ease-in-out;
         }
         @keyframes countdownPulse {
@@ -212,6 +325,269 @@
             50% { transform: scale(1.2); }
             100% { transform: scale(1); }
         }
+        
+        /* Modal lời mời thách đấu */
+        #invite-modal {
+            display: none;
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.85);
+            z-index: 3000;
+            justify-content: center;
+            align-items: center;
+            animation: fadeIn 0.3s ease-in;
+        }
+        #invite-modal.show {
+            display: flex;
+        }
+        .invite-box {
+            background: white;
+            padding: 2.5rem;
+            border-radius: 20px;
+            text-align: center;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+            animation: slideDown 0.5s ease-out;
+            max-width: 400px;
+            color: #333;
+        }
+        .invite-box .icon {
+            font-size: 4rem;
+            margin-bottom: 20px;
+            animation: bounce 1s ease-in-out infinite;
+        }
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+        .invite-box h2 {
+            font-size: 1.8rem;
+            margin-bottom: 15px;
+            color: #3498db;
+        }
+        .invite-box .challenger-name {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #3498db;
+            margin: 20px 0;
+            text-shadow: 0 2px 4px rgba(52, 152, 219, 0.2);
+        }
+        .invite-box .message {
+            font-size: 1.1rem;
+            margin-bottom: 30px;
+            color: #666;
+        }
+        .invite-buttons {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+        }
+        .invite-buttons button {
+            padding: 15px 35px;
+            font-size: 1.1rem;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            min-width: 120px;
+        }
+        .invite-buttons .accept-btn {
+            background: #28a745;
+            color: white;
+            box-shadow: 0 4px 15px rgba(40, 167, 69, 0.4);
+        }
+        .invite-buttons .accept-btn:hover {
+            background: #218838;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(40, 167, 69, 0.6);
+        }
+        .invite-buttons .decline-btn {
+            background: #dc3545;
+            color: white;
+            box-shadow: 0 4px 15px rgba(220, 53, 69, 0.4);
+        }
+        .invite-buttons .decline-btn:hover {
+            background: #c82333;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(220, 53, 69, 0.6);
+        }
+        
+        /* Modal xác nhận đầu hàng */
+        #surrender-modal {
+            display: none;
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.85);
+            z-index: 3000;
+            justify-content: center;
+            align-items: center;
+            animation: fadeIn 0.3s ease-in;
+        }
+        #surrender-modal.show {
+            display: flex;
+        }
+        .surrender-box {
+            background: white;
+            padding: 2.5rem;
+            border-radius: 20px;
+            text-align: center;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+            animation: slideDown 0.5s ease-out;
+            max-width: 400px;
+            color: #333;
+        }
+        .surrender-box .icon {
+            font-size: 4rem;
+            margin-bottom: 20px;
+        }
+        .surrender-box h2 {
+            font-size: 1.8rem;
+            margin-bottom: 15px;
+            color: #dc3545;
+        }
+        .surrender-box .message {
+            font-size: 1.1rem;
+            margin-bottom: 30px;
+            color: #666;
+        }
+        .surrender-buttons {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+        }
+        .surrender-buttons button {
+            padding: 15px 35px;
+            font-size: 1.1rem;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            min-width: 120px;
+        }
+        .surrender-buttons .confirm-surrender-btn {
+            background: #dc3545;
+            color: white;
+            box-shadow: 0 4px 15px rgba(220, 53, 69, 0.4);
+        }
+        .surrender-buttons .confirm-surrender-btn:hover {
+            background: #c82333;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(220, 53, 69, 0.6);
+        }
+        .surrender-buttons .cancel-surrender-btn {
+            background: #6c757d;
+            color: white;
+            box-shadow: 0 4px 15px rgba(108, 117, 125, 0.4);
+        }
+        .surrender-buttons .cancel-surrender-btn:hover {
+            background: #5a6268;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(108, 117, 125, 0.6);
+        }
+        
+        /* Modal kết quả trận đấu */
+        #result-modal {
+            display: none;
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            z-index: 4000;
+            justify-content: center;
+            align-items: center;
+            animation: fadeIn 0.3s ease-in;
+        }
+        #result-modal.show {
+            display: flex;
+        }
+        .result-box {
+            background: white;
+            padding: 3rem;
+            border-radius: 25px;
+            text-align: center;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+            animation: zoomIn 0.6s ease-out;
+            max-width: 500px;
+            min-width: 400px;
+        }
+        @keyframes zoomIn {
+            0% { transform: scale(0.5); opacity: 0; }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); opacity: 1; }
+        }
+        .result-box .icon-large {
+            font-size: 6rem;
+            margin-bottom: 20px;
+            animation: bounce 1s ease-in-out;
+        }
+        .result-box.win .icon-large {
+            filter: drop-shadow(0 0 20px gold);
+        }
+        .result-box h2 {
+            font-size: 2.2rem;
+            margin-bottom: 20px;
+            font-weight: bold;
+        }
+        .result-box.win h2 {
+            color: #28a745;
+        }
+        .result-box.lose h2 {
+            color: #dc3545;
+        }
+        .result-box.draw h2 {
+            color: #ffc107;
+        }
+        .result-info {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 15px;
+            margin: 20px 0;
+            text-align: left;
+        }
+        .result-info-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px solid #dee2e6;
+            font-size: 1.1rem;
+        }
+        .result-info-item:last-child {
+            border-bottom: none;
+        }
+        .result-info-label {
+            font-weight: bold;
+            color: #666;
+        }
+        .result-info-value {
+            color: #333;
+            font-weight: bold;
+        }
+        .result-reason {
+            font-size: 1.2rem;
+            color: #666;
+            margin: 15px 0;
+            font-style: italic;
+        }
+        .result-close-btn {
+            padding: 15px 40px;
+            font-size: 1.2rem;
+            background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            margin-top: 20px;
+            box-shadow: 0 4px 15px rgba(52, 152, 219, 0.4);
+        }
+        .result-close-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(52, 152, 219, 0.6);
+        }
 
         /* === MÀN HÌNH GAME === */
         #pvp-game-screen {
@@ -223,7 +599,7 @@
         #stats-bar { display: flex; justify-content: space-between; width: 500px; margin-bottom: 15px; font-size: 1.1rem; }
         .player-stat { 
             padding: 15px; 
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); 
+            background: linear-gradient(135deg, #3498db 0%, #2980b9 100%); 
             border-radius: 10px; 
             color: white;
             box-shadow: 0 4px 6px rgba(0,0,0,0.1);
@@ -235,7 +611,7 @@
             transform: scale(1.05);
         }
         #player1-stat { 
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); 
+            background: linear-gradient(135deg, #3498db 0%, #2980b9 100%); 
         }
         #player2-stat { 
             background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); 
@@ -283,10 +659,89 @@
             25% { transform: translateX(-5px); }
             75% { transform: translateX(5px); }
         }
-        #number-palette { display: flex; }
-        .number { width: 40px; height: 40px; border: 1px solid #555; margin: 5px; display: flex; justify-content: center; align-items: center; font-size: 20px; cursor: pointer; border-radius: 5px; }
-        #pvp-controls button { padding: 10px 15px; font-size: 1rem; margin: 0 10px; cursor: pointer; }
-        #surrender-btn { background-color: #dc3545; color: white; border: none; }
+        #number-palette { 
+            display: flex; 
+            gap: 8px;
+            justify-content: center;
+            margin: 20px 0;
+        }
+        .number { 
+            width: 50px; 
+            height: 50px; 
+            border: 2px solid #3498db; 
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+            font-size: 24px; 
+            font-weight: bold;
+            cursor: pointer; 
+            border-radius: 10px;
+            background: white;
+            color: #3498db;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        .number:hover {
+            background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);
+            color: white;
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(52, 152, 219, 0.4);
+        }
+        .number:active {
+            transform: translateY(-1px);
+            box-shadow: 0 2px 8px rgba(52, 152, 219, 0.4);
+        }
+        .number.erase {
+            background: #dc3545;
+            color: white;
+            border-color: #dc3545;
+            font-size: 18px;
+        }
+        .number.erase:hover {
+            background: #c82333;
+            border-color: #c82333;
+        }
+        
+        /* Các nút điều khiển */
+        #pvp-controls { 
+            display: flex; 
+            gap: 15px; 
+            justify-content: center;
+            margin: 20px 0;
+        }
+        #pvp-controls button { 
+            padding: 12px 30px; 
+            font-size: 1.1rem; 
+            cursor: pointer; 
+            border: none;
+            border-radius: 10px;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.2);
+        }
+        #pvp-controls button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        }
+        #pvp-controls button:active {
+            transform: translateY(0);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+        }
+        #check-btn { 
+            background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+            color: white;
+        }
+        #check-btn:hover {
+            background: linear-gradient(135deg, #218838 0%, #1aa179 100%);
+        }
+        #surrender-btn { 
+            background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);
+            color: white;
+        }
+        #surrender-btn:hover {
+            background: linear-gradient(135deg, #c82333 0%, #bd2130 100%);
+        }
+        
         #chat-area { width: 300px; background: #fff; box-shadow: 0 2px 5px rgba(0,0,0,0.1); border-radius: 5px; display: flex; flex-direction: column; height: 600px; }
         #chat-window { list-style-type: none; padding: 10px; margin: 0; flex-grow: 1; overflow-y: auto; }
         #chat-window li { padding: 5px 0; border-bottom: 1px solid #f0f0f0; }
@@ -305,7 +760,7 @@
             <h2>🔍 Đang tìm đối thủ...</h2>
             <div class="spinner"></div>
             <div class="match-status" id="match-status">Vui lòng chờ...</div>
-            <div style="font-size: 1.5rem; color: #667eea; margin-top: 15px; font-weight: bold;">
+            <div style="font-size: 1.5rem; color: #3498db; margin-top: 15px; font-weight: bold;">
                 <span id="waiting-time">00:00</span>
             </div>
             <button id="cancel-match-btn" style="margin-top: 20px; padding: 12px 30px; font-size: 1rem; background: #dc3545; color: white; border: none; border-radius: 8px; cursor: pointer;">Hủy tìm trận</button>
@@ -317,15 +772,66 @@
         <div class="countdown-number" id="countdown-number">3</div>
     </div>
     
+    <!-- Modal lời mời thách đấu -->
+    <div id="invite-modal">
+        <div class="invite-box">
+            <div class="icon">⚔️</div>
+            <h2>Lời Mời Thách Đấu!</h2>
+            <div class="challenger-name" id="challenger-name">Player123</div>
+            <div class="message">muốn thách đấu với bạn!<br>Bạn có chấp nhận không?</div>
+            <div class="invite-buttons">
+                <button class="accept-btn" id="accept-invite-btn">✓ Chấp Nhận</button>
+                <button class="decline-btn" id="decline-invite-btn">✗ Từ Chối</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Modal xác nhận đầu hàng -->
+    <div id="surrender-modal">
+        <div class="surrender-box">
+            <div class="icon">🏳️</div>
+            <h2>Xác Nhận Đầu Hàng?</h2>
+            <div class="message">Bạn có chắc chắn muốn đầu hàng?<br>Bạn sẽ thua trận này!</div>
+            <div class="surrender-buttons">
+                <button class="confirm-surrender-btn" id="confirm-surrender-btn">Đầu Hàng</button>
+                <button class="cancel-surrender-btn" id="cancel-surrender-btn">Tiếp Tục Chơi</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Modal kết quả trận đấu -->
+    <div id="result-modal">
+        <div class="result-box" id="result-box">
+            <div class="icon-large" id="result-icon">🏆</div>
+            <h2 id="result-title">Chúc mừng!</h2>
+            <div class="result-reason" id="result-reason">Bạn đã thắng!</div>
+            <div class="result-info">
+                <div class="result-info-item">
+                    <span class="result-info-label">🎯 Đối thủ:</span>
+                    <span class="result-info-value" id="result-opponent">Player</span>
+                </div>
+                <div class="result-info-item">
+                    <span class="result-info-label">⭐ Điểm của bạn:</span>
+                    <span class="result-info-value" id="result-score">1000</span>
+                </div>
+                <div class="result-info-item">
+                    <span class="result-info-label">❌ Số lần sai:</span>
+                    <span class="result-info-value" id="result-mistakes">0</span>
+                </div>
+            </div>
+            <button class="result-close-btn" id="result-close-btn">Quay lại Sảnh</button>
+        </div>
+    </div>
+    
     <div id="lobby-screen">
-        <h1>Thách đấu</h1>
+        <h1>⚔️ Thách đấu</h1>
         
         <div class="search-box">
             <input type="text" id="search-input" placeholder="Tìm người chơi...">
-            <button id="search-btn" disabled>Tìm</button>
+            <button id="search-btn" disabled>🔍 Tìm</button>
         </div>
         
-        <button id="find-random-btn">Ngẫu nhiên</button>
+        <button id="find-random-btn">🎲 Ngẫu nhiên</button>
 
         <ul id="player-list"></ul>
 

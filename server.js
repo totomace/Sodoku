@@ -112,6 +112,11 @@ setInterval(() => {
         const currentPlayer = (game.currentTurn === 1) ? game.p1 : game.p2;
         const opponent = (game.currentTurn === 1) ? game.p2 : game.p1;
         
+        // Debug log
+        if (game.turnTimeLeft % 5 === 0) {
+            console.log(`[${roomName}] Lượt ${game.currentTurn}, Thời gian còn: ${game.turnTimeLeft}s`);
+        }
+        
         // Gửi cập nhật timer
         io.to(roomName).emit('updateTurnTimer', { 
             turnTimeLeft: game.turnTimeLeft,
@@ -127,15 +132,16 @@ setInterval(() => {
             currentPlayer.mistakes++;
             currentPlayer.score = Math.max(0, currentPlayer.score - penalty);
             
-            // Thông báo
-            io.to(roomName).emit('turnTimeout', {
-                player: currentPlayer.username,
-                penalty: penalty,
-                newScore: currentPlayer.score
-            });
-            
             // Kiểm tra nếu hết điểm = THUA
             if (currentPlayer.score <= 0) {
+                // Thông báo timeout trước
+                io.to(roomName).emit('turnTimeout', {
+                    player: currentPlayer.username,
+                    penalty: penalty,
+                    newScore: currentPlayer.score,
+                    message: `${currentPlayer.username} hết thời gian!`
+                });
+                
                 // Lưu lịch sử
                 const db = readDB();
                 db.gameHistory.push({
@@ -181,7 +187,15 @@ setInterval(() => {
             game.turnTimeLeft = game.settings.turnTimeLimit; // Reset thời gian lượt mới
             game.lastTurnTime = now;
             
-            // Broadcast điểm mới
+            // 1. Thông báo timeout
+            io.to(roomName).emit('turnTimeout', {
+                player: currentPlayer.username,
+                penalty: penalty,
+                newScore: currentPlayer.score,
+                message: `${currentPlayer.username} hết thời gian!`
+            });
+            
+            // 2. Broadcast điểm mới
             io.to(roomName).emit('updateScores', {
                 p1Score: game.p1.score,
                 p2Score: game.p2.score,
@@ -189,7 +203,7 @@ setInterval(() => {
                 p2Mistakes: game.p2.mistakes
             });
             
-            // Thông báo chuyển lượt
+            // 3. Thông báo chuyển lượt
             io.to(roomName).emit('turnChanged', { 
                 currentTurn: game.currentTurn,
                 turnTimeLeft: game.turnTimeLeft
