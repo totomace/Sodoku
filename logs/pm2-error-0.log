@@ -1,0 +1,57 @@
+2025-11-08T00:33:10: ❌ Failed to connect Redis: Reached the max retries per request limit (which is 1). Refer to "maxRetriesPerRequest" option for details.
+2025-11-08T00:33:15: ❌ MongoDB connection error: connect ECONNREFUSED ::1:27017, connect ECONNREFUSED 127.0.0.1:27017
+2025-11-08T00:33:25: ❌ MongoDB connection error: connect ECONNREFUSED ::1:27017, connect ECONNREFUSED 127.0.0.1:27017
+2025-11-08T00:33:35: ❌ MongoDB connection error: connect ECONNREFUSED ::1:27017, connect ECONNREFUSED 127.0.0.1:27017
+2025-11-08T00:36:40: ❌ Failed to connect Redis: Reached the max retries per request limit (which is 1). Refer to "maxRetriesPerRequest" option for details.
+2025-11-08T00:36:45: ❌ MongoDB connection error: connect ECONNREFUSED ::1:27017, connect ECONNREFUSED 127.0.0.1:27017
+2025-11-08T00:36:55: ❌ MongoDB connection error: connect ECONNREFUSED ::1:27017, connect ECONNREFUSED 127.0.0.1:27017
+2025-11-08T00:37:05: ❌ MongoDB connection error: connect ECONNREFUSED ::1:27017, connect ECONNREFUSED 127.0.0.1:27017
+2025-11-08T00:41:10: ⚠️  MongoDB not connected, using fallback
+2025-11-08T00:41:13: ⚠️  MongoDB not connected, using fallback
+2025-11-08T00:43:42: ⚠️  MongoDB not connected, using fallback
+2025-11-08T00:43:48: ⚠️  MongoDB not connected, using fallback
+2025-11-08T00:43:56: ⚠️  PostgreSQL not connected, using fallback
+2025-11-08T00:44:46: ❌ Failed to connect Redis: Reached the max retries per request limit (which is 1). Refer to "maxRetriesPerRequest" option for details.
+2025-11-08T00:44:51: ❌ MongoDB connection error: connect ECONNREFUSED ::1:27017, connect ECONNREFUSED 127.0.0.1:27017
+2025-11-08T00:45:01: ❌ MongoDB connection error: connect ECONNREFUSED ::1:27017, connect ECONNREFUSED 127.0.0.1:27017
+2025-11-08T00:45:11: ❌ MongoDB connection error: connect ECONNREFUSED ::1:27017, connect ECONNREFUSED 127.0.0.1:27017
+2025-11-08T00:45:31: ⚠️  MongoDB not connected, using fallback
+2025-11-08T00:45:34: ⚠️  MongoDB not connected, using fallback
+2025-11-08T00:47:19: ⚠️  MongoDB not connected, using fallback
+2025-11-08T00:47:21: ⚠️  MongoDB not connected, using fallback
+2025-11-08T00:47:40: ⚠️  MongoDB not connected, using fallback
+2025-11-08T00:50:55: ❌ Failed to connect Redis: Reached the max retries per request limit (which is 1). Refer to "maxRetriesPerRequest" option for details.
+2025-11-08T00:51:00: ❌ MongoDB connection error: connect ECONNREFUSED ::1:27017, connect ECONNREFUSED 127.0.0.1:27017
+2025-11-08T00:51:10: ❌ MongoDB connection error: connect ECONNREFUSED ::1:27017, connect ECONNREFUSED 127.0.0.1:27017
+2025-11-08T00:51:20: ❌ MongoDB connection error: connect ECONNREFUSED ::1:27017, connect ECONNREFUSED 127.0.0.1:27017
+2025-11-08T00:51:36: ⚠️  MongoDB not connected, using fallback
+2025-11-08T00:52:03: ⚠️  MongoDB not connected, using fallback
+2025-11-08T00:52:21: ⚠️  MongoDB not connected, using fallback
+2025-11-08T00:59:17: ❌ Failed to connect Redis: Reached the max retries per request limit (which is 1). Refer to "maxRetriesPerRequest" option for details.
+2025-11-08T00:59:22: ❌ MongoDB connection error: connect ECONNREFUSED ::1:27017, connect ECONNREFUSED 127.0.0.1:27017
+2025-11-08T00:59:32: ❌ MongoDB connection error: connect ECONNREFUSED ::1:27017, connect ECONNREFUSED 127.0.0.1:27017
+2025-11-08T00:59:42: ❌ MongoDB connection error: connect ECONNREFUSED ::1:27017, connect ECONNREFUSED 127.0.0.1:27017
+2025-11-08T01:00:07: ⚠️  MongoDB not connected, using fallback
+2025-11-08T01:00:31: ⚠️  MongoDB not connected, using fallback
+2025-11-08T01:02:33: ❌ Failed to connect Redis: Reached the max retries per request limit (which is 1). Refer to "maxRetriesPerRequest" option for details.
+2025-11-08T01:02:39: ❌ MongoDB connection error: connect ECONNREFUSED ::1:27017, connect ECONNREFUSED 127.0.0.1:27017
+2025-11-08T01:02:49: ❌ MongoDB connection error: connect ECONNREFUSED ::1:27017, connect ECONNREFUSED 127.0.0.1:27017
+2025-11-08T01:02:59: ❌ MongoDB connection error: connect ECONNREFUSED ::1:27017, connect ECONNREFUSED 127.0.0.1:27017
+2025-11-08T01:04:10: ⚠️  MongoDB not connected, using fallback
+2025-11-08T01:04:12: ⚠️  MongoDB not connected, using fallback
+You have triggered an unhandledRejection, you may have forgotten to catch a Promise rejection:
+TypeError: Cannot read properties of undefined (reading 'length')
+    at createGame (C:\Data\Github\Sodoku\src\services\socket.service.js:281:69)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async Object.handleFindMatch (C:\Data\Github\Sodoku\src\services\socket.service.js:223:13)
+2025-11-08T01:05:50: ❌ Failed to connect Redis: Reached the max retries per request limit (which is 1). Refer to "maxRetriesPerRequest" option for details.
+2025-11-08T01:05:55: ❌ MongoDB connection error: connect ECONNREFUSED ::1:27017, connect ECONNREFUSED 127.0.0.1:27017
+2025-11-08T01:06:05: ❌ MongoDB connection error: connect ECONNREFUSED ::1:27017, connect ECONNREFUSED 127.0.0.1:27017
+2025-11-08T01:06:15: ❌ MongoDB connection error: connect ECONNREFUSED ::1:27017, connect ECONNREFUSED 127.0.0.1:27017
+2025-11-08T01:07:00: ⚠️  MongoDB not connected, using fallback
+2025-11-08T01:07:28: ⚠️  MongoDB not connected, using fallback
+You have triggered an unhandledRejection, you may have forgotten to catch a Promise rejection:
+TypeError: Cannot read properties of undefined (reading 'puzzle')
+    at createGame (C:\Data\Github\Sodoku\src\services\socket.service.js:309:29)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async Object.handleFindMatch (C:\Data\Github\Sodoku\src\services\socket.service.js:223:13)

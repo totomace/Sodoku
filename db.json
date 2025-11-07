@@ -93,6 +93,26 @@
       "result": "lose",
       "reason": "Đầu hàng",
       "date": "2025-11-06T03:48:56.127Z"
+    },
+    {
+      "username": "client01",
+      "mode": "PvP",
+      "score": 1000,
+      "mistakes": 0,
+      "opponent": "client02",
+      "result": "win",
+      "reason": "Đối thủ đầu hàng",
+      "date": "2025-11-07T18:11:59.462Z"
+    },
+    {
+      "username": "client02",
+      "mode": "PvP",
+      "score": 1000,
+      "mistakes": 0,
+      "opponent": "client01",
+      "result": "lose",
+      "reason": "Đầu hàng",
+      "date": "2025-11-07T18:11:59.462Z"
     }
   ]
 }

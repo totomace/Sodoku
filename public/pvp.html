@@ -305,6 +305,10 @@
             <h2>🔍 Đang tìm đối thủ...</h2>
             <div class="spinner"></div>
             <div class="match-status" id="match-status">Vui lòng chờ...</div>
+            <div style="font-size: 1.5rem; color: #667eea; margin-top: 15px; font-weight: bold;">
+                <span id="waiting-time">00:00</span>
+            </div>
+            <button id="cancel-match-btn" style="margin-top: 20px; padding: 12px 30px; font-size: 1rem; background: #dc3545; color: white; border: none; border-radius: 8px; cursor: pointer;">Hủy tìm trận</button>
         </div>
     </div>
     
@@ -366,7 +370,7 @@
     </div>
 
     <script src="/socket.io/socket.io.js"></script>
-    <script src="/js/pvp.js"></script>
+    <script src="/js/pvp.js?v=2"></script>
 
 </body>
 </html>

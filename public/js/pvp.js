@@ -18,7 +18,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const countdownOverlay = document.getElementById('countdown-overlay');
     const countdownNumber = document.getElementById('countdown-number');
     const findRandomBtn = document.getElementById('find-random-btn');
+    const cancelMatchBtn = document.getElementById('cancel-match-btn');
     const waitingMessage = document.getElementById('waiting-message');
+    const waitingTimeEl = document.getElementById('waiting-time');
     const playerList = document.getElementById('player-list'); 
     const searchInput = document.getElementById('search-input');
     const boardElement = document.getElementById('shared-board'), paletteElement = document.getElementById('number-palette');
@@ -33,6 +35,8 @@ document.addEventListener('DOMContentLoaded', () => {
     let selectedCell = null, puzzle = [], myBoard = [], solution = [], myPlayerNum = 0;
     let gameStartTime = 0, myScore = 1000, opponentScore = 1000, myMistakes = 0, opponentMistakes = 0;
     let currentTurn = 1, turnTimeLeft = 30; // Thời gian suy nghĩ mỗi lượt
+    let waitingStartTime = 0; // Thời gian bắt đầu chờ
+    let waitingTimer = null; // Timer cho thời gian chờ
 
     // === HÀM VẼ VÀ TIỆN ÍCH ===
     
@@ -254,6 +258,22 @@ document.addEventListener('DOMContentLoaded', () => {
         matchOverlay.classList.add('show');
         matchStatus.textContent = 'Đang tìm đối thủ xứng tầm...';
         
+        // Bắt đầu đếm thời gian chờ
+        waitingStartTime = Date.now();
+        waitingTimeEl.textContent = '00:00';
+        
+        console.log('Bắt đầu đếm thời gian chờ...', waitingTimeEl);
+        
+        // Cập nhật thời gian mỗi giây
+        waitingTimer = setInterval(() => {
+            const elapsed = Math.floor((Date.now() - waitingStartTime) / 1000);
+            const mins = Math.floor(elapsed / 60);
+            const secs = elapsed % 60;
+            const timeText = `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+            waitingTimeEl.textContent = timeText;
+            console.log('Thời gian chờ:', timeText);
+        }, 1000);
+        
         // Lấy settings từ localStorage (hoặc dùng mặc định)
         const settings = {
             turnTimeLimit: parseInt(localStorage.getItem('turnTimeLimit')) || 30,
@@ -262,6 +282,21 @@ document.addEventListener('DOMContentLoaded', () => {
         };
         
         socket.emit('findMatch', settings);
+    });
+    
+    // Nút hủy tìm trận
+    cancelMatchBtn.addEventListener('click', () => {
+        socket.emit('cancelMatch');
+        
+        // Dừng timer
+        if (waitingTimer) {
+            clearInterval(waitingTimer);
+            waitingTimer = null;
+        }
+        
+        matchOverlay.classList.remove('show');
+        findRandomBtn.disabled = false;
+        addChatMessage({ isSystem: true, message: 'Đã hủy tìm trận.' });
     });
     
     chatForm.addEventListener('submit', (e) => {
@@ -308,6 +343,12 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     socket.on('matchFound', (data) => {
+        // Dừng timer chờ
+        if (waitingTimer) {
+            clearInterval(waitingTimer);
+            waitingTimer = null;
+        }
+        
         // Cập nhật status
         matchStatus.innerHTML = `✅ Đã tìm thấy trận!<br><span style="color: #667eea;">Đối thủ: ${data.p1.username === myUsername ? data.p2.username : data.p1.username}</span>`;
         

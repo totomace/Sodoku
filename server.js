@@ -270,6 +270,15 @@ io.on('connection', (socket) => {
         }
     });
 
+    // 2.5. User hủy tìm trận
+    socket.on('cancelMatch', () => {
+        if (connectedUsers[socket.id] && connectedUsers[socket.id].status === 'waiting') {
+            connectedUsers[socket.id].status = 'online';
+            broadcastUserList();
+            addChatMessage(socket, { isSystem: true, message: 'Đã hủy tìm trận.' });
+        }
+    });
+
     // 3. User mời riêng
     socket.on('privateInvite', (data) => {
         if (!socket.username) return;
