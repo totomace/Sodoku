@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cài Đặt</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 20px;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .container {
+            max-width: 600px;
+            width: 100%;
+            background: #fff;
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+        h1 {
+            text-align: center;
+            color: #667eea;
+            margin-bottom: 30px;
+        }
+        .setting-group {
+            margin-bottom: 30px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 10px;
+        }
+        .setting-group h3 {
+            margin-top: 0;
+            color: #333;
+            border-bottom: 2px solid #667eea;
+            padding-bottom: 10px;
+        }
+        .time-options {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin-top: 15px;
+        }
+        .time-btn {
+            padding: 15px;
+            border: 2px solid #ddd;
+            background: white;
+            border-radius: 8px;
+            cursor: pointer;
+            text-align: center;
+            font-size: 1rem;
+            transition: all 0.3s;
+        }
+        .time-btn:hover {
+            border-color: #667eea;
+            transform: translateY(-2px);
+        }
+        .time-btn.active {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-color: #667eea;
+            font-weight: bold;
+        }
+        .penalty-group {
+            margin-top: 15px;
+        }
+        .penalty-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #555;
+            font-weight: bold;
+        }
+        .penalty-group input {
+            width: 100%;
+            padding: 10px;
+            border: 2px solid #ddd;
+            border-radius: 5px;
+            font-size: 1rem;
+        }
+        .info-text {
+            color: #666;
+            font-size: 0.9rem;
+            margin-top: 10px;
+            font-style: italic;
+        }
+        .button-group {
+            display: flex;
+            gap: 15px;
+            margin-top: 30px;
+        }
+        .btn {
+            flex: 1;
+            padding: 15px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .btn-save {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        .btn-save:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+        .btn-back {
+            background: #6c757d;
+            color: white;
+        }
+        .btn-back:hover {
+            background: #5a6268;
+        }
+        .saved-message {
+            display: none;
+            padding: 15px;
+            background: #28a745;
+            color: white;
+            border-radius: 8px;
+            text-align: center;
+            margin-top: 15px;
+            animation: fadeIn 0.5s;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>⚙️ Cài Đặt PvP</h1>
+        
+        <div class="setting-group">
+            <h3>⏱️ Thời gian mỗi lượt</h3>
+            <p class="info-text">Chọn thời gian suy nghĩ cho mỗi nước đi:</p>
+            <div class="time-options">
+                <div class="time-btn" data-time="10">10 giây</div>
+                <div class="time-btn" data-time="20">20 giây</div>
+                <div class="time-btn active" data-time="30">30 giây</div>
+                <div class="time-btn" data-time="60">1 phút</div>
+                <div class="time-btn" data-time="120">2 phút</div>
+                <div class="time-btn" data-time="180">3 phút</div>
+            </div>
+        </div>
+        
+        <div class="setting-group">
+            <h3>💰 Phạt điểm</h3>
+            <div class="penalty-group">
+                <label>Trừ điểm khi hết thời gian lượt:</label>
+                <input type="number" id="timeout-penalty" value="50" min="0" max="500" step="10">
+                <p class="info-text">Nếu hết thời gian trong lượt, sẽ mất lượt và bị trừ điểm này</p>
+            </div>
+            <div class="penalty-group">
+                <label>Trừ điểm khi kiểm tra sai:</label>
+                <input type="number" id="mistake-penalty" value="100" min="0" max="500" step="10">
+                <p class="info-text">Mỗi lần kiểm tra có lỗi sẽ bị trừ điểm này</p>
+            </div>
+        </div>
+
+        <div id="saved-message" class="saved-message">
+            ✅ Đã lưu cài đặt thành công!
+        </div>
+
+        <div class="button-group">
+            <button class="btn btn-back" onclick="location.href='/index.html'">◀ Quay lại</button>
+            <button class="btn btn-save" id="save-btn">💾 Lưu cài đặt</button>
+        </div>
+    </div>
+
+    <script>
+        // Load settings từ localStorage
+        const savedTurnTime = localStorage.getItem('turnTimeLimit') || '30';
+        const savedTimeoutPenalty = localStorage.getItem('timeoutPenalty') || '50';
+        const savedMistakePenalty = localStorage.getItem('mistakePenalty') || '100';
+
+        // Set active button
+        document.querySelectorAll('.time-btn').forEach(btn => {
+            if (btn.dataset.time === savedTurnTime) {
+                btn.classList.add('active');
+            } else {
+                btn.classList.remove('active');
+            }
+        });
+
+        // Set penalty values
+        document.getElementById('timeout-penalty').value = savedTimeoutPenalty;
+        document.getElementById('mistake-penalty').value = savedMistakePenalty;
+
+        // Handle time button click
+        document.querySelectorAll('.time-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.time-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+            });
+        });
+
+        // Save settings
+        document.getElementById('save-btn').addEventListener('click', () => {
+            const selectedTime = document.querySelector('.time-btn.active').dataset.time;
+            const timeoutPenalty = document.getElementById('timeout-penalty').value;
+            const mistakePenalty = document.getElementById('mistake-penalty').value;
+
+            localStorage.setItem('turnTimeLimit', selectedTime);
+            localStorage.setItem('timeoutPenalty', timeoutPenalty);
+            localStorage.setItem('mistakePenalty', mistakePenalty);
+
+            const message = document.getElementById('saved-message');
+            message.style.display = 'block';
+            setTimeout(() => {
+                message.style.display = 'none';
+            }, 3000);
+        });
+    </script>
+</body>
+</html>
