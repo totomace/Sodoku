@@ -370,6 +370,26 @@
       "result": "lose",
       "reason": "Đầu hàng",
       "date": "2025-11-08T03:39:00.367Z"
+    },
+    {
+      "username": "abc",
+      "mode": "PvP",
+      "score": 50,
+      "mistakes": 19,
+      "opponent": "client01",
+      "result": "win",
+      "reason": "Đối thủ hết điểm",
+      "date": "2025-11-08T03:59:02.089Z"
+    },
+    {
+      "username": "client01",
+      "mode": "PvP",
+      "score": 0,
+      "mistakes": 20,
+      "opponent": "abc",
+      "result": "lose",
+      "reason": "Hết điểm",
+      "date": "2025-11-08T03:59:02.089Z"
     }
   ]
 }

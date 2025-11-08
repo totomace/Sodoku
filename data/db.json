@@ -29,6 +29,16 @@
       "id": "1762537422853",
       "username": "test2",
       "password": "$2b$10$WaQ5TckghrNx76WtAT7Av.7UFex0jysZRmlEMS2Ziqv3zEyPvB0cS"
+    },
+    {
+      "id": "1762537422854",
+      "username": "client01",
+      "password": "$2b$10$WaQ5TckghrNx76WtAT7Av.7UFex0jysZRmlEMS2Ziqv3zEyPvB0cS"
+    },
+    {
+      "id": "1762537422855",
+      "username": "client02",
+      "password": "$2b$10$WaQ5TckghrNx76WtAT7Av.7UFex0jysZRmlEMS2Ziqv3zEyPvB0cS"
     }
   ],
   "gameHistory": [

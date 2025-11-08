@@ -924,6 +924,11 @@ document.addEventListener('DOMContentLoaded', () => {
             currentTurn = 1;
             turnTimeLeft = data.turnTimeLeft || 30;
             
+            // ✅ Enable lại nút surrender cho game mới
+            surrenderBtn.disabled = false;
+            surrenderBtn.style.opacity = '1';
+            surrenderBtn.style.cursor = 'pointer';
+            
             if(data.p1.username === myUsername) {
                 p1Name.textContent = `Bạn (${data.p1.username})`;
                 p2Name.textContent = data.p2.username;
@@ -1002,6 +1007,11 @@ document.addEventListener('DOMContentLoaded', () => {
         myPlayerNum = (data.p1.username === myUsername) ? 1 : 2;
         currentTurn = 1; // Player 1 đi trước
         turnTimeLeft = data.turnTimeLeft || 30; // Thời gian lượt đầu
+        
+        // ✅ Enable lại nút surrender cho game mới
+        surrenderBtn.disabled = false;
+        surrenderBtn.style.opacity = '1';
+        surrenderBtn.style.cursor = 'pointer';
         
         if(data.p1.username === myUsername) {
             p1Name.textContent = `Bạn (${data.p1.username})`;
@@ -1118,8 +1128,23 @@ document.addEventListener('DOMContentLoaded', () => {
         
         if (currentTurn === myPlayerNum) {
             addChatMessage({ isSystem: true, message: '🎮 Đến lượt bạn!' });
+            // ✅ Enable buttons khi đến lượt mình
+            checkBtn.disabled = false;
+            surrenderBtn.disabled = false;
+            checkBtn.style.opacity = '1';
+            surrenderBtn.style.opacity = '1';
+            checkBtn.style.cursor = 'pointer';
+            surrenderBtn.style.cursor = 'pointer';
         } else {
             addChatMessage({ isSystem: true, message: '⏸️ Đối thủ đang suy nghĩ...' });
+            // ✅ Disable buttons khi lượt đối thủ (nhưng vẫn cho surrender)
+            checkBtn.disabled = true;
+            checkBtn.style.opacity = '0.5';
+            checkBtn.style.cursor = 'not-allowed';
+            // Surrender vẫn enable (có thể đầu hàng bất cứ lúc nào)
+            surrenderBtn.disabled = false;
+            surrenderBtn.style.opacity = '1';
+            surrenderBtn.style.cursor = 'pointer';
         }
         
         updateScoreDisplay();

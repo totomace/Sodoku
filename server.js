@@ -1,25 +1,79 @@
+require('dotenv').config();
 const express = require('express');
 const path = require('path');
 const fs = require('fs'); 
 const bcrypt = require('bcrypt');
 const http = require('http'); 
-const { Server } = require("socket.io"); 
+const { Server } = require("socket.io");
+const postgres = require('./postgres');
+const redisClient = require('./redis-client');
+const antiCheat = require('./anti-cheat');
+const queueManager = require('./queue-manager');
+const rateLimit = require('express-rate-limit');
+const helmet = require('helmet');
+const cors = require('cors');
+const compression = require('compression');
+const morgan = require('morgan');
 
 const app = express();
 const server = http.createServer(app); 
-const io = new Server(server); 
-
-const PORT = 3000;
+const io = new Server(server, {
+    cors: {
+        origin: process.env.ALLOWED_ORIGINS || "*",
+        methods: ["GET", "POST"]
+    },
+    pingTimeout: 60000,
+    pingInterval: 25000,
+    maxHttpBufferSize: 1e6, // 1MB
+    transports: ['websocket', 'polling']
+});const PORT = 3000;
 const DB_FILE = path.join(__dirname, 'db.json');
 const PUZZLE_FILE = path.join(__dirname, 'puzzles.json'); 
-const STARTING_SCORE = 1000; // Điểm khởi đầu
-const DEFAULT_TURN_TIME = 30; // Thời gian mỗi lượt mặc định (giây)
-const DEFAULT_TIMEOUT_PENALTY = 50; // Phạt khi hết thời gian lượt
-const DEFAULT_MISTAKE_PENALTY = 100; // Phạt khi kiểm tra sai
+const STARTING_SCORE = 1000;
+const DEFAULT_TURN_TIME = 30;
+const DEFAULT_TIMEOUT_PENALTY = 50;
+const DEFAULT_MISTAKE_PENALTY = 100;
 
-// --- Middlewares ---
-app.use(express.json()); 
-app.use(express.static(path.join(__dirname, 'public'), { index: false }));
+// --- Security Middlewares ---
+app.use(helmet({
+    contentSecurityPolicy: false, // Tắt CSP cho game
+    crossOriginEmbedderPolicy: false
+}));
+app.use(cors());
+app.use(compression()); // Nén response
+app.use(morgan('combined')); // Logging
+
+// Rate limiting cho API
+const apiLimiter = rateLimit({
+    windowMs: 15 * 60 * 1000, // 15 phút
+    max: 100, // Tối đa 100 requests
+    message: { success: false, message: 'Quá nhiều requests, vui lòng thử lại sau' },
+    standardHeaders: true,
+    legacyHeaders: false,
+});
+
+// Rate limiting cho register (chống spam account)
+const registerLimiter = rateLimit({
+    windowMs: 60 * 60 * 1000, // 1 giờ
+    max: process.env.NODE_ENV === 'test' ? 10000 : 5, // Test mode: 10000, Production: 5
+    message: { success: false, message: 'Đã đăng ký quá nhiều tài khoản, vui lòng thử lại sau 1 giờ' },
+    skipSuccessfulRequests: true
+});
+
+// Rate limiting cho login (chống brute force)
+const loginLimiter = rateLimit({
+    windowMs: 15 * 60 * 1000, // 15 phút
+    max: process.env.NODE_ENV === 'test' ? 10000 : 10, // Test mode: 10000, Production: 10
+    message: { success: false, message: 'Đăng nhập thất bại quá nhiều, vui lòng thử lại sau 15 phút' },
+    skipSuccessfulRequests: true
+});
+
+app.use(express.json({ limit: '1mb' })); // Giới hạn request body
+app.use(express.static(path.join(__dirname, 'public'), { 
+    index: false,
+    maxAge: '1d', // Cache static files
+    etag: true
+}));
 
 // === CÁC HÀM HỖ TRỢ (Phải nằm ngoài) ===
 function readDB() {
@@ -89,12 +143,125 @@ function broadcastUserList() {
     io.emit('updateUserList', userList);
 }
 
-// === API HTTP (Đầy đủ) ===
-app.post('/api/register', async (req, res) => { const { username, password } = req.body; if (!username || !password) return res.status(400).json({ success: false, message: 'Vui lòng nhập đủ thông tin' }); const db = readDB(); if (db.users.find(user => user.username === username)) return res.status(400).json({ success: false, message: 'Tên đăng nhập đã tồn tại' }); const hashedPassword = await bcrypt.hash(password, 10); const newUser = { id: Date.now().toString(), username, password: hashedPassword }; db.users.push(newUser); writeDB(db); res.status(201).json({ success: true, message: 'Đăng ký thành công' }); });
-app.post('/api/login', async (req, res) => { const { username, password } = req.body; if (!username || !password) return res.status(400).json({ success: false, message: 'Vui lòng nhập đủ thông tin' }); const db = readDB(); const user = db.users.find(u => u.username === username); if (!user) return res.status(400).json({ success: false, message: 'Tên đăng nhập hoặc mật khẩu sai' }); const isMatch = await bcrypt.compare(password, user.password); if (isMatch) res.status(200).json({ success: true, message: 'Đăng nhập thành công' }); else res.status(400).json({ success: false, message: 'Tên đăng nhập hoặc mật khẩu sai' }); });
-app.post('/api/save-game', (req, res) => { const { username, mode, score } = req.body; if (!username || !mode || score === undefined) return res.status(400).json({ success: false, message: 'Thiếu thông tin game' }); const db = readDB(); const newGame = { username: username, mode: mode, score: score, date: new Date().toISOString() }; db.gameHistory.push(newGame); writeDB(db); res.status(201).json({ success: true, message: 'Đã lưu kết quả' }); });
-app.get('/api/history/:username', (req, res) => { const { username } = req.params; const db = readDB(); const userHistory = db.gameHistory.filter(game => game.username.toLowerCase() === username.toLowerCase()); res.status(200).json({ success: true, data: userHistory }); });
+// === API HTTP với Rate Limiting ===
+app.post('/api/register', registerLimiter, async (req, res) => { 
+    const { username, password } = req.body; 
+    
+    // Validate input
+    if (!username || !password) return res.status(400).json({ success: false, message: 'Vui lòng nhập đủ thông tin' });
+    if (username.length < 3 || username.length > 20) return res.status(400).json({ success: false, message: 'Username phải từ 3-20 ký tự' });
+    if (password.length < 6) return res.status(400).json({ success: false, message: 'Mật khẩu phải ít nhất 6 ký tự' });
+    if (!/^[a-zA-Z0-9_]+$/.test(username)) return res.status(400).json({ success: false, message: 'Username chỉ được chứa chữ, số và _' }); 
+    
+    try {
+        // Kiểm tra user đã tồn tại
+        const existingUser = await postgres.findUser(username);
+        if (existingUser) return res.status(400).json({ success: false, message: 'Tên đăng nhập đã tồn tại' });
+        
+        // Thêm vào queue thay vì gọi trực tiếp database
+        const hashedPassword = await bcrypt.hash(password, 10);
+        const job = await queueManager.addRegistration(username, hashedPassword);
+        
+        // Trả về ngay lập tức (không đợi job hoàn thành)
+        res.status(202).json({ 
+            success: true, 
+            message: 'Đăng ký đang được xử lý',
+            jobId: job.id 
+        });
+    } catch (error) {
+        console.error('Lỗi đăng ký:', error);
+        res.status(500).json({ success: false, message: 'Lỗi server' });
+    }
+});
+app.post('/api/login', loginLimiter, async (req, res) => { 
+    const { username, password } = req.body; 
+    if (!username || !password) return res.status(400).json({ success: false, message: 'Vui lòng nhập đủ thông tin' }); 
+    
+    try {
+        const user = await postgres.findUser(username);
+        if (!user) return res.status(400).json({ success: false, message: 'Tên đăng nhập hoặc mật khẩu sai' }); 
+        
+        const isMatch = await bcrypt.compare(password, user.password); 
+        if (isMatch) res.status(200).json({ success: true, message: 'Đăng nhập thành công' }); 
+        else res.status(400).json({ success: false, message: 'Tên đăng nhập hoặc mật khẩu sai' }); 
+    } catch (error) {
+        console.error('Lỗi đăng nhập:', error);
+        res.status(500).json({ success: false, message: 'Lỗi server' });
+    }
+});
+app.post('/api/save-game', apiLimiter, async (req, res) => { 
+    const { username, mode, score, mistakes, opponent, result, reason } = req.body; 
+    if (!username || !mode || score === undefined) return res.status(400).json({ success: false, message: 'Thiếu thông tin game' }); 
+    
+    try {
+        await postgres.addGameHistory({ username, mode, score, mistakes: mistakes || 0, opponent, result, reason });
+        res.status(201).json({ success: true, message: 'Đã lưu kết quả' }); 
+    } catch (error) {
+        console.error('Lỗi lưu game:', error);
+        res.status(500).json({ success: false, message: 'Lỗi server' });
+    }
+});
+app.get('/api/history/:username', apiLimiter, async (req, res) => { 
+    const { username } = req.params; 
+    
+    try {
+        const userHistory = await postgres.getGameHistory(username);
+        res.status(200).json({ success: true, data: userHistory }); 
+    } catch (error) {
+        console.error('Lỗi lấy lịch sử:', error);
+        res.status(500).json({ success: false, message: 'Lỗi server' });
+    }
+});
 app.get('/', (req, res) => { res.sendFile(path.join(__dirname, 'public', 'splash.html')); });
+
+// Queue stats endpoint
+app.get('/api/queue/stats', async (req, res) => {
+    try {
+        const stats = await queueManager.getQueueStats();
+        res.status(200).json({ success: true, data: stats });
+    } catch (error) {
+        console.error('Lỗi lấy queue stats:', error);
+        res.status(500).json({ success: false, message: 'Lỗi server' });
+    }
+});
+
+// Health check endpoint
+app.get('/health', async (req, res) => {
+    try {
+        // Check PostgreSQL
+        await postgres.pool.query('SELECT 1');
+        
+        // Get queue stats
+        const queueStats = await queueManager.getQueueStats();
+        
+        res.status(200).json({
+            status: 'healthy',
+            timestamp: new Date().toISOString(),
+            uptime: process.uptime(),
+            memory: process.memoryUsage(),
+            connections: Object.keys(connectedUsers).length,
+            activeGames: Object.keys(activeGames).length,
+            database: 'connected',
+            redis: 'connected',
+            queue: queueStats
+        });
+    } catch (error) {
+        res.status(503).json({
+            status: 'unhealthy',
+            error: error.message
+        });
+    }
+});
+
+// Stats endpoint
+app.get('/api/stats', apiLimiter, (req, res) => {
+    res.json({
+        onlineUsers: Object.keys(connectedUsers).length,
+        activeGames: Object.keys(activeGames).length,
+        publicRooms: publicRooms.length,
+        uptime: Math.floor(process.uptime())
+    });
+});
 
 // === LOGIC GLOBAL (Timer, Lists) ===
 const allPuzzles = readPuzzles(); 
@@ -240,28 +407,26 @@ setInterval(() => {
                 });
                 
                 // Lưu lịch sử
-                const db = readDB();
-                db.gameHistory.push({
-                    username: opponent.username,
-                    mode: 'PvP',
-                    score: opponent.score,
-                    mistakes: opponent.mistakes,
-                    opponent: currentPlayer.username,
-                    result: 'win',
-                    reason: 'Đối thủ hết điểm',
-                    date: new Date().toISOString()
-                });
-                db.gameHistory.push({
-                    username: currentPlayer.username,
-                    mode: 'PvP',
-                    score: 0,
-                    mistakes: currentPlayer.mistakes,
-                    opponent: opponent.username,
-                    result: 'lose',
-                    reason: 'Hết điểm',
-                    date: new Date().toISOString()
-                });
-                writeDB(db);
+                (async () => {
+                    await postgres.addGameHistory({
+                        username: opponent.username,
+                        mode: 'PvP',
+                        score: opponent.score,
+                        mistakes: opponent.mistakes,
+                        opponent: currentPlayer.username,
+                        result: 'win',
+                        reason: 'Đối thủ hết điểm'
+                    });
+                    await postgres.addGameHistory({
+                        username: currentPlayer.username,
+                        mode: 'PvP',
+                        score: 0,
+                        mistakes: currentPlayer.mistakes,
+                        opponent: opponent.username,
+                        result: 'lose',
+                        reason: 'Hết điểm'
+                    });
+                })().catch(err => console.error('Lỗi lưu game history:', err));
                 
                 io.to(roomName).emit('gameResult', { 
                     winner: opponent.username, 
@@ -312,13 +477,83 @@ setInterval(() => {
 
 // === LOGIC SOCKET.IO (KHỐI CHÍNH) ===
 // TẤT CẢ socket.on(...) PHẢI NẰM BÊN TRONG KHỐI NÀY
+// Rate limiting cho socket events
+const socketRateLimits = new Map();
+
+function checkSocketRateLimit(socketId, event, maxPerMinute = 60) {
+    const key = `${socketId}:${event}`;
+    const now = Date.now();
+    
+    if (!socketRateLimits.has(key)) {
+        socketRateLimits.set(key, { count: 1, resetTime: now + 60000 });
+        return true;
+    }
+    
+    const limit = socketRateLimits.get(key);
+    
+    if (now > limit.resetTime) {
+        limit.count = 1;
+        limit.resetTime = now + 60000;
+        return true;
+    }
+    
+    if (limit.count >= maxPerMinute) {
+        return false;
+    }
+    
+    limit.count++;
+    return true;
+}
+
+// Cleanup rate limit map mỗi 5 phút
+setInterval(() => {
+    const now = Date.now();
+    for (const [key, limit] of socketRateLimits.entries()) {
+        if (now > limit.resetTime) {
+            socketRateLimits.delete(key);
+        }
+    }
+}, 5 * 60 * 1000);
+
 io.on('connection', (socket) => {
     console.log(`Một người vừa kết nối: ${socket.id}`);
     
+    // Giới hạn số kết nối từ 1 IP
+    const clientIp = socket.handshake.address;
+    const connectionsFromIp = Object.values(io.sockets.sockets)
+        .filter(s => s.handshake.address === clientIp).length;
+    
+    if (connectionsFromIp > 10) {
+        console.log(`⚠️ Quá nhiều kết nối từ IP ${clientIp}`);
+        socket.emit('error', { message: 'Quá nhiều kết nối từ IP này' });
+        socket.disconnect(true);
+        return;
+    }
+    
     // 1. User đăng ký tên
-    socket.on('registerUser', (username) => {
+    socket.on('registerUser', async (username) => {
+        if (!checkSocketRateLimit(socket.id, 'registerUser', 5)) {
+            socket.emit('error', { message: 'Quá nhiều requests, vui lòng chờ' });
+            return;
+        }
+        
+        // Validate username
+        if (!username || typeof username !== 'string' || username.length < 3 || username.length > 20) {
+            socket.emit('error', { message: 'Username không hợp lệ' });
+            return;
+        }
+        
+        if (!/^[a-zA-Z0-9_]+$/.test(username)) {
+            socket.emit('error', { message: 'Username chỉ được chứa chữ, số và _' });
+            return;
+        }
+        
         socket.username = username;
         connectedUsers[socket.id] = { username: username, status: 'online' };
+        
+        // Lưu user online vào Redis
+        await redisClient.setUserOnline(username, socket.id);
+        
         broadcastUserList(); 
     });
 
@@ -500,10 +735,46 @@ io.on('connection', (socket) => {
     });
 
     // 6. User điền số
-    socket.on('makeMove', (data) => {
+    socket.on('makeMove', async (data) => {
+        if (!checkSocketRateLimit(socket.id, 'makeMove', 120)) {
+            socket.emit('error', { message: 'Quá nhiều nước đi, vui lòng chờ' });
+            return;
+        }
+        
+        // Anti-cheat: Kiểm tra tốc độ đi nước
+        if (!antiCheat.checkMoveSpeed(socket.id, Date.now())) {
+            socket.emit('error', { message: 'Phát hiện hành vi bất thường. Bạn đã bị cấm tạm thời.' });
+            socket.disconnect(true);
+            antiCheat.scheduleBanRemoval(socket.id);
+            return;
+        }
+        
+        // Kiểm tra nếu user đã bị ban
+        if (antiCheat.isBanned(socket.id)) {
+            socket.emit('error', { message: 'Bạn đã bị cấm do hành vi gian lận' });
+            socket.disconnect(true);
+            return;
+        }
+        
         const gameRoom = getSocketRoom(socket);
         if (!gameRoom || !activeGames[gameRoom]) return;
         const game = activeGames[gameRoom];
+        
+        // Validate move data
+        if (!data || typeof data.row !== 'number' || typeof data.col !== 'number' || typeof data.num !== 'number') {
+            socket.emit('error', { message: 'Dữ liệu nước đi không hợp lệ' });
+            return;
+        }
+        
+        if (data.row < 0 || data.row > 8 || data.col < 0 || data.col > 8) {
+            socket.emit('error', { message: 'Vị trí không hợp lệ' });
+            return;
+        }
+        
+        if (data.num < 0 || data.num > 9) {
+            socket.emit('error', { message: 'Số không hợp lệ' });
+            return;
+        }
         
         // Kiểm tra xem có phải lượt của người này không
         const playerNum = (game.p1.id === socket.id) ? 1 : 2;
@@ -515,6 +786,28 @@ io.on('connection', (socket) => {
         // Cập nhật bảng
         game.boardState[data.row][data.col] = data.num;
         socket.to(gameRoom).emit('opponentMove', data);
+        
+        // Lưu nước đi vào Redis
+        const move = {
+            player: socket.username,
+            playerNum: playerNum,
+            row: data.row,
+            col: data.col,
+            num: data.num,
+            timestamp: Date.now()
+        };
+        await redisClient.saveMoveHistory(gameRoom, move);
+        
+        // Lưu trạng thái game vào Redis
+        await redisClient.saveGameState(gameRoom, {
+            boardState: game.boardState,
+            p1Score: game.p1.score,
+            p2Score: game.p2.score,
+            p1Mistakes: game.p1.mistakes,
+            p2Mistakes: game.p2.mistakes,
+            currentTurn: game.currentTurn,
+            turnTimeLeft: game.turnTimeLeft
+        });
         
         // Chuyển lượt và RESET thời gian lượt mới
         game.currentTurn = (game.currentTurn === 1) ? 2 : 1;
@@ -557,30 +850,28 @@ io.on('connection', (socket) => {
                 const loserUsername = currentPlayer.username;
                 
                 // Lưu kết quả cho CẢ 2 NGƯỜI
-                const db = readDB();
-                // Lưu cho người THẮNG
-                db.gameHistory.push({
-                    username: winnerUsername,
-                    mode: 'PvP',
-                    score: opponent.score,
-                    mistakes: opponent.mistakes,
-                    opponent: loserUsername,
-                    result: 'win',
-                    reason: 'Đối thủ hết điểm',
-                    date: new Date().toISOString()
-                });
-                // Lưu cho người THUA
-                db.gameHistory.push({
-                    username: loserUsername,
-                    mode: 'PvP',
-                    score: 0,
-                    mistakes: currentPlayer.mistakes,
-                    opponent: winnerUsername,
-                    result: 'lose',
-                    reason: 'Hết điểm',
-                    date: new Date().toISOString()
-                });
-                writeDB(db);
+                (async () => {
+                    // Lưu cho người THẮNG
+                    await postgres.addGameHistory({
+                        username: winnerUsername,
+                        mode: 'PvP',
+                        score: opponent.score,
+                        mistakes: opponent.mistakes,
+                        opponent: loserUsername,
+                        result: 'win',
+                        reason: 'Đối thủ hết điểm'
+                    });
+                    // Lưu cho người THUA
+                    await postgres.addGameHistory({
+                        username: loserUsername,
+                        mode: 'PvP',
+                        score: 0,
+                        mistakes: currentPlayer.mistakes,
+                        opponent: winnerUsername,
+                        result: 'lose',
+                        reason: 'Hết điểm'
+                    });
+                })().catch(err => console.error('Lỗi lưu game history:', err));
                 
                 io.to(gameRoom).emit('gameResult', { 
                     winner: winnerUsername, 
@@ -614,30 +905,28 @@ io.on('connection', (socket) => {
             const loserUsername = opponent.username;
             
             // Lưu kết quả cho CẢ 2 NGƯỜI
-            const db = readDB();
-            // Lưu cho người THẮNG
-            db.gameHistory.push({
-                username: winnerUsername,
-                mode: 'PvP',
-                score: currentPlayer.score,
-                mistakes: currentPlayer.mistakes,
-                opponent: loserUsername,
-                result: 'win',
-                reason: 'Hoàn thành bảng',
-                date: new Date().toISOString()
-            });
-            // Lưu cho người THUA
-            db.gameHistory.push({
-                username: loserUsername,
-                mode: 'PvP',
-                score: opponent.score,
-                mistakes: opponent.mistakes,
-                opponent: winnerUsername,
-                result: 'lose',
-                reason: 'Đối thủ hoàn thành trước',
-                date: new Date().toISOString()
-            });
-            writeDB(db);
+            (async () => {
+                // Lưu cho người THẮNG
+                await postgres.addGameHistory({
+                    username: winnerUsername,
+                    mode: 'PvP',
+                    score: currentPlayer.score,
+                    mistakes: currentPlayer.mistakes,
+                    opponent: loserUsername,
+                    result: 'win',
+                    reason: 'Hoàn thành bảng'
+                });
+                // Lưu cho người THUA
+                await postgres.addGameHistory({
+                    username: loserUsername,
+                    mode: 'PvP',
+                    score: opponent.score,
+                    mistakes: opponent.mistakes,
+                    opponent: winnerUsername,
+                    result: 'lose',
+                    reason: 'Đối thủ hoàn thành trước'
+                });
+            })().catch(err => console.error('Lỗi lưu game history:', err));
             
             io.to(gameRoom).emit('gameResult', { 
                 winner: winnerUsername, 
@@ -673,30 +962,28 @@ io.on('connection', (socket) => {
         const loserUsername = currentPlayer.username;
         
         // Lưu lịch sử cho CẢ 2 NGƯỜI
-        const db = readDB();
-        // Người THẮNG
-        db.gameHistory.push({
-            username: winnerUsername,
-            mode: 'PvP',
-            score: opponent.score,
-            mistakes: opponent.mistakes,
-            opponent: loserUsername,
-            result: 'win',
-            reason: 'Đối thủ đầu hàng',
-            date: new Date().toISOString()
-        });
-        // Người THUA
-        db.gameHistory.push({
-            username: loserUsername,
-            mode: 'PvP',
-            score: currentPlayer.score,
-            mistakes: currentPlayer.mistakes,
-            opponent: winnerUsername,
-            result: 'lose',
-            reason: 'Đầu hàng',
-            date: new Date().toISOString()
-        });
-        writeDB(db);
+        (async () => {
+            // Người THẮNG
+            await postgres.addGameHistory({
+                username: winnerUsername,
+                mode: 'PvP',
+                score: opponent.score,
+                mistakes: opponent.mistakes,
+                opponent: loserUsername,
+                result: 'win',
+                reason: 'Đối thủ đầu hàng'
+            });
+            // Người THUA
+            await postgres.addGameHistory({
+                username: loserUsername,
+                mode: 'PvP',
+                score: currentPlayer.score,
+                mistakes: currentPlayer.mistakes,
+                opponent: winnerUsername,
+                result: 'lose',
+                reason: 'Đầu hàng'
+            });
+        })().catch(err => console.error('Lỗi lưu game history:', err));
         
         io.to(gameRoom).emit('gameResult', { 
             winner: winnerUsername, 
@@ -1012,7 +1299,7 @@ io.on('connection', (socket) => {
     });
 
     // 9. User ngắt kết nối
-    socket.on('disconnect', () => {
+    socket.on('disconnect', async () => {
         console.log(`Người dùng ${socket.id} đã ngắt kết nối.`);
         
         // Xóa khỏi phòng công khai nếu có
@@ -1048,30 +1335,28 @@ io.on('connection', (socket) => {
             const opponent = (game.p1.id === socket.id) ? game.p2 : game.p1;
             
             // Lưu lịch sử cho CẢ 2 NGƯỜI
-            const db = readDB();
-            // Người THẮNG (ở lại)
-            db.gameHistory.push({
-                username: opponent.username,
-                mode: 'PvP',
-                score: opponent.score,
-                mistakes: opponent.mistakes,
-                opponent: currentPlayer.username,
-                result: 'win',
-                reason: 'Đối thủ thoát game',
-                date: new Date().toISOString()
-            });
-            // Người THUA (ngắt kết nối)
-            db.gameHistory.push({
-                username: currentPlayer.username,
-                mode: 'PvP',
-                score: currentPlayer.score,
-                mistakes: currentPlayer.mistakes,
-                opponent: opponent.username,
-                result: 'lose',
-                reason: 'Thoát game',
-                date: new Date().toISOString()
-            });
-            writeDB(db);
+            (async () => {
+                // Người THẮNG (ở lại)
+                await postgres.addGameHistory({
+                    username: opponent.username,
+                    mode: 'PvP',
+                    score: opponent.score,
+                    mistakes: opponent.mistakes,
+                    opponent: currentPlayer.username,
+                    result: 'win',
+                    reason: 'Đối thủ thoát game'
+                });
+                // Người THUA (ngắt kết nối)
+                await postgres.addGameHistory({
+                    username: currentPlayer.username,
+                    mode: 'PvP',
+                    score: currentPlayer.score,
+                    mistakes: currentPlayer.mistakes,
+                    opponent: opponent.username,
+                    result: 'lose',
+                    reason: 'Thoát game'
+                });
+            })().catch(err => console.error('Lỗi lưu game history:', err));
             
             if (opponentSocket) {
                 opponentSocket.emit('gameResult', { 
@@ -1086,7 +1371,17 @@ io.on('connection', (socket) => {
             }
             delete activeGames[gameRoom];
             resetRoomAfterGame(gameRoom);
+            
+            // Xóa game state khỏi Redis
+            await redisClient.deleteGameState(gameRoom);
+            await redisClient.deleteMoveHistory(gameRoom);
         }
+        
+        // Xóa user khỏi Redis
+        if (socket.username) {
+            await redisClient.removeUserOnline(socket.username);
+        }
+        
         delete connectedUsers[socket.id];
         broadcastUserList();
         broadcastRoomList();
@@ -1096,9 +1391,60 @@ io.on('connection', (socket) => {
 
 
 // === Khởi động Server ===
-server.listen(PORT, '0.0.0.0', () => { 
-    console.log(`OK! Server (Express + Socket.io) đang chạy tại:`);
-    console.log(`  - Local:   http://localhost:${PORT}`);
-    console.log(`  - Network: http://10.216.72.91:${PORT}`);
-    console.log(`\nMáy khác có thể truy cập qua: http://10.216.72.91:${PORT}`);
-});
+async function startServer() {
+    try {
+        // Kết nối Redis
+        await redisClient.connectRedis();
+        console.log('✅ Redis đã sẵn sàng!');
+        
+        // Kết nối và tạo bảng PostgreSQL
+        await postgres.connectDB();
+        await postgres.createTables();
+        console.log('✅ PostgreSQL đã sẵn sàng!');
+        
+        // Khởi động server
+        server.listen(PORT, '0.0.0.0', () => { 
+            console.log(`OK! Server (Express + Socket.io) đang chạy tại:`);
+            console.log(`  - Local:   http://localhost:${PORT}`);
+            console.log(`  - Network: http://10.216.72.91:${PORT}`);
+            console.log(`\nMáy khác có thể truy cập qua: http://10.216.72.91:${PORT}`);
+            console.log(`\n📬 Message Queue đã sẵn sàng!`);
+        });
+    } catch (error) {
+        console.error('❌ Lỗi khởi động server:', error);
+        process.exit(1);
+    }
+}
+
+// Graceful shutdown
+async function gracefulShutdown() {
+    console.log('\n🛑 Đang dừng server...');
+    
+    try {
+        // Đóng queue trước
+        await queueManager.closeQueue();
+        console.log('✅ Queue đã đóng');
+        
+        // Đóng Redis
+        await redisClient.client.quit();
+        console.log('✅ Redis đã đóng');
+        
+        // Đóng PostgreSQL
+        await postgres.pool.end();
+        console.log('✅ PostgreSQL đã đóng');
+        
+        // Đóng server
+        server.close(() => {
+            console.log('✅ Server đã dừng');
+            process.exit(0);
+        });
+    } catch (error) {
+        console.error('❌ Lỗi khi dừng server:', error);
+        process.exit(1);
+    }
+}
+
+process.on('SIGTERM', gracefulShutdown);
+process.on('SIGINT', gracefulShutdown);
+
+startServer();
