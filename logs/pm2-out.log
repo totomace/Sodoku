@@ -26272,3 +26272,374 @@ Máy khác có thể truy cập qua: http://10.216.72.91:3000
 2025-11-08 13:54:33 +07:00: [Cleanup] Đã xóa 1 phòng trống
 2025-11-08 13:55:07 +07:00: [Cleanup] Đã xóa 1 phòng trống
 2025-11-08 13:55:12 +07:00: Người dùng I17wVAG-BnEWxlwyAAAQ đã ngắt kết nối.
+2025-11-08 14:33:03 +07:00: [dotenv@17.2.3] injecting env (23) from .env -- tip: 👥 sync secrets across teammates & machines: https://dotenvx.com/ops
+2025-11-08 14:33:03 +07:00: [dotenv@17.2.3] injecting env (23) from .env -- tip: 🔐 prevent committing .env to code: https://dotenvx.com/precommit
+2025-11-08 14:33:03 +07:00: [dotenv@17.2.3] injecting env (23) from .env -- tip: 🔐 prevent committing .env to code: https://dotenvx.com/precommit
+2025-11-08 14:33:03 +07:00: [dotenv@17.2.3] injecting env (23) from .env -- tip: ⚙️  enable debug logging with { debug: true }
+2025-11-08 14:33:03 +07:00: [dotenv@17.2.3] injecting env (0) from .env -- tip: ⚙️  write to custom object with { processEnv: myObject }
+2025-11-08 14:33:04 +07:00: 🚀 Đang khởi động hệ thống...
+
+2025-11-08 14:33:03 +07:00: [dotenv@17.2.3] injecting env (0) from .env -- tip: 📡 add observability to secrets: https://dotenvx.com/ops
+2025-11-08 14:33:04 +07:00: 🚀 Đang khởi động hệ thống...
+
+2025-11-08 14:33:04 +07:00: ✅ PostgreSQL đang chạy
+2025-11-08 14:33:04 +07:00: ✅ PostgreSQL đang chạy
+2025-11-08 14:33:04 +07:00: ⚠️  Redis chưa chạy, đang khởi động...
+2025-11-08 14:33:04 +07:00: ⚠️  Redis chưa chạy, đang khởi động...
+2025-11-08 14:33:04 +07:00: ❌ Lỗi khởi động Redis: Command failed: net start Redis
+The service name is invalid.
+
+More help is available by typing NET HELPMSG 2185.
+
+
+2025-11-08 14:33:04 +07:00: ❌ Lỗi khởi động Redis: Command failed: net start Redis
+The service name is invalid.
+
+More help is available by typing NET HELPMSG 2185.
+
+
+2025-11-08 14:33:04 +07:00: 
+💡 Đang kết nối đến database...
+
+2025-11-08 14:33:04 +07:00: 
+💡 Đang kết nối đến database...
+
+2025-11-08 14:33:03 +07:00: [dotenv@17.2.3] injecting env (0) from .env -- tip: 🔐 prevent building .env in docker: https://dotenvx.com/prebuild
+2025-11-08 14:33:04 +07:00: 🚀 Đang khởi động hệ thống...
+
+2025-11-08 14:33:04 +07:00: ✅ PostgreSQL đang chạy
+2025-11-08 14:33:04 +07:00: ⚠️  Redis chưa chạy, đang khởi động...
+2025-11-08 14:33:04 +07:00: [dotenv@17.2.3] injecting env (0) from .env -- tip: ⚙️  suppress all logs with { quiet: true }
+2025-11-08 14:33:04 +07:00: 🚀 Đang khởi động hệ thống...
+
+2025-11-08 14:33:04 +07:00: ❌ Lỗi khởi động Redis: Command failed: net start Redis
+The service name is invalid.
+
+More help is available by typing NET HELPMSG 2185.
+
+
+2025-11-08 14:33:04 +07:00: 
+💡 Đang kết nối đến database...
+
+2025-11-08 14:33:04 +07:00: ✅ PostgreSQL đang chạy
+2025-11-08 14:33:04 +07:00: ⚠️  Redis chưa chạy, đang khởi động...
+2025-11-08 14:33:04 +07:00: ❌ Lỗi khởi động Redis: Command failed: net start Redis
+The service name is invalid.
+
+More help is available by typing NET HELPMSG 2185.
+
+
+2025-11-08 14:33:04 +07:00: 
+💡 Đang kết nối đến database...
+
+2025-11-08 14:39:09 +07:00: [dotenv@17.2.3] injecting env (23) from .env -- tip: 🔐 encrypt with Dotenvx: https://dotenvx.com
+2025-11-08 14:39:09 +07:00: [dotenv@17.2.3] injecting env (23) from .env -- tip: 🔐 prevent committing .env to code: https://dotenvx.com/precommit
+2025-11-08 14:39:10 +07:00: [dotenv@17.2.3] injecting env (23) from .env -- tip: 🔐 encrypt with Dotenvx: https://dotenvx.com
+2025-11-08 14:39:10 +07:00: [dotenv@17.2.3] injecting env (23) from .env -- tip: ⚙️  enable debug logging with { debug: true }
+2025-11-08 14:39:10 +07:00: [dotenv@17.2.3] injecting env (0) from .env -- tip: 🛠️  run anywhere with `dotenvx run -- yourcommand`
+2025-11-08 14:39:10 +07:00: [dotenv@17.2.3] injecting env (0) from .env -- tip: 🔐 prevent committing .env to code: https://dotenvx.com/precommit
+2025-11-08 14:39:10 +07:00: [dotenv@17.2.3] injecting env (0) from .env -- tip: 🔐 prevent building .env in docker: https://dotenvx.com/prebuild
+2025-11-08 14:39:10 +07:00: [dotenv@17.2.3] injecting env (0) from .env -- tip: ⚙️  specify custom .env file path with { path: '/custom/path/.env' }
+2025-11-08 14:43:10 +07:00: [dotenv@17.2.3] injecting env (23) from .env -- tip: 🔑 add access controls to secrets: https://dotenvx.com/ops
+2025-11-08 14:43:10 +07:00: [dotenv@17.2.3] injecting env (23) from .env -- tip: 🗂️ backup and recover secrets: https://dotenvx.com/ops
+2025-11-08 14:43:11 +07:00: [dotenv@17.2.3] injecting env (23) from .env -- tip: 🔐 encrypt with Dotenvx: https://dotenvx.com
+2025-11-08 14:43:11 +07:00: [dotenv@17.2.3] injecting env (23) from .env -- tip: ⚙️  specify custom .env file path with { path: '/custom/path/.env' }
+2025-11-08 14:43:11 +07:00: [dotenv@17.2.3] injecting env (0) from .env -- tip: 🔐 prevent building .env in docker: https://dotenvx.com/prebuild
+2025-11-08 14:43:11 +07:00: [dotenv@17.2.3] injecting env (0) from .env -- tip: 🔑 add access controls to secrets: https://dotenvx.com/ops
+2025-11-08 14:43:11 +07:00: [dotenv@17.2.3] injecting env (0) from .env -- tip: 🗂️ backup and recover secrets: https://dotenvx.com/ops
+2025-11-08 14:43:11 +07:00: [dotenv@17.2.3] injecting env (0) from .env -- tip: 🔐 prevent committing .env to code: https://dotenvx.com/precommit
+2025-11-08 14:43:38 +07:00: [dotenv@17.2.3] injecting env (23) from .env -- tip: ⚙️  specify custom .env file path with { path: '/custom/path/.env' }
+2025-11-08 14:43:38 +07:00: [dotenv@17.2.3] injecting env (23) from .env -- tip: 🔐 prevent building .env in docker: https://dotenvx.com/prebuild
+2025-11-08 14:43:38 +07:00: [dotenv@17.2.3] injecting env (23) from .env -- tip: ⚙️  specify custom .env file path with { path: '/custom/path/.env' }
+2025-11-08 14:43:38 +07:00: [dotenv@17.2.3] injecting env (23) from .env -- tip: ⚙️  override existing env vars with { override: true }
+2025-11-08 14:43:38 +07:00: [dotenv@17.2.3] injecting env (0) from .env -- tip: 🛠️  run anywhere with `dotenvx run -- yourcommand`
+2025-11-08 14:43:38 +07:00: [dotenv@17.2.3] injecting env (0) from .env -- tip: 📡 add observability to secrets: https://dotenvx.com/ops
+2025-11-08 14:43:39 +07:00: [dotenv@17.2.3] injecting env (0) from .env -- tip: ⚙️  load multiple .env files with { path: ['.env.local', '.env'] }
+2025-11-08 14:43:39 +07:00: [dotenv@17.2.3] injecting env (0) from .env -- tip: ⚙️  write to custom object with { processEnv: myObject }
+2025-11-08 14:50:10 +07:00: [dotenv@17.2.3] injecting env (23) from .env -- tip: ⚙️  suppress all logs with { quiet: true }
+2025-11-08 14:50:11 +07:00: [dotenv@17.2.3] injecting env (23) from .env -- tip: 📡 add observability to secrets: https://dotenvx.com/ops
+2025-11-08 14:50:11 +07:00: [dotenv@17.2.3] injecting env (23) from .env -- tip: ⚙️  suppress all logs with { quiet: true }
+2025-11-08 14:50:11 +07:00: [dotenv@17.2.3] injecting env (23) from .env -- tip: ⚙️  write to custom object with { processEnv: myObject }
+2025-11-08 14:50:11 +07:00: [dotenv@17.2.3] injecting env (0) from .env -- tip: ⚙️  override existing env vars with { override: true }
+2025-11-08 14:50:12 +07:00: ✅ Redis đã kết nối!
+2025-11-08 14:50:12 +07:00: ✅ Redis đã sẵn sàng!
+2025-11-08 14:50:12 +07:00: ✅ Đã kết nối PostgreSQL thành công!
+2025-11-08 14:50:11 +07:00: [dotenv@17.2.3] injecting env (0) from .env -- tip: ✅ audit secrets and track compliance: https://dotenvx.com/ops
+2025-11-08 14:50:12 +07:00: ✅ Đã tạo tables và indexes
+2025-11-08 14:50:12 +07:00: ✅ Đã tạo tables và indexes
+2025-11-08 14:50:12 +07:00: ✅ PostgreSQL đã sẵn sàng!
+2025-11-08 14:50:12 +07:00: ✅ Redis đã kết nối!
+2025-11-08 14:50:12 +07:00: ✅ Redis đã sẵn sàng!
+2025-11-08 14:50:11 +07:00: [dotenv@17.2.3] injecting env (0) from .env -- tip: ⚙️  specify custom .env file path with { path: '/custom/path/.env' }
+2025-11-08 14:50:12 +07:00: ✅ Đã kết nối PostgreSQL thành công!
+2025-11-08 14:50:12 +07:00: ✅ Đã tạo tables và indexes
+2025-11-08 14:50:12 +07:00: ✅ Redis đã kết nối!
+2025-11-08 14:50:12 +07:00: ✅ Đã tạo tables và indexes
+2025-11-08 14:50:12 +07:00: ✅ PostgreSQL đã sẵn sàng!
+2025-11-08 14:50:12 +07:00: ✅ Redis đã sẵn sàng!
+2025-11-08 14:50:11 +07:00: [dotenv@17.2.3] injecting env (0) from .env -- tip: 🔐 prevent building .env in docker: https://dotenvx.com/prebuild
+2025-11-08 14:50:12 +07:00: ✅ Redis đã kết nối!
+2025-11-08 14:50:12 +07:00: ✅ Redis đã sẵn sàng!
+2025-11-08 14:50:12 +07:00: ✅ Đã kết nối PostgreSQL thành công!
+2025-11-08 14:50:12 +07:00: ✅ Đã tạo tables và indexes
+2025-11-08 14:50:12 +07:00: ✅ Đã tạo tables và indexes
+2025-11-08 14:50:12 +07:00: ✅ PostgreSQL đã sẵn sàng!
+2025-11-08 14:50:12 +07:00: ✅ Đã kết nối PostgreSQL thành công!
+2025-11-08 14:50:12 +07:00: ✅ Đã tạo tables và indexes
+2025-11-08 14:50:12 +07:00: ✅ Đã tạo tables và indexes
+2025-11-08 14:50:12 +07:00: ✅ PostgreSQL đã sẵn sàng!
+2025-11-08 14:50:16 +07:00: [dotenv@17.2.3] injecting env (23) from .env -- tip: 📡 add observability to secrets: https://dotenvx.com/ops
+2025-11-08 14:50:17 +07:00: [dotenv@17.2.3] injecting env (23) from .env -- tip: 🔑 add access controls to secrets: https://dotenvx.com/ops
+2025-11-08 14:50:17 +07:00: [dotenv@17.2.3] injecting env (23) from .env -- tip: 👥 sync secrets across teammates & machines: https://dotenvx.com/ops
+2025-11-08 14:50:17 +07:00: [dotenv@17.2.3] injecting env (23) from .env -- tip: ⚙️  enable debug logging with { debug: true }
+2025-11-08 14:50:17 +07:00: [dotenv@17.2.3] injecting env (0) from .env -- tip: 🔐 prevent building .env in docker: https://dotenvx.com/prebuild
+2025-11-08 14:50:17 +07:00: ✅ Redis đã kết nối!
+2025-11-08 14:50:17 +07:00: ✅ Redis đã sẵn sàng!
+2025-11-08 14:50:18 +07:00: ✅ Đã kết nối PostgreSQL thành công!
+2025-11-08 14:50:18 +07:00: ✅ Đã tạo tables và indexes
+2025-11-08 14:50:18 +07:00: ✅ Đã tạo tables và indexes
+2025-11-08 14:50:18 +07:00: ✅ PostgreSQL đã sẵn sàng!
+2025-11-08 14:50:17 +07:00: [dotenv@17.2.3] injecting env (0) from .env -- tip: ⚙️  specify custom .env file path with { path: '/custom/path/.env' }
+2025-11-08 14:50:18 +07:00: ✅ Redis đã kết nối!
+2025-11-08 14:50:18 +07:00: ✅ Redis đã sẵn sàng!
+2025-11-08 14:50:18 +07:00: ✅ Đã kết nối PostgreSQL thành công!
+2025-11-08 14:50:18 +07:00: ✅ Đã tạo tables và indexes
+2025-11-08 14:50:18 +07:00: ✅ Đã tạo tables và indexes
+2025-11-08 14:50:18 +07:00: ✅ PostgreSQL đã sẵn sàng!
+2025-11-08 14:50:17 +07:00: [dotenv@17.2.3] injecting env (0) from .env -- tip: ⚙️  load multiple .env files with { path: ['.env.local', '.env'] }
+2025-11-08 14:50:18 +07:00: ✅ Redis đã kết nối!
+2025-11-08 14:50:18 +07:00: ✅ Redis đã sẵn sàng!
+2025-11-08 14:50:17 +07:00: [dotenv@17.2.3] injecting env (0) from .env -- tip: 🔐 prevent committing .env to code: https://dotenvx.com/precommit
+2025-11-08 14:50:18 +07:00: ✅ Redis đã kết nối!
+2025-11-08 14:50:18 +07:00: ✅ Redis đã sẵn sàng!
+2025-11-08 14:50:18 +07:00: ✅ Đã kết nối PostgreSQL thành công!
+2025-11-08 14:50:18 +07:00: ✅ Đã tạo tables và indexes
+2025-11-08 14:50:18 +07:00: ✅ Đã tạo tables và indexes
+2025-11-08 14:50:18 +07:00: ✅ PostgreSQL đã sẵn sàng!
+2025-11-08 14:50:18 +07:00: ✅ Đã kết nối PostgreSQL thành công!
+2025-11-08 14:50:18 +07:00: ✅ Đã tạo tables và indexes
+2025-11-08 14:50:18 +07:00: ✅ Đã tạo tables và indexes
+2025-11-08 14:50:18 +07:00: ✅ PostgreSQL đã sẵn sàng!
+2025-11-08 14:50:22 +07:00: [dotenv@17.2.3] injecting env (23) from .env -- tip: 🔐 prevent committing .env to code: https://dotenvx.com/precommit
+2025-11-08 14:50:22 +07:00: [dotenv@17.2.3] injecting env (23) from .env -- tip: 🔐 prevent building .env in docker: https://dotenvx.com/prebuild
+2025-11-08 14:50:22 +07:00: [dotenv@17.2.3] injecting env (23) from .env -- tip: 🛠️  run anywhere with `dotenvx run -- yourcommand`
+2025-11-08 14:50:22 +07:00: [dotenv@17.2.3] injecting env (23) from .env -- tip: ✅ audit secrets and track compliance: https://dotenvx.com/ops
+2025-11-08 14:50:22 +07:00: [dotenv@17.2.3] injecting env (0) from .env -- tip: 🛠️  run anywhere with `dotenvx run -- yourcommand`
+2025-11-08 14:50:23 +07:00: ✅ Redis đã kết nối!
+2025-11-08 14:50:23 +07:00: ✅ Redis đã sẵn sàng!
+2025-11-08 14:50:23 +07:00: ✅ Đã kết nối PostgreSQL thành công!
+2025-11-08 14:50:23 +07:00: ✅ Đã tạo tables và indexes
+2025-11-08 14:50:23 +07:00: ✅ Đã tạo tables và indexes
+2025-11-08 14:50:23 +07:00: ✅ PostgreSQL đã sẵn sàng!
+2025-11-08 14:50:22 +07:00: [dotenv@17.2.3] injecting env (0) from .env -- tip: ⚙️  enable debug logging with { debug: true }
+2025-11-08 14:50:23 +07:00: ✅ Redis đã kết nối!
+2025-11-08 14:50:23 +07:00: ✅ Redis đã sẵn sàng!
+2025-11-08 14:50:23 +07:00: ✅ Đã kết nối PostgreSQL thành công!
+2025-11-08 14:50:23 +07:00: ✅ Đã tạo tables và indexes
+2025-11-08 14:50:23 +07:00: ✅ Đã tạo tables và indexes
+2025-11-08 14:50:23 +07:00: ✅ PostgreSQL đã sẵn sàng!
+2025-11-08 14:50:23 +07:00: [dotenv@17.2.3] injecting env (0) from .env -- tip: ⚙️  write to custom object with { processEnv: myObject }
+2025-11-08 14:50:24 +07:00: ✅ Redis đã kết nối!
+2025-11-08 14:50:24 +07:00: ✅ Redis đã sẵn sàng!
+2025-11-08 14:50:23 +07:00: [dotenv@17.2.3] injecting env (0) from .env -- tip: 🔐 prevent building .env in docker: https://dotenvx.com/prebuild
+2025-11-08 14:50:24 +07:00: ✅ Redis đã kết nối!
+2025-11-08 14:50:24 +07:00: ✅ Redis đã sẵn sàng!
+2025-11-08 14:50:24 +07:00: ✅ Đã kết nối PostgreSQL thành công!
+2025-11-08 14:50:24 +07:00: ✅ Đã tạo tables và indexes
+2025-11-08 14:50:24 +07:00: ✅ Đã tạo tables và indexes
+2025-11-08 14:50:24 +07:00: ✅ PostgreSQL đã sẵn sàng!
+2025-11-08 14:50:24 +07:00: ✅ Đã kết nối PostgreSQL thành công!
+2025-11-08 14:50:24 +07:00: ✅ Đã tạo tables và indexes
+2025-11-08 14:50:24 +07:00: ✅ Đã tạo tables và indexes
+2025-11-08 14:50:24 +07:00: ✅ PostgreSQL đã sẵn sàng!
+2025-11-08 14:50:27 +07:00: [dotenv@17.2.3] injecting env (23) from .env -- tip: 🔑 add access controls to secrets: https://dotenvx.com/ops
+2025-11-08 14:50:28 +07:00: [dotenv@17.2.3] injecting env (23) from .env -- tip: ⚙️  specify custom .env file path with { path: '/custom/path/.env' }
+2025-11-08 14:50:28 +07:00: [dotenv@17.2.3] injecting env (23) from .env -- tip: 👥 sync secrets across teammates & machines: https://dotenvx.com/ops
+2025-11-08 14:50:28 +07:00: [dotenv@17.2.3] injecting env (23) from .env -- tip: ⚙️  override existing env vars with { override: true }
+2025-11-08 14:50:28 +07:00: [dotenv@17.2.3] injecting env (0) from .env -- tip: 📡 add observability to secrets: https://dotenvx.com/ops
+2025-11-08 14:50:28 +07:00: ✅ Redis đã kết nối!
+2025-11-08 14:50:28 +07:00: ✅ Redis đã sẵn sàng!
+2025-11-08 14:50:28 +07:00: ✅ Đã kết nối PostgreSQL thành công!
+2025-11-08 14:50:28 +07:00: ✅ Đã tạo tables và indexes
+2025-11-08 14:50:28 +07:00: ✅ Đã tạo tables và indexes
+2025-11-08 14:50:28 +07:00: ✅ PostgreSQL đã sẵn sàng!
+2025-11-08 14:50:28 +07:00: [dotenv@17.2.3] injecting env (0) from .env -- tip: ⚙️  specify custom .env file path with { path: '/custom/path/.env' }
+2025-11-08 14:50:29 +07:00: ✅ Redis đã kết nối!
+2025-11-08 14:50:29 +07:00: ✅ Redis đã sẵn sàng!
+2025-11-08 14:50:29 +07:00: ✅ Đã kết nối PostgreSQL thành công!
+2025-11-08 14:50:29 +07:00: ✅ Đã tạo tables và indexes
+2025-11-08 14:50:29 +07:00: ✅ Đã tạo tables và indexes
+2025-11-08 14:50:29 +07:00: ✅ PostgreSQL đã sẵn sàng!
+2025-11-08 14:50:28 +07:00: [dotenv@17.2.3] injecting env (0) from .env -- tip: 🗂️ backup and recover secrets: https://dotenvx.com/ops
+2025-11-08 14:50:29 +07:00: ✅ Redis đã kết nối!
+2025-11-08 14:50:29 +07:00: ✅ Redis đã sẵn sàng!
+2025-11-08 14:50:28 +07:00: [dotenv@17.2.3] injecting env (0) from .env -- tip: 👥 sync secrets across teammates & machines: https://dotenvx.com/ops
+2025-11-08 14:50:29 +07:00: ✅ Redis đã kết nối!
+2025-11-08 14:50:29 +07:00: ✅ Redis đã sẵn sàng!
+2025-11-08 14:50:29 +07:00: ✅ Đã kết nối PostgreSQL thành công!
+2025-11-08 14:50:29 +07:00: ✅ Đã tạo tables và indexes
+2025-11-08 14:50:29 +07:00: ✅ Đã kết nối PostgreSQL thành công!
+2025-11-08 14:50:29 +07:00: ✅ Đã tạo tables và indexes
+2025-11-08 14:50:29 +07:00: ✅ PostgreSQL đã sẵn sàng!
+2025-11-08 14:50:29 +07:00: ✅ Đã tạo tables và indexes
+2025-11-08 14:50:29 +07:00: ✅ Đã tạo tables và indexes
+2025-11-08 14:50:29 +07:00: ✅ PostgreSQL đã sẵn sàng!
+2025-11-08 14:50:33 +07:00: [dotenv@17.2.3] injecting env (23) from .env -- tip: 🔐 encrypt with Dotenvx: https://dotenvx.com
+2025-11-08 14:50:33 +07:00: [dotenv@17.2.3] injecting env (23) from .env -- tip: ⚙️  write to custom object with { processEnv: myObject }
+2025-11-08 14:50:33 +07:00: [dotenv@17.2.3] injecting env (0) from .env -- tip: 🔄 add secrets lifecycle management: https://dotenvx.com/ops
+2025-11-08 14:50:34 +07:00: ✅ Redis đã kết nối!
+2025-11-08 14:50:34 +07:00: ✅ Redis đã sẵn sàng!
+2025-11-08 14:50:34 +07:00: ✅ Đã kết nối PostgreSQL thành công!
+2025-11-08 14:50:34 +07:00: ✅ Đã tạo tables và indexes
+2025-11-08 14:50:34 +07:00: ✅ Đã tạo tables và indexes
+2025-11-08 14:50:34 +07:00: ✅ PostgreSQL đã sẵn sàng!
+2025-11-08 14:50:34 +07:00: [dotenv@17.2.3] injecting env (23) from .env -- tip: 🔐 encrypt with Dotenvx: https://dotenvx.com
+2025-11-08 14:50:34 +07:00: [dotenv@17.2.3] injecting env (23) from .env -- tip: 🔐 prevent committing .env to code: https://dotenvx.com/precommit
+2025-11-08 14:50:33 +07:00: [dotenv@17.2.3] injecting env (0) from .env -- tip: 🔑 add access controls to secrets: https://dotenvx.com/ops
+2025-11-08 14:50:34 +07:00: ✅ Redis đã kết nối!
+2025-11-08 14:50:34 +07:00: ✅ Redis đã sẵn sàng!
+2025-11-08 14:50:34 +07:00: ✅ Đã kết nối PostgreSQL thành công!
+2025-11-08 14:50:34 +07:00: ✅ Đã tạo tables và indexes
+2025-11-08 14:50:34 +07:00: ✅ Đã tạo tables và indexes
+2025-11-08 14:50:34 +07:00: ✅ PostgreSQL đã sẵn sàng!
+2025-11-08 14:50:34 +07:00: [dotenv@17.2.3] injecting env (0) from .env -- tip: 🔄 add secrets lifecycle management: https://dotenvx.com/ops
+2025-11-08 14:50:34 +07:00: [dotenv@17.2.3] injecting env (0) from .env -- tip: 📡 add observability to secrets: https://dotenvx.com/ops
+2025-11-08 14:50:35 +07:00: ✅ Redis đã kết nối!
+2025-11-08 14:50:35 +07:00: ✅ Redis đã sẵn sàng!
+2025-11-08 14:50:35 +07:00: ✅ Redis đã kết nối!
+2025-11-08 14:50:35 +07:00: ✅ Redis đã sẵn sàng!
+2025-11-08 14:50:35 +07:00: ✅ Đã kết nối PostgreSQL thành công!
+2025-11-08 14:50:35 +07:00: ✅ Đã tạo tables và indexes
+2025-11-08 14:50:35 +07:00: ✅ Đã tạo tables và indexes
+2025-11-08 14:50:35 +07:00: ✅ PostgreSQL đã sẵn sàng!
+2025-11-08 14:50:35 +07:00: ✅ Đã kết nối PostgreSQL thành công!
+2025-11-08 14:50:35 +07:00: ✅ Đã tạo tables và indexes
+2025-11-08 14:50:35 +07:00: ✅ Đã tạo tables và indexes
+2025-11-08 14:50:35 +07:00: ✅ PostgreSQL đã sẵn sàng!
+2025-11-08 14:51:00 +07:00: [dotenv@17.2.3] injecting env (23) from .env -- tip: ⚙️  write to custom object with { processEnv: myObject }
+2025-11-08 14:51:00 +07:00: [dotenv@17.2.3] injecting env (23) from .env -- tip: 🔐 prevent committing .env to code: https://dotenvx.com/precommit
+2025-11-08 14:51:00 +07:00: [dotenv@17.2.3] injecting env (23) from .env -- tip: 🔑 add access controls to secrets: https://dotenvx.com/ops
+2025-11-08 14:51:00 +07:00: [dotenv@17.2.3] injecting env (23) from .env -- tip: 🛠️  run anywhere with `dotenvx run -- yourcommand`
+2025-11-08 14:51:00 +07:00: [dotenv@17.2.3] injecting env (0) from .env -- tip: 👥 sync secrets across teammates & machines: https://dotenvx.com/ops
+2025-11-08 14:51:01 +07:00: ✅ Redis đã kết nối!
+2025-11-08 14:51:01 +07:00: ✅ Redis đã sẵn sàng!
+2025-11-08 14:51:01 +07:00: ✅ Đã kết nối PostgreSQL thành công!
+2025-11-08 14:51:01 +07:00: ✅ Đã tạo tables và indexes
+2025-11-08 14:51:01 +07:00: ✅ Đã tạo tables và indexes
+2025-11-08 14:51:01 +07:00: ✅ PostgreSQL đã sẵn sàng!
+2025-11-08 14:51:01 +07:00: OK! Server (Express + Socket.io) đang chạy tại:
+2025-11-08 14:51:01 +07:00:   - Local:   http://localhost:3000
+2025-11-08 14:51:01 +07:00:   - Network: http://10.216.72.91:3000
+2025-11-08 14:51:01 +07:00: 
+Máy khác có thể truy cập qua: http://10.216.72.91:3000
+2025-11-08 14:51:01 +07:00: 
+📬 Message Queue đã sẵn sàng!
+2025-11-08 14:51:01 +07:00: [dotenv@17.2.3] injecting env (0) from .env -- tip: 🔑 add access controls to secrets: https://dotenvx.com/ops
+2025-11-08 14:51:01 +07:00: ✅ Redis đã kết nối!
+2025-11-08 14:51:01 +07:00: ✅ Redis đã sẵn sàng!
+2025-11-08 14:51:02 +07:00: ✅ Đã kết nối PostgreSQL thành công!
+2025-11-08 14:51:02 +07:00: ✅ Đã tạo tables và indexes
+2025-11-08 14:51:02 +07:00: ✅ Đã tạo tables và indexes
+2025-11-08 14:51:01 +07:00: [dotenv@17.2.3] injecting env (0) from .env -- tip: 🔑 add access controls to secrets: https://dotenvx.com/ops
+2025-11-08 14:51:02 +07:00: ✅ PostgreSQL đã sẵn sàng!
+2025-11-08 14:51:02 +07:00: OK! Server (Express + Socket.io) đang chạy tại:
+2025-11-08 14:51:02 +07:00:   - Local:   http://localhost:3000
+2025-11-08 14:51:02 +07:00:   - Network: http://10.216.72.91:3000
+2025-11-08 14:51:02 +07:00: 
+Máy khác có thể truy cập qua: http://10.216.72.91:3000
+2025-11-08 14:51:02 +07:00: 
+📬 Message Queue đã sẵn sàng!
+2025-11-08 14:51:02 +07:00: ✅ Redis đã kết nối!
+2025-11-08 14:51:02 +07:00: ✅ Redis đã sẵn sàng!
+2025-11-08 14:51:01 +07:00: [dotenv@17.2.3] injecting env (0) from .env -- tip: ⚙️  override existing env vars with { override: true }
+2025-11-08 14:51:02 +07:00: ✅ Đã kết nối PostgreSQL thành công!
+2025-11-08 14:51:02 +07:00: ✅ Đã tạo tables và indexes
+2025-11-08 14:51:02 +07:00: ✅ Redis đã kết nối!
+2025-11-08 14:51:02 +07:00: ✅ Đã tạo tables và indexes
+2025-11-08 14:51:02 +07:00: ✅ PostgreSQL đã sẵn sàng!
+2025-11-08 14:51:02 +07:00: OK! Server (Express + Socket.io) đang chạy tại:
+2025-11-08 14:51:02 +07:00: ✅ Redis đã sẵn sàng!
+2025-11-08 14:51:02 +07:00:   - Local:   http://localhost:3000
+2025-11-08 14:51:02 +07:00:   - Network: http://10.216.72.91:3000
+2025-11-08 14:51:02 +07:00: 
+Máy khác có thể truy cập qua: http://10.216.72.91:3000
+2025-11-08 14:51:02 +07:00: 
+📬 Message Queue đã sẵn sàng!
+2025-11-08 14:51:02 +07:00: ✅ Đã kết nối PostgreSQL thành công!
+2025-11-08 14:51:02 +07:00: ✅ Đã tạo tables và indexes
+2025-11-08 14:51:02 +07:00: ✅ Đã tạo tables và indexes
+2025-11-08 14:51:02 +07:00: ✅ PostgreSQL đã sẵn sàng!
+2025-11-08 14:51:02 +07:00: OK! Server (Express + Socket.io) đang chạy tại:
+2025-11-08 14:51:02 +07:00:   - Local:   http://localhost:3000
+2025-11-08 14:51:02 +07:00:   - Network: http://10.216.72.91:3000
+2025-11-08 14:51:02 +07:00: 
+Máy khác có thể truy cập qua: http://10.216.72.91:3000
+2025-11-08 14:51:02 +07:00: 
+📬 Message Queue đã sẵn sàng!
+2025-11-08 14:52:48 +07:00: 127.0.0.1 - - [08/Nov/2025:07:52:48 +0000] "GET / HTTP/1.1" 304 - "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36 Edg/142.0.0.0"
+2025-11-08 14:52:51 +07:00: 127.0.0.1 - - [08/Nov/2025:07:52:51 +0000] "POST /api/login HTTP/1.1" 200 55 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36 Edg/142.0.0.0"
+2025-11-08 14:55:19 +07:00: [dotenv@17.2.3] injecting env (23) from .env -- tip: ⚙️  load multiple .env files with { path: ['.env.local', '.env'] }
+2025-11-08 14:55:19 +07:00: [dotenv@17.2.3] injecting env (23) from .env -- tip: 🔐 prevent building .env in docker: https://dotenvx.com/prebuild
+2025-11-08 14:55:19 +07:00: [dotenv@17.2.3] injecting env (23) from .env -- tip: ⚙️  enable debug logging with { debug: true }
+2025-11-08 14:55:19 +07:00: [dotenv@17.2.3] injecting env (23) from .env -- tip: ⚙️  write to custom object with { processEnv: myObject }
+2025-11-08 14:55:19 +07:00: [dotenv@17.2.3] injecting env (0) from .env -- tip: 🔐 prevent committing .env to code: https://dotenvx.com/precommit
+2025-11-08 14:55:19 +07:00: [dotenv@17.2.3] injecting env (0) from .env -- tip: ⚙️  specify custom .env file path with { path: '/custom/path/.env' }
+2025-11-08 14:55:20 +07:00: ✅ Redis đã kết nối!
+2025-11-08 14:55:20 +07:00: ✅ Redis đã kết nối!
+2025-11-08 14:55:20 +07:00: ✅ Redis đã sẵn sàng!
+2025-11-08 14:55:20 +07:00: ✅ Redis đã sẵn sàng!
+2025-11-08 14:55:20 +07:00: ✅ Đã kết nối PostgreSQL thành công!
+2025-11-08 14:55:20 +07:00: ✅ Đã kết nối PostgreSQL thành công!
+2025-11-08 14:55:20 +07:00: ✅ Đã tạo tables và indexes
+2025-11-08 14:55:20 +07:00: ✅ Đã tạo tables và indexes
+2025-11-08 14:55:20 +07:00: ✅ Đã tạo tables và indexes
+2025-11-08 14:55:20 +07:00: ✅ PostgreSQL đã sẵn sàng!
+2025-11-08 14:55:20 +07:00: ✅ Đã tạo tables và indexes
+2025-11-08 14:55:20 +07:00: ✅ PostgreSQL đã sẵn sàng!
+2025-11-08 14:55:20 +07:00: OK! Server (Express + Socket.io) đang chạy tại:
+2025-11-08 14:55:20 +07:00:   - Local:   http://localhost:3000
+2025-11-08 14:55:20 +07:00:   - Network: http://10.216.72.91:3000
+2025-11-08 14:55:20 +07:00: 
+Máy khác có thể truy cập qua: http://10.216.72.91:3000
+2025-11-08 14:55:20 +07:00: 
+📬 Message Queue đã sẵn sàng!
+2025-11-08 14:55:20 +07:00: OK! Server (Express + Socket.io) đang chạy tại:
+2025-11-08 14:55:20 +07:00:   - Local:   http://localhost:3000
+2025-11-08 14:55:20 +07:00:   - Network: http://10.216.72.91:3000
+2025-11-08 14:55:20 +07:00: 
+Máy khác có thể truy cập qua: http://10.216.72.91:3000
+2025-11-08 14:55:20 +07:00: 
+📬 Message Queue đã sẵn sàng!
+2025-11-08 14:55:20 +07:00: [dotenv@17.2.3] injecting env (0) from .env -- tip: ⚙️  load multiple .env files with { path: ['.env.local', '.env'] }
+2025-11-08 14:55:20 +07:00: ✅ Redis đã kết nối!
+2025-11-08 14:55:20 +07:00: ✅ Redis đã sẵn sàng!
+2025-11-08 14:55:19 +07:00: [dotenv@17.2.3] injecting env (0) from .env -- tip: ⚙️  enable debug logging with { debug: true }
+2025-11-08 14:55:20 +07:00: ✅ Redis đã kết nối!
+2025-11-08 14:55:20 +07:00: ✅ Redis đã sẵn sàng!
+2025-11-08 14:55:20 +07:00: ✅ Đã kết nối PostgreSQL thành công!
+2025-11-08 14:55:20 +07:00: ✅ Đã tạo tables và indexes
+2025-11-08 14:55:20 +07:00: ✅ Đã tạo tables và indexes
+2025-11-08 14:55:20 +07:00: ✅ PostgreSQL đã sẵn sàng!
+2025-11-08 14:55:20 +07:00: OK! Server (Express + Socket.io) đang chạy tại:
+2025-11-08 14:55:20 +07:00:   - Local:   http://localhost:3000
+2025-11-08 14:55:20 +07:00:   - Network: http://10.216.72.91:3000
+2025-11-08 14:55:20 +07:00: 
+Máy khác có thể truy cập qua: http://10.216.72.91:3000
+2025-11-08 14:55:20 +07:00: 
+📬 Message Queue đã sẵn sàng!
+2025-11-08 14:55:20 +07:00: ✅ Đã kết nối PostgreSQL thành công!
+2025-11-08 14:55:20 +07:00: ✅ Đã tạo tables và indexes
+2025-11-08 14:55:20 +07:00: ✅ Đã tạo tables và indexes
+2025-11-08 14:55:20 +07:00: ✅ PostgreSQL đã sẵn sàng!
+2025-11-08 14:55:20 +07:00: OK! Server (Express + Socket.io) đang chạy tại:
+2025-11-08 14:55:20 +07:00:   - Local:   http://localhost:3000
+2025-11-08 14:55:20 +07:00:   - Network: http://10.216.72.91:3000
+2025-11-08 14:55:20 +07:00: 
+Máy khác có thể truy cập qua: http://10.216.72.91:3000
+2025-11-08 14:55:20 +07:00: 
+📬 Message Queue đã sẵn sàng!
+2025-11-08 14:55:28 +07:00: 127.0.0.1 - - [08/Nov/2025:07:55:28 +0000] "GET / HTTP/1.1" 304 - "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36 Edg/142.0.0.0"
+2025-11-08 14:55:31 +07:00: 127.0.0.1 - - [08/Nov/2025:07:55:31 +0000] "POST /api/login HTTP/1.1" 200 55 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36 Edg/142.0.0.0"
+2025-11-08 14:55:33 +07:00: Một người vừa kết nối: 5F3kFe6DY9m8UpJfAAAB
+2025-11-08 14:55:35 +07:00: Người dùng 5F3kFe6DY9m8UpJfAAAB đã ngắt kết nối.
+2025-11-08 14:55:35 +07:00: [Cleanup] Đã xóa 1 phòng trống
