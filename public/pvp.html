@@ -227,6 +227,106 @@
             transform: none;
             box-shadow: none;
         }
+
+        /* Tab buttons */
+        .tab-btn {
+            transition: all 0.3s ease;
+        }
+        .tab-btn:hover {
+            transform: translateY(-2px);
+        }
+        .tab-btn.active {
+            background: linear-gradient(135deg, #3498db 0%, #2980b9 100%) !important;
+            color: white !important;
+            border-color: #3498db !important;
+        }
+
+        /* Room list */
+        #room-list {
+            max-height: 400px;
+            overflow-y: auto;
+        }
+        .room-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 12px;
+            margin-bottom: 12px;
+            background: #fafafa;
+            transition: all 0.3s ease;
+        }
+        .room-item:hover {
+            border-color: #3498db;
+            background: white;
+            box-shadow: 0 4px 15px rgba(52, 152, 219, 0.1);
+        }
+        .room-info {
+            flex-grow: 1;
+        }
+        .room-name {
+            font-weight: bold;
+            font-size: 1.1rem;
+            color: #333;
+            margin-bottom: 5px;
+        }
+        .room-players {
+            font-size: 0.9rem;
+            color: #666;
+        }
+        .room-status {
+            padding: 5px 12px;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            font-weight: bold;
+            margin-right: 10px;
+        }
+        .room-status.empty {
+            background: #e8f5e9;
+            color: #28a745;
+        }
+        .room-status.waiting {
+            background: #fff3cd;
+            color: #ffc107;
+        }
+        .room-status.full {
+            background: #f8d7da;
+            color: #dc3545;
+        }
+        .room-status.playing {
+            background: #cce5ff;
+            color: #0066cc;
+        }
+        .room-btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .room-btn.join {
+            background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+            color: white;
+        }
+        .room-btn.join:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(40, 167, 69, 0.4);
+        }
+        .room-btn.spectate {
+            background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);
+            color: white;
+        }
+        .room-btn.spectate:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(52, 152, 219, 0.4);
+        }
+        .room-btn:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+        }
         
         #waiting-message {
             display: none; margin-top: 20px;
@@ -748,9 +848,105 @@
         #chat-window li strong { color: #007bff; }
         #chat-form { display: flex; }
         #chat-input { flex-grow: 1; padding: 10px; border: none; border-top: 1px solid #ccc; }
+
+        /* Toast Notifications */
+        .toast-container {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        .toast {
+            min-width: 300px;
+            padding: 16px 20px;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            animation: slideInRight 0.3s ease-out;
+            border-left: 4px solid #3498db;
+        }
+        .toast.success {
+            border-left-color: #28a745;
+        }
+        .toast.error {
+            border-left-color: #dc3545;
+        }
+        .toast.warning {
+            border-left-color: #ffc107;
+        }
+        .toast.info {
+            border-left-color: #3498db;
+        }
+        .toast-icon {
+            font-size: 1.8rem;
+            flex-shrink: 0;
+        }
+        .toast-content {
+            flex-grow: 1;
+        }
+        .toast-title {
+            font-weight: bold;
+            margin-bottom: 4px;
+            color: #333;
+        }
+        .toast-message {
+            color: #666;
+            font-size: 0.95rem;
+        }
+        .toast-close {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #999;
+            padding: 0;
+            width: 24px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            transition: all 0.2s;
+        }
+        .toast-close:hover {
+            background: #f0f0f0;
+            color: #333;
+        }
+        @keyframes slideInRight {
+            from {
+                transform: translateX(400px);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+        @keyframes slideOutRight {
+            from {
+                transform: translateX(0);
+                opacity: 1;
+            }
+            to {
+                transform: translateX(400px);
+                opacity: 0;
+            }
+        }
+        .toast.removing {
+            animation: slideOutRight 0.3s ease-out;
+        }
     </style>
 </head>
 <body>
+
+    <!-- Toast Container -->
+    <div class="toast-container" id="toast-container"></div>
 
     <a href="/index.html" class="back-btn">◀ Menu</a>
     
@@ -770,6 +966,35 @@
     <!-- Overlay đếm ngược -->
     <div id="countdown-overlay">
         <div class="countdown-number" id="countdown-number">3</div>
+    </div>
+    
+    <!-- Modal Ready (Sẵn sàng) -->
+    <div id="ready-modal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 2000; justify-content: center; align-items: center;">
+        <div style="background: white; padding: 40px; border-radius: 20px; text-align: center; box-shadow: 0 10px 40px rgba(0,0,0,0.3); min-width: 450px;">
+            <div style="font-size: 3rem; margin-bottom: 10px;">🎮</div>
+            
+            <!-- Hiển thị ID Phòng -->
+            <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 15px; border-radius: 12px; margin-bottom: 20px;">
+                <div style="color: rgba(255,255,255,0.9); font-size: 0.85rem; margin-bottom: 5px;">ID Phòng</div>
+                <div id="ready-room-id" style="color: white; font-size: 2rem; font-weight: bold; letter-spacing: 5px;">----</div>
+            </div>
+            
+            <h2 style="color: #3498db; margin-bottom: 15px;">Phòng đã đủ 2 người!</h2>
+            <div id="ready-players" style="margin: 20px 0; font-size: 1.1rem; color: #666;">
+                <div><span id="ready-player1">Player 1</span> <span id="ready-status1">⏳</span></div>
+                <div style="margin: 10px 0; font-size: 1.5rem;">VS</div>
+                <div><span id="ready-player2">Player 2</span> <span id="ready-status2">⏳</span></div>
+            </div>
+            <div style="margin: 25px 0; padding: 15px; background: #f8f9fa; border-radius: 10px;">
+                <p style="color: #666; margin: 0;">Cả 2 người cần nhấn "Sẵn sàng" để bắt đầu</p>
+            </div>
+            <button id="ready-btn" style="padding: 15px 50px; font-size: 1.2rem; background: linear-gradient(135deg, #28a745 0%, #20c997 100%); color: white; border: none; border-radius: 10px; cursor: pointer; font-weight: bold; box-shadow: 0 4px 15px rgba(40, 167, 69, 0.3); transition: all 0.3s;">
+                ✓ Sẵn sàng
+            </button>
+            <button id="leave-room-btn" style="margin-top: 10px; padding: 12px 30px; font-size: 1rem; background: #dc3545; color: white; border: none; border-radius: 8px; cursor: pointer; display: block; margin-left: auto; margin-right: auto;">
+                Rời phòng
+            </button>
+        </div>
     </div>
     
     <!-- Modal lời mời thách đấu -->
@@ -826,16 +1051,68 @@
     <div id="lobby-screen">
         <h1>⚔️ Thách đấu</h1>
         
-        <div class="search-box">
-            <input type="text" id="search-input" placeholder="Tìm người chơi...">
-            <button id="search-btn" disabled>🔍 Tìm</button>
+        <!-- Tab chuyển đổi -->
+        <div style="display: flex; gap: 10px; margin-bottom: 20px;">
+            <button id="tab-challenge" class="tab-btn active" style="flex: 1; padding: 12px; border: 2px solid #3498db; background: #3498db; color: white; border-radius: 8px; font-weight: bold; cursor: pointer;">
+                ⚔️ Thách Đấu
+            </button>
+            <button id="tab-rooms" class="tab-btn" style="flex: 1; padding: 12px; border: 2px solid #e0e0e0; background: white; color: #666; border-radius: 8px; font-weight: bold; cursor: pointer;">
+                🏠 Phòng chơi
+            </button>
         </div>
-        
-        <button id="find-random-btn">🎲 Ngẫu nhiên</button>
 
-        <ul id="player-list"></ul>
+        <!-- Nội dung Tab Thách Đấu -->
+        <div id="challenge-content">
+            <!-- Tạo/Tham gia phòng riêng bằng ID -->
+            <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 20px; border-radius: 15px; margin-bottom: 25px; box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);">
+                <h3 style="color: white; text-align: center; margin-bottom: 15px;">🔑 Phòng Riêng</h3>
+                
+                <!-- ID Phòng đã tạo (ẩn mặc định) -->
+                <div id="created-room-display" style="display: none; background: rgba(255,255,255,0.95); padding: 20px; border-radius: 12px; margin-bottom: 15px; border: 3px solid #28a745;">
+                    <div style="text-align: center;">
+                        <div style="font-size: 0.9rem; color: #666; margin-bottom: 5px;">🎮 ID Phòng của bạn</div>
+                        <div id="created-room-id" style="font-size: 2.5rem; font-weight: bold; color: #28a745; letter-spacing: 5px; margin: 10px 0;">----</div>
+                        <div style="font-size: 0.85rem; color: #999;">Chia sẻ ID này cho bạn bè!</div>
+                    </div>
+                </div>
+                
+                <div style="display: flex; gap: 10px; margin-bottom: 10px;">
+                    <button id="create-room-btn" style="flex: 1; padding: 12px 15px; background: #28a745; color: white; border: none; border-radius: 8px; font-weight: bold; cursor: pointer;">
+                        🎮 Tạo Phòng Riêng
+                    </button>
+                </div>
+                
+                <div style="display: flex; gap: 10px; margin-bottom: 5px;">
+                    <input type="text" id="room-id-input" placeholder="Nhập ID để vào" 
+                        style="flex: 1; padding: 12px 8px; border: 2px solid white; border-radius: 8px; font-size: 1rem; font-weight: bold; text-align: center;" maxlength="10">
+                    <button id="join-room-id-btn" style="padding: 12px 20px; background: #17a2b8; color: white; border: none; border-radius: 8px; font-weight: bold; cursor: pointer;">
+                        🚪 Vào
+                    </button>
+                </div>
+                <p style="color: rgba(255,255,255,0.9); font-size: 0.8rem; text-align: center; margin: 5px 0 0 0;">
+                    Tạo phòng riêng hoặc nhập ID để vào
+                </p>
+            </div>
+            
+            <div class="search-box">
+                <input type="text" id="search-input" placeholder="Tìm người chơi...">
+                <button id="search-btn" disabled>🔍 Tìm</button>
+            </div>
+            
+            <button id="find-random-btn">🎲 Ngẫu nhiên</button>
 
-        <div id="waiting-message">Đang tìm đối thủ...</div>
+            <ul id="player-list"></ul>
+
+            <div id="waiting-message">Đang tìm đối thủ...</div>
+        </div>
+
+        <!-- Nội dung Tab Phòng -->
+        <div id="rooms-content" style="display: none;">
+            <h3 style="text-align: center; color: #666; margin-bottom: 15px;">Danh sách phòng</h3>
+            <ul id="room-list" style="list-style: none; padding: 0;">
+                <!-- Rooms will be dynamically added here -->
+            </ul>
+        </div>
     </div>
 
     <div id="pvp-game-screen">

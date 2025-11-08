@@ -99,7 +99,104 @@ app.get('/', (req, res) => { res.sendFile(path.join(__dirname, 'public', 'splash
 // === LOGIC GLOBAL (Timer, Lists) ===
 const allPuzzles = readPuzzles(); 
 let connectedUsers = {}; 
-let activeGames = {}; 
+let activeGames = {};
+let publicRooms = []; // Danh sách phòng động
+
+function createNewRoom() {
+    // Tìm ID nhỏ nhất còn thiếu (để tái sử dụng số phòng)
+    let roomNumber = 1;
+    const existingNumbers = publicRooms.map(r => parseInt(r.name.match(/\d+/)[0])).sort((a, b) => a - b);
+    
+    for (let num of existingNumbers) {
+        if (num === roomNumber) {
+            roomNumber++;
+        } else {
+            break;
+        }
+    }
+    
+    const room = {
+        id: `room${roomNumber}`,
+        name: `Phòng ${roomNumber}`,
+        player1: null,
+        player2: null,
+        player1Id: null,
+        player2Id: null,
+        player1Ready: false,
+        player2Ready: false,
+        spectators: [],
+        playerCount: 0,
+        status: 'waiting', // waiting, ready, playing
+        type: 'public' // public hoặc private
+    };
+    publicRooms.push(room);
+    
+    // Sắp xếp phòng theo số thứ tự
+    publicRooms.sort((a, b) => {
+        const numA = parseInt(a.name.match(/\d+/)[0]);
+        const numB = parseInt(b.name.match(/\d+/)[0]);
+        return numA - numB;
+    });
+    
+    return room;
+}
+
+// Tạo phòng trống ban đầu
+createNewRoom();
+
+function broadcastRoomList() {
+    const roomListData = publicRooms.map(room => ({
+        id: room.id,
+        name: room.name,
+        player1: room.player1,
+        player2: room.player2,
+        player1Ready: room.player1Ready,
+        player2Ready: room.player2Ready,
+        playerCount: room.playerCount,
+        status: room.status,
+        spectatorCount: room.spectators.length
+    }));
+    io.emit('roomList', roomListData);
+}
+
+function getOrCreateAvailableRoom() {
+    // Tìm phòng trống hoặc chờ 1 người
+    let room = publicRooms.find(r => r.playerCount < 2 && r.status === 'waiting');
+    
+    // Nếu không có phòng trống, tạo mới
+    if (!room) {
+        room = createNewRoom();
+    }
+    
+    return room;
+}
+
+function cleanupEmptyRooms() {
+    // Xóa tất cả phòng trống (phòng riêng không còn ai)
+    const beforeCount = publicRooms.length;
+    publicRooms = publicRooms.filter(r => r.playerCount > 0);
+    const afterCount = publicRooms.length;
+    
+    if (beforeCount !== afterCount) {
+        console.log(`[Cleanup] Đã xóa ${beforeCount - afterCount} phòng trống`);
+    }
+}
+
+function resetRoomAfterGame(roomId) {
+    const room = publicRooms.find(r => r.id === roomId);
+    if (room) {
+        room.player1 = null;
+        room.player2 = null;
+        room.player1Id = null;
+        room.player2Id = null;
+        room.playerCount = 0;
+        room.status = 'waiting';
+        room.player1Ready = false;
+        room.player2Ready = false;
+    }
+    cleanupEmptyRooms();
+    broadcastRoomList();
+}
 
 setInterval(() => {
     const now = Date.now();
@@ -179,6 +276,7 @@ setInterval(() => {
                 if(connectedUsers[game.p2.id]) connectedUsers[game.p2.id].status = 'online';
                 broadcastUserList();
                 delete activeGames[roomName];
+                resetRoomAfterGame(roomName);
                 continue;
             }
             
@@ -239,55 +337,83 @@ io.on('connection', (socket) => {
             mistakePenalty: parseInt(settings.mistakePenalty) || DEFAULT_MISTAKE_PENALTY
         };
         
+        // Tìm người cũng đang tìm random (chỉ ghép random với random)
         connectedUsers[socket.id].status = 'waiting';
+        connectedUsers[socket.id].waitingType = 'random'; // Đánh dấu đang chờ random
         broadcastUserList();
         addChatMessage(socket, { isSystem: true, message: 'Đang tìm đối thủ...' });
+        
         const waitingPlayerId = Object.keys(connectedUsers).find(id =>
-            connectedUsers[id].status === 'waiting' && id !== socket.id
+            connectedUsers[id].status === 'waiting' && 
+            connectedUsers[id].waitingType === 'random' && 
+            id !== socket.id
         );
-        if (waitingPlayerId) {
-            const player1_socket = socket;
-            const player2_socket = io.sockets.sockets.get(waitingPlayerId);
-            connectedUsers[player1_socket.id].status = 'playing';
-            connectedUsers[player2_socket.id].status = 'playing';
-            const roomName = `room_${player1_socket.id}`;
-            player1_socket.join(roomName);
-            player2_socket.join(roomName);
-            const gameData = allPuzzles[Math.floor(Math.random() * allPuzzles.length)];
             
-            // Lấy settings (ưu tiên settings của người tạo phòng)
-            const settings = player1_socket.gameSettings || {
-                turnTimeLimit: DEFAULT_TURN_TIME,
-                timeoutPenalty: DEFAULT_TIMEOUT_PENALTY,
-                mistakePenalty: DEFAULT_MISTAKE_PENALTY
-            };
-            
-            const matchData = {
-                room: roomName, puzzle: gameData.puzzle, solution: gameData.solution,
-                p1: { id: player1_socket.id, username: player1_socket.username, mistakes: 0, score: STARTING_SCORE },
-                p2: { id: player2_socket.id, username: player2_socket.username, mistakes: 0, score: STARTING_SCORE },
-                boardState: stringToBoard(gameData.puzzle),
-                solutionBoard: stringToBoard(gameData.solution),
-                startTime: Date.now(), 
-                currentTurn: 1, // 1 = player1, 2 = player2
-                lastTurnTime: Date.now(),
-                turnTimeLeft: settings.turnTimeLimit, // Thời gian còn lại của lượt hiện tại
-                settings: settings // Lưu settings vào game
-            };
-            activeGames[roomName] = matchData;
-            io.to(roomName).emit('matchFound', matchData);
-            broadcastUserList();
-            addChatMessage(player1_socket, { isSystem: true, message: `Đã tìm thấy trận! Đối thủ: ${player2_socket.username}`});
-            addChatMessage(player2_socket, { isSystem: true, message: `Đã tìm thấy trận! Đối thủ: ${player1_socket.username}`});
-        } else {
-            addChatMessage(socket, { isSystem: true, message: 'Bạn là người đầu tiên, vui lòng chờ...' });
-        }
+            if (waitingPlayerId) {
+                // 2 người cùng random → Vào thẳng
+                const player1_socket = socket;
+                const player2_socket = io.sockets.sockets.get(waitingPlayerId);
+                connectedUsers[player1_socket.id].status = 'playing';
+                connectedUsers[player2_socket.id].status = 'playing';
+                
+                // Tạo phòng mới
+                const room = getOrCreateAvailableRoom();
+                room.player1 = player1_socket.username;
+                room.player2 = player2_socket.username;
+                room.player1Id = player1_socket.id;
+                room.player2Id = player2_socket.id;
+                room.playerCount = 2;
+                room.status = 'playing';
+                room.type = 'random';
+                
+                const roomName = room.id;
+                player1_socket.join(roomName);
+                player2_socket.join(roomName);
+                player1_socket.currentRoomId = roomName;
+                player2_socket.currentRoomId = roomName;
+                
+                const gameData = allPuzzles[Math.floor(Math.random() * allPuzzles.length)];
+                
+                // Lấy settings
+                const settings = player1_socket.gameSettings || {
+                    turnTimeLimit: DEFAULT_TURN_TIME,
+                    timeoutPenalty: DEFAULT_TIMEOUT_PENALTY,
+                    mistakePenalty: DEFAULT_MISTAKE_PENALTY
+                };
+                
+                const matchData = {
+                    room: roomName, 
+                    puzzle: gameData.puzzle, 
+                    solution: gameData.solution,
+                    p1: { id: player1_socket.id, username: player1_socket.username, mistakes: 0, score: STARTING_SCORE },
+                    p2: { id: player2_socket.id, username: player2_socket.username, mistakes: 0, score: STARTING_SCORE },
+                    boardState: stringToBoard(gameData.puzzle),
+                    solutionBoard: stringToBoard(gameData.solution),
+                    startTime: Date.now(), 
+                    currentTurn: 1,
+                    lastTurnTime: Date.now(),
+                    turnTimeLeft: settings.turnTimeLimit,
+                    settings: settings
+                };
+                activeGames[roomName] = matchData;
+                io.to(roomName).emit('matchFound', matchData);
+                broadcastUserList();
+                broadcastRoomList();
+                cleanupEmptyRooms();
+                addChatMessage(player1_socket, { isSystem: true, message: `Đã tìm thấy trận! Đối thủ: ${player2_socket.username}`});
+                addChatMessage(player2_socket, { isSystem: true, message: `Đã tìm thấy trận! Đối thủ: ${player1_socket.username}`});
+            } else {
+                // Không có ai → Chỉ đợi, KHÔNG tạo phòng trong publicRooms
+                // Người tìm random chỉ ghép với random, không tạo phòng công khai
+                addChatMessage(socket, { isSystem: true, message: 'Bạn là người đầu tiên, vui lòng chờ...' });
+            }
     });
 
     // 2.5. User hủy tìm trận
     socket.on('cancelMatch', () => {
         if (connectedUsers[socket.id] && connectedUsers[socket.id].status === 'waiting') {
             connectedUsers[socket.id].status = 'online';
+            delete connectedUsers[socket.id].waitingType; // Xóa flag waitingType
             broadcastUserList();
             addChatMessage(socket, { isSystem: true, message: 'Đã hủy tìm trận.' });
         }
@@ -319,7 +445,16 @@ io.on('connection', (socket) => {
             const player2_socket = socket;
             connectedUsers[player1_socket.id].status = 'playing';
             connectedUsers[player2_socket.id].status = 'playing';
-            const roomName = `room_${player1_socket.id}`;
+            
+            // Tạo hoặc lấy phòng có sẵn
+            const room = getOrCreateAvailableRoom();
+            room.player1 = player1_socket.username;
+            room.player2 = player2_socket.username;
+            room.playerCount = 2;
+            room.status = 'playing';
+            room.type = 'private';
+            
+            const roomName = room.id;
             player1_socket.join(roomName);
             player2_socket.join(roomName);
             const gameData = allPuzzles[Math.floor(Math.random() * allPuzzles.length)];
@@ -336,6 +471,8 @@ io.on('connection', (socket) => {
             activeGames[roomName] = matchData;
             io.to(roomName).emit('matchFound', matchData);
             broadcastUserList();
+            broadcastRoomList(); // Cập nhật danh sách phòng
+            cleanupEmptyRooms();
             addChatMessage(player1_socket, { isSystem: true, message: `${player2_socket.username} đã chấp nhận!`});
             addChatMessage(player2_socket, { isSystem: true, message: `Bạn đã chấp nhận ${player1_socket.username}!`});
         } else {
@@ -458,6 +595,7 @@ io.on('connection', (socket) => {
                 if(connectedUsers[game.p2.id]) connectedUsers[game.p2.id].status = 'online';
                 broadcastUserList();
                 delete activeGames[gameRoom];
+                resetRoomAfterGame(gameRoom);
                 return;
             }
             
@@ -513,6 +651,7 @@ io.on('connection', (socket) => {
             if(connectedUsers[game.p2.id]) connectedUsers[game.p2.id].status = 'online';
             broadcastUserList();
             delete activeGames[gameRoom];
+            resetRoomAfterGame(gameRoom);
         } else {
             socket.emit('checkResult', { 
                 errors: errors,
@@ -571,11 +710,334 @@ io.on('connection', (socket) => {
         if(connectedUsers[game.p2.id]) connectedUsers[game.p2.id].status = 'online';
         broadcastUserList();
         delete activeGames[gameRoom];
+        resetRoomAfterGame(gameRoom);
+    });
+
+    // === ROOM SYSTEM HANDLERS ===
+    
+    // Lấy danh sách phòng
+    socket.on('getRoomList', () => {
+        broadcastRoomList();
+    });
+
+    // Tạo phòng riêng với ID tùy chọn
+    socket.on('createPrivateRoom', (data) => {
+        const roomId = data.roomId;
+        
+        // Kiểm tra xem phòng đã tồn tại chưa
+        const existingRoom = publicRooms.find(r => r.id === roomId);
+        if (existingRoom) {
+            socket.emit('error', { message: 'ID phòng này đã được sử dụng! Vui lòng chọn ID khác.' });
+            return;
+        }
+        
+        // Tạo phòng mới
+        const room = {
+            id: roomId,
+            name: `Phòng #${roomId}`,
+            player1: socket.username,
+            player2: null,
+            player1Id: socket.id,
+            player2Id: null,
+            player1Ready: false,
+            player2Ready: false,
+            spectators: [],
+            playerCount: 1,
+            status: 'waiting',
+            type: 'private'
+        };
+        
+        publicRooms.push(room);
+        socket.join(roomId);
+        socket.currentRoomId = roomId;
+        connectedUsers[socket.id].status = 'waiting';
+        
+        socket.emit('privateRoomCreated', { 
+            roomId: roomId,
+            message: `Phòng #${roomId} đã được tạo! Chia sẻ ID này để bạn bè có thể tham gia.`
+        });
+        
+        broadcastRoomList();
+        broadcastUserList();
+    });
+    
+    // Tham gia phòng riêng bằng ID
+    socket.on('joinPrivateRoom', (data) => {
+        const roomId = data.roomId;
+        const room = publicRooms.find(r => r.id === roomId);
+        
+        if (!room) {
+            socket.emit('error', { message: 'Không tìm thấy phòng với ID này!' });
+            return;
+        }
+        
+        if (room.playerCount >= 2) {
+            socket.emit('error', { message: 'Phòng đã đầy hoặc đang chơi!' });
+            return;
+        }
+        
+        if (room.status !== 'waiting') {
+            socket.emit('error', { message: 'Phòng không ở trạng thái chờ!' });
+            return;
+        }
+        
+        // Thêm vào phòng
+        room.player2 = socket.username;
+        room.player2Id = socket.id;
+        room.playerCount = 2;
+        room.status = 'ready';
+        socket.join(roomId);
+        socket.currentRoomId = roomId;
+        connectedUsers[socket.id].status = 'waiting';
+        
+        // Thông báo cho cả 2 người
+        io.to(roomId).emit('roomFull', { 
+            player1: room.player1,
+            player2: room.player2,
+            roomId: roomId
+        });
+        
+        broadcastRoomList();
+        broadcastUserList();
+    });
+
+    // Vào phòng chơi
+    socket.on('joinRoom', (data) => {
+        const room = publicRooms.find(r => r.id === data.roomId);
+        
+        if (!room) {
+            socket.emit('error', { message: 'Phòng không tồn tại!' });
+            return;
+        }
+
+        if (room.playerCount >= 2) {
+            socket.emit('error', { message: 'Phòng đã đầy hoặc đang chơi!' });
+            return;
+        }
+        
+        if (room.status !== 'waiting') {
+            socket.emit('error', { message: 'Phòng không ở trạng thái chờ!' });
+            return;
+        }
+
+        // Thêm người chơi vào phòng
+        if (!room.player1) {
+            room.player1 = socket.username;
+            room.player1Id = socket.id;
+            room.playerCount = 1;
+            socket.join(data.roomId);
+            socket.currentRoomId = data.roomId; // Lưu room ID vào socket
+            connectedUsers[socket.id].status = 'waiting';
+            socket.emit('joinedRoom', { roomId: data.roomId, waiting: true });
+            broadcastRoomList();
+            broadcastUserList();
+        } else if (!room.player2) {
+            room.player2 = socket.username;
+            room.player2Id = socket.id;
+            room.playerCount = 2;
+            room.status = 'ready'; // Đổi thành ready, chưa playing
+            socket.join(data.roomId);
+            socket.currentRoomId = data.roomId;
+            connectedUsers[socket.id].status = 'waiting';
+            
+            // Thông báo cho cả 2 người là phòng đã đủ
+            io.to(data.roomId).emit('roomFull', { 
+                player1: room.player1,
+                player2: room.player2,
+                roomId: data.roomId
+            });
+        }
+        
+        broadcastUserList();
+        broadcastRoomList();
+        cleanupEmptyRooms();
+    });
+
+    // Người chơi nhấn Ready
+    socket.on('playerReady', (data) => {
+        const room = publicRooms.find(r => r.id === data.roomId);
+        
+        if (!room) return;
+
+        // Đánh dấu người chơi ready
+        if (room.player1Id === socket.id) {
+            room.player1Ready = true;
+        } else if (room.player2Id === socket.id) {
+            room.player2Ready = true;
+        }
+
+        // Thông báo trạng thái ready
+        io.to(data.roomId).emit('readyStatus', {
+            player1Ready: room.player1Ready,
+            player2Ready: room.player2Ready
+        });
+
+        broadcastRoomList();
+
+        // Nếu cả 2 đã ready, bắt đầu game
+        if (room.player1Ready && room.player2Ready) {
+            room.status = 'playing';
+            
+            const player1Socket = io.sockets.sockets.get(room.player1Id);
+            const player2Socket = io.sockets.sockets.get(room.player2Id);
+            
+            if (player1Socket && player2Socket) {
+                connectedUsers[player1Socket.id].status = 'playing';
+                connectedUsers[player2Socket.id].status = 'playing';
+                
+                const gameData = allPuzzles[Math.floor(Math.random() * allPuzzles.length)];
+                const settings = {
+                    turnTimeLimit: DEFAULT_TURN_TIME,
+                    timeoutPenalty: DEFAULT_TIMEOUT_PENALTY,
+                    mistakePenalty: DEFAULT_MISTAKE_PENALTY
+                };
+                
+                const matchData = {
+                    room: data.roomId,
+                    puzzle: gameData.puzzle,
+                    solution: gameData.solution,
+                    p1: { id: player1Socket.id, username: player1Socket.username, mistakes: 0, score: STARTING_SCORE },
+                    p2: { id: player2Socket.id, username: player2Socket.username, mistakes: 0, score: STARTING_SCORE },
+                    boardState: stringToBoard(gameData.puzzle),
+                    solutionBoard: stringToBoard(gameData.solution),
+                    startTime: Date.now(),
+                    currentTurn: 1,
+                    lastTurnTime: Date.now(),
+                    turnTimeLeft: settings.turnTimeLimit,
+                    settings: settings,
+                    p1Board: stringToBoard(gameData.puzzle),
+                    p2Board: stringToBoard(gameData.puzzle)
+                };
+                
+                activeGames[data.roomId] = matchData;
+                
+                io.to(data.roomId).emit('matchFound', {
+                    p1: { username: player1Socket.username },
+                    p2: { username: player2Socket.username }
+                });
+                
+                setTimeout(() => {
+                    io.to(data.roomId).emit('gameStart', {
+                        puzzle: gameData.puzzle,
+                        solution: gameData.solution,
+                        p1: { username: player1Socket.username },
+                        p2: { username: player2Socket.username },
+                        startingScore: STARTING_SCORE,
+                        turnTimeLimit: settings.turnTimeLimit
+                    });
+                    
+                    broadcastUserList();
+                    broadcastRoomList();
+                }, 2500);
+            }
+        }
+    });
+
+    // Thoát phòng
+    socket.on('leaveRoom', (data) => {
+        const room = publicRooms.find(r => r.id === data.roomId);
+        
+        if (!room) return;
+
+        // Xóa người chơi khỏi phòng
+        if (room.player1Id === socket.id) {
+            room.player1 = null;
+            room.player1Id = null;
+            room.player1Ready = false;
+            room.playerCount--;
+        } else if (room.player2Id === socket.id) {
+            room.player2 = null;
+            room.player2Id = null;
+            room.player2Ready = false;
+            room.playerCount--;
+        }
+
+        // Reset status nếu chưa đủ 2 người
+        if (room.playerCount < 2) {
+            room.status = 'waiting';
+        }
+
+        socket.leave(data.roomId);
+        socket.currentRoomId = null;
+        
+        // Thông báo cho người còn lại
+        io.to(data.roomId).emit('playerLeft', {
+            message: `${socket.username} đã rời phòng`
+        });
+        
+        if (connectedUsers[socket.id]) {
+            connectedUsers[socket.id].status = 'online';
+        }
+
+        socket.emit('leftRoom');
+        broadcastUserList();
+        broadcastRoomList();
+        cleanupEmptyRooms();
+    });
+
+    // Xem phòng (spectator)
+    socket.on('spectateRoom', (data) => {
+        const room = publicRooms.find(r => r.id === data.roomId);
+        
+        if (!room) {
+            socket.emit('error', { message: 'Phòng không tồn tại!' });
+            return;
+        }
+
+        if (room.status !== 'playing') {
+            socket.emit('error', { message: 'Phòng chưa bắt đầu chơi!' });
+            return;
+        }
+
+        // Thêm vào danh sách spectators
+        room.spectators.push(socket.id);
+        socket.join(data.roomId);
+        
+        // Broadcast cập nhật danh sách phòng
+        broadcastRoomList();
+        
+        // Gửi trạng thái game hiện tại
+        const game = activeGames[data.roomId];
+        if (game) {
+            socket.emit('spectateStart', {
+                p1: { username: game.p1.username, score: game.p1.score, mistakes: game.p1.mistakes },
+                p2: { username: game.p2.username, score: game.p2.score, mistakes: game.p2.mistakes },
+                puzzle: game.puzzle,
+                p1Board: game.p1Board,
+                p2Board: game.p2Board,
+                currentTurn: game.currentTurn,
+                turnTimeLeft: game.turnTimeLeft
+            });
+        }
     });
 
     // 9. User ngắt kết nối
     socket.on('disconnect', () => {
         console.log(`Người dùng ${socket.id} đã ngắt kết nối.`);
+        
+        // Xóa khỏi phòng công khai nếu có
+        publicRooms.forEach(room => {
+            if (room.player1 === socket.username || room.player1Id === socket.id) {
+                room.player1 = null;
+                room.player1Id = null;
+                room.playerCount--;
+            }
+            if (room.player2 === socket.username || room.player2Id === socket.id) {
+                room.player2 = null;
+                room.player2Id = null;
+                room.playerCount--;
+            }
+            if (room.playerCount === 0) {
+                room.status = 'waiting';
+            }
+            room.spectators = room.spectators.filter(id => id !== socket.id);
+        });
+        
+        // Broadcast danh sách phòng sau khi cập nhật
+        broadcastRoomList();
+        
+        cleanupEmptyRooms();
+        
         const gameRoom = getSocketRoom(socket);
         if (gameRoom && activeGames[gameRoom]) {
             const game = activeGames[gameRoom];
@@ -623,9 +1085,11 @@ io.on('connection', (socket) => {
                 if(connectedUsers[opponentId]) { connectedUsers[opponentId].status = 'online'; }
             }
             delete activeGames[gameRoom];
+            resetRoomAfterGame(gameRoom);
         }
         delete connectedUsers[socket.id];
         broadcastUserList();
+        broadcastRoomList();
     });
 
 }); // === KẾT THÚC io.on('connection') ===
