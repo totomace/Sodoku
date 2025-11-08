@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lịch Sử Đấu</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            padding: 20px;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: #fff;
+            padding: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            text-align: center;
+            border-bottom: 2px solid #eee;
+            padding-bottom: 10px;
+            margin-bottom: 0px; /* Sửa lại cho đẹp */
+        }
+        .back-btn {
+            display: inline-block;
+            padding: 10px 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: bold;
+            transition: all 0.3s;
+            margin-bottom: 20px;
+        }
+        .back-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+        
+        /* === DÒNG MỚI ĐỂ HIỆN TÊN USER === */
+        #history-title {
+            text-align: center;
+            color: #555;
+            font-weight: normal;
+            font-size: 1.2rem;
+            margin-top: 10px;
+        }
+        /* === HẾT PHẦN MỚI === */
+
+        #history-list {
+            list-style-type: none;
+            padding: 0;
+        }
+        .history-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px;
+            border-bottom: 1px solid #f0f0f0;
+            border-left: 5px solid #ccc;
+            transition: all 0.3s ease;
+        }
+        .history-item:hover {
+            background: #f8f9fa;
+            transform: translateX(5px);
+        }
+        .history-item:last-child {
+            border-bottom: none;
+        }
+        
+        /* Màu theo kết quả thắng/thua */
+        .history-item.win {
+            border-left-color: #28a745;
+            background: #f0fff4;
+        }
+        .history-item.lose {
+            border-left-color: #dc3545;
+            background: #fff5f5;
+        }
+        
+        .item-left {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .result-badge {
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-weight: bold;
+            font-size: 0.9rem;
+            min-width: 80px;
+            text-align: center;
+        }
+        .result-badge.win {
+            background: #28a745;
+            color: white;
+        }
+        .result-badge.lose {
+            background: #dc3545;
+            color: white;
+        }
+        
+        .mode { 
+            font-weight: bold; 
+            font-size: 1.1rem;
+        }
+        .mode-DỄ { color: #28a745; }
+        .mode-THƯỜNG { color: #ffc107; }
+        .mode-KHÓ { color: #dc3545; }
+        .mode-PvP { color: #667eea; }
+        
+        .opponent-info {
+            font-size: 0.9rem;
+            color: #666;
+            margin-top: 5px;
+        }
+        
+        .item-right {
+            text-align: right;
+        }
+        
+        .score { 
+            font-size: 1.3rem; 
+            font-weight: bold; 
+            color: #007bff; 
+        }
+        .reason {
+            font-size: 0.85rem;
+            color: #666;
+            font-style: italic;
+            margin-top: 3px;
+        }
+        .date { 
+            font-size: 0.85rem; 
+            color: #999; 
+            margin-top: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Lịch Sử Đấu</h1>
+        
+        <h2 id="history-title">...</h2>
+        
+        <a href="/index.html" class="back-btn">◀ Quay lại Menu</a>
+        
+        <ul id="history-list">
+            </ul>
+    </div>
+    <script src="/js/history.js"></script>
+</body>
+</html>

@@ -1,0 +1,7 @@
+# Bỏ qua thư mục node_modules
+node_modules
+
+# Bỏ qua các file sinh ra tự động khác (tùy chọn)
+/dist
+.DS_Store
+npm-debug.log

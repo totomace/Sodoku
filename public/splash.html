@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chào mừng - Sudoku</title>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <style>
+        /* Import font chữ giống thiết kế */
+        @import url('https://fonts.googleapis.com/css2?family=Permanent+Marker&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400&display=swap');
+
+        body, html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            /* Dùng font Inter làm font phụ, sạch sẽ */
+            font-family: 'Inter', sans-serif;
+            background-color: #FEFEFE; /* Màu trắng tinh */
+        }
+
+        /* Thẻ <a> bao bọc toàn màn hình để có thể nhấp */
+        .splash-link {
+            display: block;
+            width: 100%;
+            height: 100%;
+            text-decoration: none;
+            color: #333; /* Màu chữ mặc định */
+        }
+
+        .splash-container {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+            height: 100%;
+            position: relative;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .splash-container:hover {
+            background-color: #f9f9f9; /* Hiệu ứng khi di chuột */
+        }
+
+        /* Tiêu đề chính */
+        h1 {
+            margin: 0;
+            padding: 0;
+            text-align: center;
+            line-height: 1.0;
+            /* Dùng font 'Permanent Marker' cho tiêu đề */
+            font-family: 'Permanent Marker', cursive;
+            color: #222;
+        }
+
+        .text-sudoku {
+            font-size: 10.0rem; /* 64px */
+            display: block;
+            font-weight: 500;
+        }
+
+        .text-solver {
+            font-size: 5.0rem; /* 104px */
+            display: block;
+            margin-top: -15px; /* Kéo chữ lên cho sát */
+        }
+
+        /* Dòng chữ "Nhấn vào màn hình" */
+        .click-prompt {
+            margin-top: 3rem;
+            font-size: 1rem; /* 16px */
+            color: #888;
+            font-family: 'Inter', sans-serif;
+        }
+
+        /* --- Các icon trang trí --- */
+        .icon {
+            position: absolute;
+            font-size: 5.0rem; /* Kích thước icon */
+            opacity: 0.8;
+            z-index: 10;
+        }
+
+        /* Icon 2x2 Grid (fa-grip) */
+        .icon-grid {
+            top: 15%;
+            left: 15%;
+            color: #FFA500; /* Màu cam */
+            transform: rotate(-10deg);
+        }
+
+        /* Icon Gamepad (giống SNES) */
+        .icon-gamepad {
+            top: 20%;
+            right: 15%;
+            color: #999; /* Màu xám */
+            transform: rotate(15deg);
+        }
+        
+        /* Icon Puzzle */
+        .icon-puzzle {
+            bottom: 20%;
+            left: 20%;
+            color: #444; /* Màu đen nhạt */
+            transform: rotate(10deg);
+        }
+
+        /* Đường cong trang trí dưới góc (Tùy chọn) */
+        .bottom-curve {
+            position: absolute;
+            bottom: -50px;
+            left: -50px;
+            width: 200px;
+            height: 200px;
+            background: #FFF3E0; /* Màu cam nhạt */
+            border-radius: 50%;
+            opacity: 0.6;
+            z-index: 1;
+        }
+
+    </style>
+    </head>
+<body>
+
+    <a href="login.html" class="splash-link">
+        
+        <div class="splash-container">
+            
+            <div class="bottom-curve"></div>
+
+            <i class="fa-solid fa-grip icon icon-grid"></i>
+            <i class="fa-solid fa-gamepad icon icon-gamepad"></i>
+            <i class="fa-solid fa-puzzle-piece icon icon-puzzle"></i>
+
+            <h1>
+                <span class="text-solver">WELCOME TO</span>
+                <span class="text-sudoku">SUDOKU</span>
+            </h1>
+
+            <p class="click-prompt">
+                Nhấn vào màn hình
+            </p>
+
+        </div>
+    </a>
+
+</body>
+</html>

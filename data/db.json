@@ -1,0 +1,66 @@
+{
+  "users": [
+    {
+      "id": "1762537422848",
+      "username": "user1",
+      "password": "$2b$10$WaQ5TckghrNx76WtAT7Av.7UFex0jysZRmlEMS2Ziqv3zEyPvB0cS"
+    },
+    {
+      "id": "1762537422849",
+      "username": "user2",
+      "password": "$2b$10$WaQ5TckghrNx76WtAT7Av.7UFex0jysZRmlEMS2Ziqv3zEyPvB0cS"
+    },
+    {
+      "id": "1762537422850",
+      "username": "user3",
+      "password": "$2b$10$WaQ5TckghrNx76WtAT7Av.7UFex0jysZRmlEMS2Ziqv3zEyPvB0cS"
+    },
+    {
+      "id": "1762537422851",
+      "username": "admin",
+      "password": "$2b$10$WaQ5TckghrNx76WtAT7Av.7UFex0jysZRmlEMS2Ziqv3zEyPvB0cS"
+    },
+    {
+      "id": "1762537422852",
+      "username": "test1",
+      "password": "$2b$10$WaQ5TckghrNx76WtAT7Av.7UFex0jysZRmlEMS2Ziqv3zEyPvB0cS"
+    },
+    {
+      "id": "1762537422853",
+      "username": "test2",
+      "password": "$2b$10$WaQ5TckghrNx76WtAT7Av.7UFex0jysZRmlEMS2Ziqv3zEyPvB0cS"
+    },
+    {
+      "id": "1762537422854",
+      "username": "client01",
+      "password": "$2b$10$WaQ5TckghrNx76WtAT7Av.7UFex0jysZRmlEMS2Ziqv3zEyPvB0cS"
+    },
+    {
+      "id": "1762537422855",
+      "username": "client02",
+      "password": "$2b$10$WaQ5TckghrNx76WtAT7Av.7UFex0jysZRmlEMS2Ziqv3zEyPvB0cS"
+    }
+  ],
+  "gameHistory": [
+    {
+      "username": "client01",
+      "mode": "PvP",
+      "score": 50,
+      "mistakes": 19,
+      "opponent": "client02",
+      "result": "win",
+      "reason": "Đối thủ hết điểm",
+      "date": "2025-11-07T10:21:11.330Z"
+    },
+    {
+      "username": "client02",
+      "mode": "PvP",
+      "score": 0,
+      "mistakes": 20,
+      "opponent": "client01",
+      "result": "lose",
+      "reason": "Hết điểm",
+      "date": "2025-11-07T10:21:11.331Z"
+    }
+  ]
+}
