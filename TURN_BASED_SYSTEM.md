@@ -5,7 +5,9 @@
 Sudoku là một trò chơi đố số trong đó người chơi phải điền các số từ 1 đến 9 vào một bảng 9×9, được chia thành 9 ô vuông con 3×3. Quy tắc là:
 
 -Mỗi hàng chỉ chứa số 1–9 và không trùng lặp
+
 -Mỗi cột chỉ chứa số 1–9 và không trùng lặp
+
 -Mỗi ô vuông 3×3 cũng phải đủ số 1–9 và không được trùng nhau
 
 Game Sudoku PvP giờ hoạt động theo hệ thống **lượt chơi** giống cờ vua:
