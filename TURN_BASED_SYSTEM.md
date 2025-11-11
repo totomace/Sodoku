@@ -18,8 +18,8 @@ Game Sudoku PvP giờ hoạt động theo hệ thống **lượt chơi** giống
 Người thắng là:
 
 ✅ Hoàn thành trước đối thủ hoặc
+✅ Đối thủ hết giờ hoặc chọn sai nhiều lần nên bị trừ hết điểm
 
-✅ Đối thủ hết giờ hoặc chọn sai nhiều lần dẫn đến trừ hết điểm
 ---
 
 ## 🎲 Luật chơi
