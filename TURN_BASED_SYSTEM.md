@@ -15,7 +15,11 @@ Game Sudoku PvP giờ hoạt động theo hệ thống **lượt chơi** giống
 - 🎯 Chỉ đồng hồ người đang chơi mới chạy
 - 🔄 Sau mỗi nước đi, tự động chuyển lượt
 - 💰 Điểm số cố định: 1000 điểm ban đầu
+Người thắng là:
 
+✅ Hoàn thành trước đối thủ hoặc
+
+✅ Đối thủ hết giờ hoặc chọn sai nhiều lần dẫn đến trừ hết điểm
 ---
 
 ## 🎲 Luật chơi
