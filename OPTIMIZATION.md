@@ -108,20 +108,31 @@ curl http://localhost:3000/api/stats
 
 ## 🔍 Monitoring
 
-### Metrics Available:
-- Online users count
-- Active games count
-- Memory usage
-- CPU usage
-- Database status
-- Redis status
-- Uptime
+System Metrics:
 
-### Logs:
-- Access logs (Morgan)
-- Error logs
-- Security violations
-- Anti-cheat detections
+- ✅Online Users Count – Displays the number of active users in real time.
+
+- ✅Active Games Count – Tracks the number of games currently running.
+
+- ✅Memory Usage – Monitors RAM consumption to prevent performance bottlenecks.
+
+- ✅CPU Usage – Provides CPU load statistics for performance tuning.
+
+- ✅Database Status – Checks the connectivity and health of the database system.
+
+- ✅Redis Status – Monitors cache performance and availability.
+
+- ✅Uptime – Records the total continuous operation time of the system.
+
+Logs & Security:
+
+- ✅Access Logs (Morgan) – Logs all incoming requests for auditing and analytics.
+
+- ✅Error Logs – Captures detailed error information for debugging and maintenance.
+
+- ✅Security Violations – Detects unauthorized access attempts or suspicious behavior.
+
+- ✅Anti-Cheat Detections – Identifies cheating or exploit activities within the game system.
 
 ## 🚨 Error Handling
 
