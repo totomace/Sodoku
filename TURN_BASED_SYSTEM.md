@@ -170,11 +170,19 @@ Người thắng: [Đối thủ]
 
 ## 🚀 Lợi ích
 
-✅ **Công bằng hơn**: Mỗi người có thời gian riêng  
-✅ **Chiến thuật cao hơn**: Phải suy nghĩ trước khi đi  
-✅ **Ít gian lận**: Không thể spam điền số  
-✅ **Giống game thật**: Như chơi cờ vua, cờ tướng  
-✅ **Thú vị hơn**: Có áp lực khi đến lượt mình  
+✅ Công bằng hơn: Mỗi người có thời gian riêng để suy nghĩ, không bị ảnh hưởng bởi tốc độ của người khác.
+
+✅ Chiến thuật cao hơn: Người chơi phải tính toán trước, cân nhắc từng nước đi để tận dụng tối đa thời gian của mình.
+
+✅ Giảm gian lận: Không thể spam hay thao túng lượt chơi — mọi hành động đều minh bạch và có giới hạn thời gian rõ ràng.
+
+✅ Thực tế hơn: Giống như trong các môn cờ vua, cờ tướng hay cờ vây — mỗi người đều có “đồng hồ” riêng, tăng tính chuyên nghiệp.
+
+✅ Hấp dẫn hơn: Cảm giác hồi hộp khi đồng hồ đếm ngược giúp trận đấu thêm kịch tính và cuốn hút.
+
+✅ Rèn luyện tư duy nhanh: Người chơi học cách phản xạ nhanh, ra quyết định chính xác trong áp lực thời gian.
+
+✅ Tạo trải nghiệm cân bằng: Ai cũng có cơ hội thể hiện khả năng, không phụ thuộc vào tốc độ hoặc sự may mắn.
 
 ---
 
