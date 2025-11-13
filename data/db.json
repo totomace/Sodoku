@@ -1,20 +1,4 @@
-{
-  "users": [
-    {
-      "id": "1762537422848",
-      "username": "user1",
-      "password": "$2b$10$WaQ5TckghrNx76WtAT7Av.7UFex0jysZRmlEMS2Ziqv3zEyPvB0cS"
-    },
-    {
-      "id": "1762537422849",
-      "username": "user2",
-      "password": "$2b$10$WaQ5TckghrNx76WtAT7Av.7UFex0jysZRmlEMS2Ziqv3zEyPvB0cS"
-    },
-    {
-      "id": "1762537422850",
-      "username": "user3",
-      "password": "$2b$10$WaQ5TckghrNx76WtAT7Av.7UFex0jysZRmlEMS2Ziqv3zEyPvB0cS"
-    },
+
     {
       "id": "1762537422851",
       "username": "admin",
