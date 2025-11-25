@@ -100,11 +100,11 @@
             color: #3498db;
         }
         #stats-bar {
-            display: flex; 
-            justify-content: space-between;
-            gap: 20px;
-            width: 500px; 
-            margin-bottom: 20px; 
+            display: flex;
+            justify-content: center;
+            gap: 0;
+            width: 350px;
+            margin-bottom: 20px;
             font-size: 1.1rem;
         }
         #stats-bar div {
@@ -135,7 +135,11 @@
             grid-template-rows: repeat(9, 50px);
             border: 3px solid #333;
             margin-bottom: 20px;
+            margin-top: 10px;
             box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            min-width: 450px;
+            min-height: 450px;
+            background: white;
         }
         .cell {
             width: 50px; height: 50px; border: 1px solid #ccc;
@@ -346,10 +350,6 @@
         <h1>🎮 Chơi Đơn</h1>
         
         <div id="stats-bar">
-            <div id="score-box">
-                💰 Điểm<br>
-                <span id="score">5000</span>
-            </div>
             <div id="timer-box">
                 ⏱️ Thời gian<br>
                 <span id="timer">10:00</span>
