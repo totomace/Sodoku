@@ -26643,3 +26643,156 @@ Máy khác có thể truy cập qua: http://10.216.72.91:3000
 2025-11-08 14:55:33 +07:00: Một người vừa kết nối: 5F3kFe6DY9m8UpJfAAAB
 2025-11-08 14:55:35 +07:00: Người dùng 5F3kFe6DY9m8UpJfAAAB đã ngắt kết nối.
 2025-11-08 14:55:35 +07:00: [Cleanup] Đã xóa 1 phòng trống
+2025-11-25 17:43:10 +07:00: [dotenv@17.2.3] injecting env (23) from .env -- tip: 🔐 prevent committing .env to code: https://dotenvx.com/precommit
+2025-11-25 17:43:10 +07:00: [dotenv@17.2.3] injecting env (23) from .env -- tip: 📡 add observability to secrets: https://dotenvx.com/ops
+2025-11-25 17:43:10 +07:00: [dotenv@17.2.3] injecting env (23) from .env -- tip: ⚙️  override existing env vars with { override: true }
+2025-11-25 17:43:10 +07:00: [dotenv@17.2.3] injecting env (23) from .env -- tip: ⚙️  specify custom .env file path with { path: '/custom/path/.env' }
+2025-11-25 17:43:10 +07:00: [dotenv@17.2.3] injecting env (0) from .env -- tip: ⚙️  load multiple .env files with { path: ['.env.local', '.env'] }
+2025-11-25 17:43:12 +07:00: ✅ Redis đã kết nối!
+2025-11-25 17:43:12 +07:00: ✅ Redis đã sẵn sàng!
+2025-11-25 17:43:10 +07:00: [dotenv@17.2.3] injecting env (0) from .env -- tip: 👥 sync secrets across teammates & machines: https://dotenvx.com/ops
+2025-11-25 17:43:12 +07:00: ✅ Redis đã kết nối!
+2025-11-25 17:43:12 +07:00: ✅ Redis đã sẵn sàng!
+2025-11-25 17:43:11 +07:00: [dotenv@17.2.3] injecting env (0) from .env -- tip: 🗂️ backup and recover secrets: https://dotenvx.com/ops
+2025-11-25 17:43:13 +07:00: ✅ Đã kết nối PostgreSQL thành công!
+2025-11-25 17:43:11 +07:00: [dotenv@17.2.3] injecting env (0) from .env -- tip: 🗂️ backup and recover secrets: https://dotenvx.com/ops
+2025-11-25 17:43:13 +07:00: ✅ Redis đã kết nối!
+2025-11-25 17:43:13 +07:00: ✅ Đã tạo tables và indexes
+2025-11-25 17:43:13 +07:00: ✅ Đã tạo tables và indexes
+2025-11-25 17:43:13 +07:00: ✅ Redis đã sẵn sàng!
+2025-11-25 17:43:13 +07:00: ✅ PostgreSQL đã sẵn sàng!
+2025-11-25 17:43:13 +07:00: OK! Server (Express + Socket.io) đang chạy tại:
+2025-11-25 17:43:13 +07:00:   - Local:   http://localhost:3000
+2025-11-25 17:43:13 +07:00:   - Network: http://10.216.72.91:3000
+2025-11-25 17:43:13 +07:00: 
+Máy khác có thể truy cập qua: http://10.216.72.91:3000
+2025-11-25 17:43:13 +07:00: 
+📬 Message Queue đã sẵn sàng!
+2025-11-25 17:43:13 +07:00: ✅ Redis đã kết nối!
+2025-11-25 17:43:13 +07:00: ✅ Đã kết nối PostgreSQL thành công!
+2025-11-25 17:43:13 +07:00: ✅ Đã tạo tables và indexes
+2025-11-25 17:43:13 +07:00: ✅ Redis đã sẵn sàng!
+2025-11-25 17:43:13 +07:00: ✅ Đã tạo tables và indexes
+2025-11-25 17:43:13 +07:00: ✅ PostgreSQL đã sẵn sàng!
+2025-11-25 17:43:13 +07:00: OK! Server (Express + Socket.io) đang chạy tại:
+2025-11-25 17:43:13 +07:00:   - Local:   http://localhost:3000
+2025-11-25 17:43:13 +07:00:   - Network: http://10.216.72.91:3000
+2025-11-25 17:43:13 +07:00: 
+Máy khác có thể truy cập qua: http://10.216.72.91:3000
+2025-11-25 17:43:13 +07:00: 
+📬 Message Queue đã sẵn sàng!
+2025-11-25 17:43:13 +07:00: ✅ Đã kết nối PostgreSQL thành công!
+2025-11-25 17:43:13 +07:00: ✅ Đã tạo tables và indexes
+2025-11-25 17:43:13 +07:00: ✅ Đã tạo tables và indexes
+2025-11-25 17:43:13 +07:00: ✅ PostgreSQL đã sẵn sàng!
+2025-11-25 17:43:13 +07:00: OK! Server (Express + Socket.io) đang chạy tại:
+2025-11-25 17:43:13 +07:00:   - Local:   http://localhost:3000
+2025-11-25 17:43:13 +07:00:   - Network: http://10.216.72.91:3000
+2025-11-25 17:43:13 +07:00: 
+Máy khác có thể truy cập qua: http://10.216.72.91:3000
+2025-11-25 17:43:13 +07:00: 
+📬 Message Queue đã sẵn sàng!
+2025-11-25 17:43:13 +07:00: ✅ Đã kết nối PostgreSQL thành công!
+2025-11-25 17:43:13 +07:00: ✅ Đã tạo tables và indexes
+2025-11-25 17:43:13 +07:00: ✅ Đã tạo tables và indexes
+2025-11-25 17:43:13 +07:00: ✅ PostgreSQL đã sẵn sàng!
+2025-11-25 17:43:13 +07:00: OK! Server (Express + Socket.io) đang chạy tại:
+2025-11-25 17:43:13 +07:00:   - Local:   http://localhost:3000
+2025-11-25 17:43:13 +07:00:   - Network: http://10.216.72.91:3000
+2025-11-25 17:43:13 +07:00: 
+Máy khác có thể truy cập qua: http://10.216.72.91:3000
+2025-11-25 17:43:13 +07:00: 
+📬 Message Queue đã sẵn sàng!
+2025-11-25 17:43:15 +07:00: 127.0.0.1 - - [25/Nov/2025:10:43:15 +0000] "GET / HTTP/1.1" 200 - "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0"
+2025-11-25 17:43:18 +07:00: 127.0.0.1 - - [25/Nov/2025:10:43:18 +0000] "POST /api/login HTTP/1.1" 200 55 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0"
+2025-11-25 17:43:35 +07:00: Một người vừa kết nối: zMQDn0mRJR2r7ZVZAAAB
+2025-11-25 17:43:47 +07:00: 127.0.0.1 - - [25/Nov/2025:10:43:47 +0000] "GET / HTTP/1.1" 200 - "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36 Edg/142.0.0.0"
+2025-11-25 17:43:50 +07:00: 127.0.0.1 - - [25/Nov/2025:10:43:50 +0000] "POST /api/login HTTP/1.1" 200 55 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36 Edg/142.0.0.0"
+2025-11-25 17:43:52 +07:00: Một người vừa kết nối: -Pz_j8cfzpboScpRAAAD
+2025-11-25 17:47:56 +07:00: 127.0.0.1 - - [25/Nov/2025:10:47:56 +0000] "GET /pvp.html HTTP/1.1" 200 - "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36 Edg/142.0.0.0"
+2025-11-25 17:47:56 +07:00: Người dùng -Pz_j8cfzpboScpRAAAD đã ngắt kết nối.
+2025-11-25 17:47:56 +07:00: Một người vừa kết nối: 46oatKiQeKuwvPpyAAAF
+2025-11-25 17:47:56 +07:00: Người dùng zMQDn0mRJR2r7ZVZAAAB đã ngắt kết nối.
+2025-11-25 17:47:56 +07:00: [Cleanup] Đã xóa 1 phòng trống
+2025-11-25 17:47:56 +07:00: 127.0.0.1 - - [25/Nov/2025:10:47:56 +0000] "GET /pvp.html HTTP/1.1" 200 - "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0"
+2025-11-25 17:47:56 +07:00: Một người vừa kết nối: zcddnneKemI3E6kFAAAH
+2025-11-25 17:48:11 +07:00: Người dùng zcddnneKemI3E6kFAAAH đã ngắt kết nối.
+2025-11-25 17:48:12 +07:00: Người dùng 46oatKiQeKuwvPpyAAAF đã ngắt kết nối.
+2025-11-25 17:48:12 +07:00: [Cleanup] Đã xóa 1 phòng trống
+2025-11-25 17:48:37 +07:00: [dotenv@17.2.3] injecting env (23) from .env -- tip: ⚙️  enable debug logging with { debug: true }
+2025-11-25 17:48:37 +07:00: [dotenv@17.2.3] injecting env (23) from .env -- tip: ⚙️  enable debug logging with { debug: true }
+2025-11-25 17:48:37 +07:00: [dotenv@17.2.3] injecting env (23) from .env -- tip: ⚙️  enable debug logging with { debug: true }
+2025-11-25 17:48:37 +07:00: [dotenv@17.2.3] injecting env (23) from .env -- tip: ✅ audit secrets and track compliance: https://dotenvx.com/ops
+2025-11-25 17:48:37 +07:00: [dotenv@17.2.3] injecting env (0) from .env -- tip: 🔄 add secrets lifecycle management: https://dotenvx.com/ops
+2025-11-25 17:48:37 +07:00: [dotenv@17.2.3] injecting env (0) from .env -- tip: 🔐 prevent committing .env to code: https://dotenvx.com/precommit
+2025-11-25 17:48:38 +07:00: ✅ Redis đã kết nối!
+2025-11-25 17:48:38 +07:00: ✅ Redis đã kết nối!
+2025-11-25 17:48:38 +07:00: ✅ Redis đã sẵn sàng!
+2025-11-25 17:48:38 +07:00: ✅ Redis đã sẵn sàng!
+2025-11-25 17:48:38 +07:00: ✅ Đã kết nối PostgreSQL thành công!
+2025-11-25 17:48:38 +07:00: ✅ Đã kết nối PostgreSQL thành công!
+2025-11-25 17:48:38 +07:00: ✅ Đã tạo tables và indexes
+2025-11-25 17:48:38 +07:00: ✅ Đã tạo tables và indexes
+2025-11-25 17:48:38 +07:00: ✅ Đã tạo tables và indexes
+2025-11-25 17:48:38 +07:00: ✅ PostgreSQL đã sẵn sàng!
+2025-11-25 17:48:38 +07:00: ✅ Đã tạo tables và indexes
+2025-11-25 17:48:38 +07:00: ✅ PostgreSQL đã sẵn sàng!
+2025-11-25 17:48:38 +07:00: OK! Server (Express + Socket.io) đang chạy tại:
+2025-11-25 17:48:38 +07:00:   - Local:   http://localhost:3000
+2025-11-25 17:48:38 +07:00:   - Network: http://10.216.72.91:3000
+2025-11-25 17:48:38 +07:00: 
+Máy khác có thể truy cập qua: http://10.216.72.91:3000
+2025-11-25 17:48:38 +07:00: 
+📬 Message Queue đã sẵn sàng!
+2025-11-25 17:48:38 +07:00: OK! Server (Express + Socket.io) đang chạy tại:
+2025-11-25 17:48:38 +07:00:   - Local:   http://localhost:3000
+2025-11-25 17:48:38 +07:00:   - Network: http://10.216.72.91:3000
+2025-11-25 17:48:38 +07:00: 
+Máy khác có thể truy cập qua: http://10.216.72.91:3000
+2025-11-25 17:48:38 +07:00: 
+📬 Message Queue đã sẵn sàng!
+2025-11-25 17:48:37 +07:00: [dotenv@17.2.3] injecting env (0) from .env -- tip: 🔑 add access controls to secrets: https://dotenvx.com/ops
+2025-11-25 17:48:38 +07:00: ✅ Redis đã kết nối!
+2025-11-25 17:48:37 +07:00: [dotenv@17.2.3] injecting env (0) from .env -- tip: 👥 sync secrets across teammates & machines: https://dotenvx.com/ops
+2025-11-25 17:48:38 +07:00: ✅ Redis đã sẵn sàng!
+2025-11-25 17:48:38 +07:00: ✅ Redis đã kết nối!
+2025-11-25 17:48:38 +07:00: ✅ Redis đã sẵn sàng!
+2025-11-25 17:48:39 +07:00: ✅ Đã kết nối PostgreSQL thành công!
+2025-11-25 17:48:39 +07:00: ✅ Đã tạo tables và indexes
+2025-11-25 17:48:39 +07:00: ✅ Đã tạo tables và indexes
+2025-11-25 17:48:39 +07:00: ✅ PostgreSQL đã sẵn sàng!
+2025-11-25 17:48:39 +07:00: ✅ Đã kết nối PostgreSQL thành công!
+2025-11-25 17:48:39 +07:00: OK! Server (Express + Socket.io) đang chạy tại:
+2025-11-25 17:48:39 +07:00:   - Local:   http://localhost:3000
+2025-11-25 17:48:39 +07:00:   - Network: http://10.216.72.91:3000
+2025-11-25 17:48:39 +07:00: 
+Máy khác có thể truy cập qua: http://10.216.72.91:3000
+2025-11-25 17:48:39 +07:00: 
+📬 Message Queue đã sẵn sàng!
+2025-11-25 17:48:39 +07:00: ✅ Đã tạo tables và indexes
+2025-11-25 17:48:39 +07:00: ✅ Đã tạo tables và indexes
+2025-11-25 17:48:39 +07:00: ✅ PostgreSQL đã sẵn sàng!
+2025-11-25 17:48:39 +07:00: OK! Server (Express + Socket.io) đang chạy tại:
+2025-11-25 17:48:39 +07:00:   - Local:   http://localhost:3000
+2025-11-25 17:48:39 +07:00:   - Network: http://10.216.72.91:3000
+2025-11-25 17:48:39 +07:00: 
+Máy khác có thể truy cập qua: http://10.216.72.91:3000
+2025-11-25 17:48:39 +07:00: 
+📬 Message Queue đã sẵn sàng!
+2025-11-25 17:48:40 +07:00: 127.0.0.1 - - [25/Nov/2025:10:48:40 +0000] "GET / HTTP/1.1" 304 - "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36 Edg/142.0.0.0"
+2025-11-25 17:48:41 +07:00: 127.0.0.1 - - [25/Nov/2025:10:48:41 +0000] "GET / HTTP/1.1" 304 - "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0"
+2025-11-25 17:48:43 +07:00: 127.0.0.1 - - [25/Nov/2025:10:48:43 +0000] "POST /api/login HTTP/1.1" 200 55 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36 Edg/142.0.0.0"
+2025-11-25 17:48:44 +07:00: 127.0.0.1 - - [25/Nov/2025:10:48:44 +0000] "POST /api/login HTTP/1.1" 200 55 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0"
+2025-11-25 17:48:46 +07:00: 127.0.0.1 - - [25/Nov/2025:10:48:46 +0000] "GET /api/history/client01 HTTP/1.1" 304 - "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36 Edg/142.0.0.0"
+2025-11-25 17:49:08 +07:00: Một người vừa kết nối: LeytuBPuxueFAh6yAAAB
+2025-11-25 17:49:09 +07:00: Một người vừa kết nối: PoLwABofkD-QbPzmAAAD
+2025-11-25 17:49:17 +07:00: [room1] Lượt 1, Thời gian còn: 25s
+2025-11-25 17:49:22 +07:00: [room1] Lượt 1, Thời gian còn: 20s
+2025-11-25 17:49:29 +07:00: Người dùng PoLwABofkD-QbPzmAAAD đã ngắt kết nối.
+2025-11-25 17:49:30 +07:00: Người dùng LeytuBPuxueFAh6yAAAB đã ngắt kết nối.
+2025-11-25 17:49:30 +07:00: [Cleanup] Đã xóa 1 phòng trống
+2025-11-25 17:49:32 +07:00: [room1] Lượt 2, Thời gian còn: 25s
+2025-11-25 17:49:32 +07:00: 127.0.0.1 - - [25/Nov/2025:10:49:32 +0000] "GET /api/history/client01 HTTP/1.1" 304 - "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36 Edg/142.0.0.0"
+2025-11-25 17:49:37 +07:00: [room1] Lượt 2, Thời gian còn: 20s
+2025-11-25 17:49:42 +07:00: [room1] Lượt 2, Thời gian còn: 15s
+2025-11-25 17:49:47 +07:00: [room1] Lượt 2, Thời gian còn: 10s

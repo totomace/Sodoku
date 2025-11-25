@@ -72193,3 +72193,11 @@ Error: bind EADDRINUSE 0.0.0.0:3000
     at process.emit (node:events:531:35)
     at emit (node:internal/child_process:949:14)
     at process.processTicksAndRejections (node:internal/process/task_queues:91:21)
+You have triggered an unhandledRejection, you may have forgotten to catch a Promise rejection:
+TypeError: Cannot read properties of undefined (reading 'turnTimeLimit')
+    at Socket.<anonymous> (C:\Data\Github\VS code\Sodoku\server.js:814:43)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+You have triggered an unhandledRejection, you may have forgotten to catch a Promise rejection:
+TypeError: Cannot read properties of undefined (reading 'turnTimeLimit')
+    at Socket.<anonymous> (C:\Data\Github\VS code\Sodoku\server.js:814:43)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)

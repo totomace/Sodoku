@@ -75,6 +75,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let currentTurn = 1, turnTimeLeft = 30; // Thời gian suy nghĩ mỗi lượt
     let waitingStartTime = 0; // Thời gian bắt đầu chờ
     let waitingTimer = null; // Timer cho thời gian chờ
+    let turnTimer = null; // Timer cho thời gian lượt chơi
     let currentInviter = null; // Lưu tên người mời
     let isSpectator = false; // Chế độ xem
     let currentRoomId = null; // Phòng hiện tại
@@ -1120,12 +1121,27 @@ document.addEventListener('DOMContentLoaded', () => {
         currentTurn = data.currentTurn;
         console.log('⏰ Update timer:', turnTimeLeft, 'giây, Lượt:', currentTurn);
         updateScoreDisplay();
+        // Reset và khởi động lại timer phía client
+        if (turnTimer) {
+            clearInterval(turnTimer);
+            turnTimer = null;
+        }
+        if (currentTurn === myPlayerNum && turnTimeLeft > 0) {
+            turnTimer = setInterval(() => {
+                if (turnTimeLeft > 0) {
+                    turnTimeLeft--;
+                    updateScoreDisplay();
+                } else {
+                    clearInterval(turnTimer);
+                    turnTimer = null;
+                }
+            }, 1000);
+        }
     });
     
     socket.on('turnChanged', (data) => {
         currentTurn = data.currentTurn;
         turnTimeLeft = data.turnTimeLeft;
-        
         if (currentTurn === myPlayerNum) {
             addChatMessage({ isSystem: true, message: '🎮 Đến lượt bạn!' });
             // ✅ Enable buttons khi đến lượt mình
@@ -1146,8 +1162,23 @@ document.addEventListener('DOMContentLoaded', () => {
             surrenderBtn.style.opacity = '1';
             surrenderBtn.style.cursor = 'pointer';
         }
-        
         updateScoreDisplay();
+        // Reset và khởi động lại timer phía client khi đổi lượt
+        if (turnTimer) {
+            clearInterval(turnTimer);
+            turnTimer = null;
+        }
+        if (currentTurn === myPlayerNum && turnTimeLeft > 0) {
+            turnTimer = setInterval(() => {
+                if (turnTimeLeft > 0) {
+                    turnTimeLeft--;
+                    updateScoreDisplay();
+                } else {
+                    clearInterval(turnTimer);
+                    turnTimer = null;
+                }
+            }, 1000);
+        }
     });
     
     // Xử lý hết giờ lượt
