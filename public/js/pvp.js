@@ -1253,6 +1253,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
     socket.on('gameResult', (data) => {
         // Hiển thị modal kết quả
+        if (turnTimer) {
+            clearInterval(turnTimer);
+            turnTimer = null;
+        }
         if (data.draw) {
             resultBox.className = 'result-box draw';
             resultIcon.textContent = '⏱️';
@@ -1285,6 +1289,10 @@ document.addEventListener('DOMContentLoaded', () => {
     // Nút đóng modal kết quả
     resultCloseBtn.addEventListener('click', () => {
         resultModal.classList.remove('show');
+        if (turnTimer) {
+            clearInterval(turnTimer);
+            turnTimer = null;
+        }
         
         // Reset game state với hiệu ứng
         gameStartTime = 0;
@@ -1342,6 +1350,10 @@ document.addEventListener('DOMContentLoaded', () => {
     
     socket.on('forceReload', (data) => {
         showToast(data.message, 'warning', 'Cảnh báo hệ thống');
+        if (turnTimer) {
+            clearInterval(turnTimer);
+            turnTimer = null;
+        }
         setTimeout(() => {
             window.location.reload();
         }, 2000);

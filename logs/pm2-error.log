@@ -72201,3 +72201,11 @@ You have triggered an unhandledRejection, you may have forgotten to catch a Prom
 TypeError: Cannot read properties of undefined (reading 'turnTimeLimit')
     at Socket.<anonymous> (C:\Data\Github\VS code\Sodoku\server.js:814:43)
     at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+You have triggered an unhandledRejection, you may have forgotten to catch a Promise rejection:
+TypeError: Cannot read properties of undefined (reading 'turnTimeLimit')
+    at Socket.<anonymous> (C:\Data\Github\VS code\Sodoku\server.js:814:43)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+You have triggered an unhandledRejection, you may have forgotten to catch a Promise rejection:
+TypeError: Cannot read properties of undefined (reading 'turnTimeLimit')
+    at Socket.<anonymous> (C:\Data\Github\VS code\Sodoku\server.js:814:43)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)

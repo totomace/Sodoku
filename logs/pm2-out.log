@@ -26796,3 +26796,205 @@ Máy khác có thể truy cập qua: http://10.216.72.91:3000
 2025-11-25 17:49:37 +07:00: [room1] Lượt 2, Thời gian còn: 20s
 2025-11-25 17:49:42 +07:00: [room1] Lượt 2, Thời gian còn: 15s
 2025-11-25 17:49:47 +07:00: [room1] Lượt 2, Thời gian còn: 10s
+2025-11-25 17:49:52 +07:00: [room1] Lượt 2, Thời gian còn: 5s
+2025-11-25 17:49:57 +07:00: [room1] Lượt 2, Thời gian còn: 0s
+2025-11-25 17:50:02 +07:00: [room1] Lượt 1, Thời gian còn: 25s
+2025-11-25 17:50:07 +07:00: [room1] Lượt 1, Thời gian còn: 20s
+2025-11-25 17:50:12 +07:00: [room1] Lượt 1, Thời gian còn: 15s
+2025-11-25 17:50:17 +07:00: [room1] Lượt 1, Thời gian còn: 10s
+2025-11-25 17:50:22 +07:00: [room1] Lượt 1, Thời gian còn: 5s
+2025-11-25 17:50:28 +07:00: [room1] Lượt 1, Thời gian còn: 0s
+2025-11-25 17:50:33 +07:00: [room1] Lượt 2, Thời gian còn: 25s
+2025-11-25 17:50:38 +07:00: [room1] Lượt 2, Thời gian còn: 20s
+2025-11-25 17:50:43 +07:00: [room1] Lượt 2, Thời gian còn: 15s
+2025-11-25 17:50:48 +07:00: [room1] Lượt 2, Thời gian còn: 10s
+2025-11-25 17:50:53 +07:00: [room1] Lượt 2, Thời gian còn: 5s
+2025-11-25 17:50:58 +07:00: [room1] Lượt 2, Thời gian còn: 0s
+2025-11-25 17:51:03 +07:00: [room1] Lượt 1, Thời gian còn: 25s
+2025-11-25 17:51:08 +07:00: [room1] Lượt 1, Thời gian còn: 20s
+2025-11-25 17:51:13 +07:00: [room1] Lượt 1, Thời gian còn: 15s
+2025-11-25 17:51:18 +07:00: [room1] Lượt 1, Thời gian còn: 10s
+2025-11-25 17:51:23 +07:00: [room1] Lượt 1, Thời gian còn: 5s
+2025-11-25 17:51:28 +07:00: [room1] Lượt 1, Thời gian còn: 0s
+2025-11-25 17:51:33 +07:00: [room1] Lượt 2, Thời gian còn: 25s
+2025-11-25 17:51:38 +07:00: [room1] Lượt 2, Thời gian còn: 20s
+2025-11-25 17:51:43 +07:00: [room1] Lượt 2, Thời gian còn: 15s
+2025-11-25 17:51:48 +07:00: [room1] Lượt 2, Thời gian còn: 10s
+2025-11-25 17:51:50 +07:00: [dotenv@17.2.3] injecting env (23) from .env -- tip: 🔐 encrypt with Dotenvx: https://dotenvx.com
+2025-11-25 17:51:50 +07:00: [dotenv@17.2.3] injecting env (23) from .env -- tip: ⚙️  suppress all logs with { quiet: true }
+2025-11-25 17:51:51 +07:00: [dotenv@17.2.3] injecting env (23) from .env -- tip: ⚙️  specify custom .env file path with { path: '/custom/path/.env' }
+2025-11-25 17:51:51 +07:00: [dotenv@17.2.3] injecting env (23) from .env -- tip: 🛠️  run anywhere with `dotenvx run -- yourcommand`
+2025-11-25 17:51:51 +07:00: [dotenv@17.2.3] injecting env (0) from .env -- tip: ⚙️  write to custom object with { processEnv: myObject }
+2025-11-25 17:51:52 +07:00: ✅ Redis đã kết nối!
+2025-11-25 17:51:51 +07:00: [dotenv@17.2.3] injecting env (0) from .env -- tip: ⚙️  write to custom object with { processEnv: myObject }
+2025-11-25 17:51:52 +07:00: ✅ Redis đã sẵn sàng!
+2025-11-25 17:51:52 +07:00: ✅ Redis đã kết nối!
+2025-11-25 17:51:52 +07:00: ✅ Redis đã sẵn sàng!
+2025-11-25 17:51:52 +07:00: ✅ Đã kết nối PostgreSQL thành công!
+2025-11-25 17:51:52 +07:00: ✅ Đã tạo tables và indexes
+2025-11-25 17:51:52 +07:00: ✅ Đã tạo tables và indexes
+2025-11-25 17:51:52 +07:00: ✅ PostgreSQL đã sẵn sàng!
+2025-11-25 17:51:52 +07:00: OK! Server (Express + Socket.io) đang chạy tại:
+2025-11-25 17:51:52 +07:00:   - Local:   http://localhost:3000
+2025-11-25 17:51:52 +07:00:   - Network: http://10.216.72.91:3000
+2025-11-25 17:51:52 +07:00: 
+Máy khác có thể truy cập qua: http://10.216.72.91:3000
+2025-11-25 17:51:52 +07:00: 
+📬 Message Queue đã sẵn sàng!
+2025-11-25 17:51:52 +07:00: ✅ Đã kết nối PostgreSQL thành công!
+2025-11-25 17:51:52 +07:00: ✅ Đã tạo tables và indexes
+2025-11-25 17:51:52 +07:00: ✅ Đã tạo tables và indexes
+2025-11-25 17:51:52 +07:00: ✅ PostgreSQL đã sẵn sàng!
+2025-11-25 17:51:52 +07:00: OK! Server (Express + Socket.io) đang chạy tại:
+2025-11-25 17:51:52 +07:00:   - Local:   http://localhost:3000
+2025-11-25 17:51:52 +07:00:   - Network: http://10.216.72.91:3000
+2025-11-25 17:51:52 +07:00: 
+Máy khác có thể truy cập qua: http://10.216.72.91:3000
+2025-11-25 17:51:52 +07:00: 
+📬 Message Queue đã sẵn sàng!
+2025-11-25 17:51:52 +07:00: 127.0.0.1 - - [25/Nov/2025:10:51:52 +0000] "GET /history.html HTTP/1.1" 200 - "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36 Edg/142.0.0.0"
+2025-11-25 17:51:51 +07:00: [dotenv@17.2.3] injecting env (0) from .env -- tip: ⚙️  write to custom object with { processEnv: myObject }
+2025-11-25 17:51:52 +07:00: ✅ Redis đã kết nối!
+2025-11-25 17:51:52 +07:00: ✅ Redis đã sẵn sàng!
+2025-11-25 17:51:51 +07:00: [dotenv@17.2.3] injecting env (0) from .env -- tip: ⚙️  override existing env vars with { override: true }
+2025-11-25 17:51:52 +07:00: ✅ Redis đã kết nối!
+2025-11-25 17:51:52 +07:00: ✅ Redis đã sẵn sàng!
+2025-11-25 17:51:52 +07:00: ✅ Đã kết nối PostgreSQL thành công!
+2025-11-25 17:51:52 +07:00: ✅ Đã tạo tables và indexes
+2025-11-25 17:51:52 +07:00: ✅ Đã tạo tables và indexes
+2025-11-25 17:51:52 +07:00: ✅ PostgreSQL đã sẵn sàng!
+2025-11-25 17:51:52 +07:00: OK! Server (Express + Socket.io) đang chạy tại:
+2025-11-25 17:51:52 +07:00:   - Local:   http://localhost:3000
+2025-11-25 17:51:52 +07:00:   - Network: http://10.216.72.91:3000
+2025-11-25 17:51:52 +07:00: 
+Máy khác có thể truy cập qua: http://10.216.72.91:3000
+2025-11-25 17:51:52 +07:00: 
+📬 Message Queue đã sẵn sàng!
+2025-11-25 17:51:52 +07:00: ✅ Đã kết nối PostgreSQL thành công!
+2025-11-25 17:51:52 +07:00: ✅ Đã tạo tables và indexes
+2025-11-25 17:51:52 +07:00: ✅ Đã tạo tables và indexes
+2025-11-25 17:51:52 +07:00: ✅ PostgreSQL đã sẵn sàng!
+2025-11-25 17:51:52 +07:00: OK! Server (Express + Socket.io) đang chạy tại:
+2025-11-25 17:51:52 +07:00:   - Local:   http://localhost:3000
+2025-11-25 17:51:52 +07:00:   - Network: http://10.216.72.91:3000
+2025-11-25 17:51:52 +07:00: 
+Máy khác có thể truy cập qua: http://10.216.72.91:3000
+2025-11-25 17:51:52 +07:00: 
+📬 Message Queue đã sẵn sàng!
+2025-11-25 17:51:53 +07:00: 127.0.0.1 - - [25/Nov/2025:10:51:53 +0000] "GET /api/history/client01 HTTP/1.1" 304 - "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36 Edg/142.0.0.0"
+2025-11-25 17:51:53 +07:00: 127.0.0.1 - - [25/Nov/2025:10:51:53 +0000] "GET /history.html HTTP/1.1" 200 - "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0"
+2025-11-25 17:51:54 +07:00: 127.0.0.1 - - [25/Nov/2025:10:51:54 +0000] "GET /history.html HTTP/1.1" 304 - "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0"
+2025-11-25 17:51:55 +07:00: 127.0.0.1 - - [25/Nov/2025:10:51:55 +0000] "GET /history.html HTTP/1.1" 304 - "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0"
+2025-11-25 17:51:55 +07:00: 127.0.0.1 - - [25/Nov/2025:10:51:55 +0000] "GET /history.html HTTP/1.1" 304 - "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0"
+2025-11-25 17:51:55 +07:00: 127.0.0.1 - - [25/Nov/2025:10:51:55 +0000] "GET /history.html HTTP/1.1" 304 - "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0"
+2025-11-25 17:51:55 +07:00: 127.0.0.1 - - [25/Nov/2025:10:51:55 +0000] "GET /history.html HTTP/1.1" 304 - "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0"
+2025-11-25 17:51:56 +07:00: 127.0.0.1 - - [25/Nov/2025:10:51:56 +0000] "GET /history.html HTTP/1.1" 304 - "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0"
+2025-11-25 17:52:01 +07:00: 127.0.0.1 - - [25/Nov/2025:10:52:01 +0000] "GET /history.html HTTP/1.1" 304 - "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0"
+2025-11-25 17:52:01 +07:00: 127.0.0.1 - - [25/Nov/2025:10:52:01 +0000] "GET /history.html HTTP/1.1" 304 - "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0"
+2025-11-25 17:52:11 +07:00: 127.0.0.1 - - [25/Nov/2025:10:52:11 +0000] "GET / HTTP/1.1" 304 - "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36 Edg/142.0.0.0"
+2025-11-25 17:52:15 +07:00: 127.0.0.1 - - [25/Nov/2025:10:52:15 +0000] "POST /api/login HTTP/1.1" 200 55 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36 Edg/142.0.0.0"
+2025-11-25 17:52:17 +07:00: 127.0.0.1 - - [25/Nov/2025:10:52:17 +0000] "GET /api/history/client02 HTTP/1.1" 200 - "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36 Edg/142.0.0.0"
+2025-11-25 17:52:30 +07:00: 127.0.0.1 - - [25/Nov/2025:10:52:30 +0000] "GET /history.html HTTP/1.1" 200 - "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0"
+2025-11-25 17:52:31 +07:00: 127.0.0.1 - - [25/Nov/2025:10:52:31 +0000] "GET /favicon.ico HTTP/1.1" - - "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0"
+2025-11-25 17:52:32 +07:00: 127.0.0.1 - - [25/Nov/2025:10:52:32 +0000] "GET /history.html HTTP/1.1" 304 - "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0"
+2025-11-25 17:52:33 +07:00: 127.0.0.1 - - [25/Nov/2025:10:52:33 +0000] "GET /history.html HTTP/1.1" 304 - "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0"
+2025-11-25 17:52:33 +07:00: 127.0.0.1 - - [25/Nov/2025:10:52:33 +0000] "GET /history.html HTTP/1.1" 304 - "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0"
+2025-11-25 17:52:33 +07:00: 127.0.0.1 - - [25/Nov/2025:10:52:33 +0000] "GET /history.html HTTP/1.1" 304 - "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0"
+2025-11-25 17:52:33 +07:00: 127.0.0.1 - - [25/Nov/2025:10:52:33 +0000] "GET /history.html HTTP/1.1" 304 - "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0"
+2025-11-25 17:52:36 +07:00: 127.0.0.1 - - [25/Nov/2025:10:52:36 +0000] "GET /index.html HTTP/1.1" - - "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:145.0) Gecko/20100101 Firefox/145.0"
+2025-11-25 17:53:24 +07:00: 127.0.0.1 - - [25/Nov/2025:10:53:24 +0000] "GET /history.html HTTP/1.1" 200 - "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36 Edg/142.0.0.0"
+2025-11-25 17:53:24 +07:00: 127.0.0.1 - - [25/Nov/2025:10:53:24 +0000] "GET /js/history.js HTTP/1.1" 200 - "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36 Edg/142.0.0.0"
+2025-11-25 17:53:24 +07:00: 127.0.0.1 - - [25/Nov/2025:10:53:24 +0000] "GET /favicon.ico HTTP/1.1" 200 6 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36 Edg/142.0.0.0"
+2025-11-25 17:53:25 +07:00: 127.0.0.1 - - [25/Nov/2025:10:53:25 +0000] "GET /index.html HTTP/1.1" 200 - "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36 Edg/142.0.0.0"
+2025-11-25 17:53:32 +07:00: 127.0.0.1 - - [25/Nov/2025:10:53:32 +0000] "GET / HTTP/1.1" 200 - "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36 Edg/142.0.0.0"
+2025-11-25 17:53:33 +07:00: 127.0.0.1 - - [25/Nov/2025:10:53:33 +0000] "GET /login.html HTTP/1.1" 200 - "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36 Edg/142.0.0.0"
+2025-11-25 17:53:33 +07:00: 127.0.0.1 - - [25/Nov/2025:10:53:33 +0000] "GET /js/auth.js HTTP/1.1" 200 - "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36 Edg/142.0.0.0"
+2025-11-25 17:53:36 +07:00: 127.0.0.1 - - [25/Nov/2025:10:53:36 +0000] "POST /api/login HTTP/1.1" 200 55 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36 Edg/142.0.0.0"
+2025-11-25 17:53:38 +07:00: 127.0.0.1 - - [25/Nov/2025:10:53:38 +0000] "GET /api/history/client02 HTTP/1.1" 200 - "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36 Edg/142.0.0.0"
+2025-11-25 17:53:48 +07:00: 127.0.0.1 - - [25/Nov/2025:10:53:48 +0000] "GET / HTTP/1.1" 304 - "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36 Edg/142.0.0.0"
+2025-11-25 17:53:53 +07:00: 127.0.0.1 - - [25/Nov/2025:10:53:53 +0000] "POST /api/login HTTP/1.1" 200 55 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36 Edg/142.0.0.0"
+2025-11-25 17:53:55 +07:00: 127.0.0.1 - - [25/Nov/2025:10:53:55 +0000] "GET /history.html HTTP/1.1" 304 - "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36 Edg/142.0.0.0"
+2025-11-25 17:53:55 +07:00: 127.0.0.1 - - [25/Nov/2025:10:53:55 +0000] "GET /api/history/client02 HTTP/1.1" 304 - "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36 Edg/142.0.0.0"
+2025-11-25 17:53:58 +07:00: Một người vừa kết nối: GtTM5YAxMMXNtPcQAAAB
+2025-11-25 17:53:58 +07:00: 127.0.0.1 - - [25/Nov/2025:10:53:58 +0000] "GET /pvp.html HTTP/1.1" 200 - "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36 Edg/142.0.0.0"
+2025-11-25 17:53:58 +07:00: 127.0.0.1 - - [25/Nov/2025:10:53:58 +0000] "GET /js/pvp.js?v=2 HTTP/1.1" 200 - "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36 Edg/142.0.0.0"
+2025-11-25 17:53:59 +07:00: Một người vừa kết nối: 6bJll3hPn8t1eBBtAAAD
+2025-11-25 17:54:23 +07:00: [Cleanup] Đã xóa 1 phòng trống
+2025-11-25 17:54:26 +07:00: Người dùng GtTM5YAxMMXNtPcQAAAB đã ngắt kết nối.
+2025-11-25 17:54:27 +07:00: Người dùng 6bJll3hPn8t1eBBtAAAD đã ngắt kết nối.
+2025-11-25 17:54:29 +07:00: 127.0.0.1 - - [25/Nov/2025:10:54:29 +0000] "GET /api/history/client01 HTTP/1.1" 200 - "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36 Edg/142.0.0.0"
+2025-11-25 17:54:32 +07:00: 127.0.0.1 - - [25/Nov/2025:10:54:32 +0000] "GET /api/history/client02 HTTP/1.1" 200 - "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36 Edg/142.0.0.0"
+2025-11-25 17:56:53 +07:00: [dotenv@17.2.3] injecting env (23) from .env -- tip: ⚙️  enable debug logging with { debug: true }
+2025-11-25 17:56:53 +07:00: [dotenv@17.2.3] injecting env (23) from .env -- tip: 🔄 add secrets lifecycle management: https://dotenvx.com/ops
+2025-11-25 17:56:53 +07:00: [dotenv@17.2.3] injecting env (23) from .env -- tip: ✅ audit secrets and track compliance: https://dotenvx.com/ops
+2025-11-25 17:56:53 +07:00: [dotenv@17.2.3] injecting env (23) from .env -- tip: 🛠️  run anywhere with `dotenvx run -- yourcommand`
+2025-11-25 17:56:53 +07:00: [dotenv@17.2.3] injecting env (0) from .env -- tip: 🔐 prevent building .env in docker: https://dotenvx.com/prebuild
+2025-11-25 17:56:53 +07:00: [dotenv@17.2.3] injecting env (0) from .env -- tip: 👥 sync secrets across teammates & machines: https://dotenvx.com/ops
+2025-11-25 17:56:54 +07:00: ✅ Redis đã kết nối!
+2025-11-25 17:56:54 +07:00: ✅ Redis đã kết nối!
+2025-11-25 17:56:54 +07:00: ✅ Redis đã sẵn sàng!
+2025-11-25 17:56:54 +07:00: ✅ Redis đã sẵn sàng!
+2025-11-25 17:56:54 +07:00: ✅ Đã kết nối PostgreSQL thành công!
+2025-11-25 17:56:54 +07:00: ✅ Đã tạo tables và indexes
+2025-11-25 17:56:54 +07:00: ✅ Đã kết nối PostgreSQL thành công!
+2025-11-25 17:56:54 +07:00: ✅ Đã tạo tables và indexes
+2025-11-25 17:56:54 +07:00: ✅ PostgreSQL đã sẵn sàng!
+2025-11-25 17:56:54 +07:00: ✅ Đã tạo tables và indexes
+2025-11-25 17:56:54 +07:00: OK! Server (Express + Socket.io) đang chạy tại:
+2025-11-25 17:56:54 +07:00:   - Local:   http://localhost:3000
+2025-11-25 17:56:54 +07:00:   - Network: http://10.216.72.91:3000
+2025-11-25 17:56:54 +07:00: 
+Máy khác có thể truy cập qua: http://10.216.72.91:3000
+2025-11-25 17:56:54 +07:00: 
+📬 Message Queue đã sẵn sàng!
+2025-11-25 17:56:54 +07:00: ✅ Đã tạo tables và indexes
+2025-11-25 17:56:54 +07:00: ✅ PostgreSQL đã sẵn sàng!
+2025-11-25 17:56:54 +07:00: OK! Server (Express + Socket.io) đang chạy tại:
+2025-11-25 17:56:54 +07:00:   - Local:   http://localhost:3000
+2025-11-25 17:56:54 +07:00:   - Network: http://10.216.72.91:3000
+2025-11-25 17:56:54 +07:00: 
+Máy khác có thể truy cập qua: http://10.216.72.91:3000
+2025-11-25 17:56:54 +07:00: 
+📬 Message Queue đã sẵn sàng!
+2025-11-25 17:56:54 +07:00: [dotenv@17.2.3] injecting env (0) from .env -- tip: ⚙️  specify custom .env file path with { path: '/custom/path/.env' }
+2025-11-25 17:56:54 +07:00: ✅ Redis đã kết nối!
+2025-11-25 17:56:54 +07:00: ✅ Redis đã sẵn sàng!
+2025-11-25 17:56:54 +07:00: [dotenv@17.2.3] injecting env (0) from .env -- tip: 🗂️ backup and recover secrets: https://dotenvx.com/ops
+2025-11-25 17:56:54 +07:00: ✅ Redis đã kết nối!
+2025-11-25 17:56:54 +07:00: ✅ Redis đã sẵn sàng!
+2025-11-25 17:56:54 +07:00: ✅ Đã kết nối PostgreSQL thành công!
+2025-11-25 17:56:54 +07:00: ✅ Đã tạo tables và indexes
+2025-11-25 17:56:54 +07:00: ✅ Đã tạo tables và indexes
+2025-11-25 17:56:54 +07:00: ✅ PostgreSQL đã sẵn sàng!
+2025-11-25 17:56:54 +07:00: OK! Server (Express + Socket.io) đang chạy tại:
+2025-11-25 17:56:54 +07:00:   - Local:   http://localhost:3000
+2025-11-25 17:56:54 +07:00:   - Network: http://10.216.72.91:3000
+2025-11-25 17:56:54 +07:00: 
+Máy khác có thể truy cập qua: http://10.216.72.91:3000
+2025-11-25 17:56:54 +07:00: 
+📬 Message Queue đã sẵn sàng!
+2025-11-25 17:56:55 +07:00: ✅ Đã kết nối PostgreSQL thành công!
+2025-11-25 17:56:55 +07:00: ✅ Đã tạo tables và indexes
+2025-11-25 17:56:55 +07:00: ✅ Đã tạo tables và indexes
+2025-11-25 17:56:55 +07:00: ✅ PostgreSQL đã sẵn sàng!
+2025-11-25 17:56:55 +07:00: OK! Server (Express + Socket.io) đang chạy tại:
+2025-11-25 17:56:55 +07:00:   - Local:   http://localhost:3000
+2025-11-25 17:56:55 +07:00:   - Network: http://10.216.72.91:3000
+2025-11-25 17:56:55 +07:00: 
+Máy khác có thể truy cập qua: http://10.216.72.91:3000
+2025-11-25 17:56:55 +07:00: 
+📬 Message Queue đã sẵn sàng!
+2025-11-25 17:57:20 +07:00: 127.0.0.1 - - [25/Nov/2025:10:57:20 +0000] "GET /history.html HTTP/1.1" 304 - "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36 Edg/142.0.0.0"
+2025-11-25 17:57:20 +07:00: 127.0.0.1 - - [25/Nov/2025:10:57:20 +0000] "GET /api/history/client01 HTTP/1.1" 304 - "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36 Edg/142.0.0.0"
+2025-11-25 17:57:21 +07:00: 127.0.0.1 - - [25/Nov/2025:10:57:21 +0000] "GET /history.html HTTP/1.1" 304 - "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36 Edg/142.0.0.0"
+2025-11-25 17:57:21 +07:00: 127.0.0.1 - - [25/Nov/2025:10:57:21 +0000] "GET /api/history/client02 HTTP/1.1" 304 - "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36 Edg/142.0.0.0"
+2025-11-25 17:57:24 +07:00: Một người vừa kết nối: D720XbM2y4U066RKAAAB
+2025-11-25 17:57:24 +07:00: Một người vừa kết nối: r148B13VxwAJqzrsAAAD
+2025-11-25 17:57:31 +07:00: [room1] Lượt 1, Thời gian còn: 25s
+2025-11-25 17:57:36 +07:00: [room1] Lượt 1, Thời gian còn: 20s
+2025-11-25 17:57:44 +07:00: [room1] Lượt 1, Thời gian còn: 25s
+2025-11-25 17:57:47 +07:00: [Cleanup] Đã xóa 1 phòng trống
+2025-11-25 17:57:50 +07:00: Người dùng D720XbM2y4U066RKAAAB đã ngắt kết nối.
+2025-11-25 17:57:51 +07:00: Người dùng r148B13VxwAJqzrsAAAD đã ngắt kết nối.
+2025-11-25 17:57:53 +07:00: 127.0.0.1 - - [25/Nov/2025:10:57:53 +0000] "GET /api/history/client01 HTTP/1.1" 200 - "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36 Edg/142.0.0.0"
+2025-11-25 17:57:54 +07:00: 127.0.0.1 - - [25/Nov/2025:10:57:54 +0000] "GET /api/history/client02 HTTP/1.1" 200 - "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36 Edg/142.0.0.0"
