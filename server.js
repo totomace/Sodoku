@@ -26,7 +26,8 @@ const io = new Server(server, {
     pingInterval: 25000,
     maxHttpBufferSize: 1e6, // 1MB
     transports: ['websocket', 'polling']
-});const PORT = 3000;
+});
+const PORT = process.env.PORT ? parseInt(process.env.PORT, 10) : 3000;
 const DB_FILE = path.join(__dirname, 'db.json');
 const PUZZLE_FILE = path.join(__dirname, 'puzzles.json'); 
 const STARTING_SCORE = 1000;
@@ -268,6 +269,8 @@ const allPuzzles = readPuzzles();
 let connectedUsers = {}; 
 let activeGames = {};
 let publicRooms = []; // Danh sách phòng động
+// Pending invites: inviterSocketId -> { targetId, timer }
+let pendingInvites = {};
 
 function createNewRoom() {
     // Tìm ID nhỏ nhất còn thiếu (để tái sử dụng số phòng)
@@ -662,9 +665,28 @@ io.on('connection', (socket) => {
             connectedUsers[id].status === 'online'
         );
         if (targetSocketId) {
+            // Clear any previous pending invite from this inviter
+            if (pendingInvites[socket.id] && pendingInvites[socket.id].timer) {
+                clearTimeout(pendingInvites[socket.id].timer);
+            }
+
+            // Store pending invite and set a timeout (30s)
+            const timer = setTimeout(() => {
+                // If still pending, notify inviter of timeout and cleanup
+                if (pendingInvites[socket.id] && pendingInvites[socket.id].targetId === targetSocketId) {
+                    io.to(socket.id).emit('inviteTimeout', { targetUsername: data.targetUsername, message: `Lời mời tới ${data.targetUsername} đã hết hạn.` });
+                    delete pendingInvites[socket.id];
+                }
+            }, 30000);
+
+            pendingInvites[socket.id] = { targetId: targetSocketId, timer };
+
+            // Notify recipient and ack inviter
             io.to(targetSocketId).emit('receiveInvite', { fromUsername: socket.username });
+            socket.emit('inviteSent', { targetUsername: data.targetUsername });
         } else {
             addChatMessage(socket, { isSystem: true, message: `Không tìm thấy ${data.targetUsername} hoặc họ đang bận.` });
+            socket.emit('inviteFailed', { targetUsername: data.targetUsername, message: 'Người chơi không khả dụng.' });
         }
     });
 
@@ -676,6 +698,16 @@ io.on('connection', (socket) => {
             connectedUsers[id].status === 'online'
         );
         if (inviterSocketId) {
+            // Ensure the invite is still pending and intended for this socket
+            const pending = pendingInvites[inviterSocketId];
+            if (!pending || pending.targetId !== socket.id) {
+                socket.emit('inviteFailed', { targetUsername: data.targetUsername, message: 'Lời mời không còn hợp lệ hoặc đã hết hạn.' });
+                return;
+            }
+
+            // Clear invite timeout
+            if (pending.timer) clearTimeout(pending.timer);
+            delete pendingInvites[inviterSocketId];
             const player1_socket = io.sockets.sockets.get(inviterSocketId);
             const player2_socket = socket;
             connectedUsers[player1_socket.id].status = 'playing';
@@ -693,6 +725,11 @@ io.on('connection', (socket) => {
             player1_socket.join(roomName);
             player2_socket.join(roomName);
             const gameData = allPuzzles[Math.floor(Math.random() * allPuzzles.length)];
+            const settings = {
+                turnTimeLimit: DEFAULT_TURN_TIME,
+                timeoutPenalty: DEFAULT_TIMEOUT_PENALTY,
+                mistakePenalty: DEFAULT_MISTAKE_PENALTY
+            };
             const matchData = {
                 room: roomName, puzzle: gameData.puzzle, solution: gameData.solution,
                 p1: { id: player1_socket.id, username: player1_socket.username, mistakes: 0, score: STARTING_SCORE },
@@ -701,10 +738,14 @@ io.on('connection', (socket) => {
                 solutionBoard: stringToBoard(gameData.solution),
                 startTime: Date.now(),
                 currentTurn: 1,
-                lastTurnTime: Date.now()
+                lastTurnTime: Date.now(),
+                turnTimeLeft: settings.turnTimeLimit,
+                settings: settings
             };
             activeGames[roomName] = matchData;
             io.to(roomName).emit('matchFound', matchData);
+            // Notify inviter that invite was accepted (optional small ack)
+            io.to(inviterSocketId).emit('inviteAccepted', { by: player2_socket.username, room: roomName });
             broadcastUserList();
             broadcastRoomList(); // Cập nhật danh sách phòng
             cleanupEmptyRooms();
@@ -712,6 +753,22 @@ io.on('connection', (socket) => {
             addChatMessage(player2_socket, { isSystem: true, message: `Bạn đã chấp nhận ${player1_socket.username}!`});
         } else {
             addChatMessage(socket, { isSystem: true, message: `${data.targetUsername} đã offline hoặc vào trận khác.`});
+        }
+    });
+
+    // 3.5 User từ chối lời mời (notify inviter)
+    socket.on('declineInvite', (data) => {
+        if (!socket.username) return;
+        // find inviter by username
+        const inviterSocketId = Object.keys(connectedUsers).find(id => connectedUsers[id].username === data.fromUsername);
+        if (inviterSocketId) {
+            // Clear pending invite if matches
+            const pending = pendingInvites[inviterSocketId];
+            if (pending && pending.targetId === socket.id) {
+                if (pending.timer) clearTimeout(pending.timer);
+                delete pendingInvites[inviterSocketId];
+            }
+            io.to(inviterSocketId).emit('inviteDeclined', { by: socket.username });
         }
     });
 
@@ -1409,6 +1466,19 @@ async function startServer() {
             console.log(`  - Network: http://10.216.72.91:${PORT}`);
             console.log(`\nMáy khác có thể truy cập qua: http://10.216.72.91:${PORT}`);
             console.log(`\n📬 Message Queue đã sẵn sàng!`);
+        });
+
+        // Graceful handling of listen errors (e.g. port already in use)
+        server.on('error', (err) => {
+            if (err && err.code === 'EADDRINUSE') {
+                console.error(`❌ Lỗi: Port ${PORT} đã được sử dụng. Dừng process khác hoặc đổi PORT.`);
+                console.error(`  - Tìm process (PowerShell): netstat -ano | findstr :${PORT}`);
+                console.error(`  - Dừng process: Stop-Process -Id <PID> -Force  OR  taskkill /PID <PID> /F`);
+                console.error(`  - Hoặc chạy server trên port khác: $env:PORT=3001; node server.js`);
+                process.exit(1);
+            } else {
+                console.error('Lỗi server:', err);
+            }
         });
     } catch (error) {
         console.error('❌ Lỗi khởi động server:', error);

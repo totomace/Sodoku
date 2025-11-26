@@ -318,7 +318,8 @@ document.addEventListener('DOMContentLoaded', () => {
             button.addEventListener('click', (e) => {
                 const targetUsername = e.target.dataset.username;
                 socket.emit('privateInvite', { targetUsername: targetUsername });
-                addChatMessage({ isSystem: true, message: `Đã gửi lời mời tới ${targetUsername}...`});
+                // Wait for server ack (inviteSent / inviteFailed)
+                showToast(`Đang gửi lời mời tới ${targetUsername}...`, 'info', 'Gửi lời mời');
             });
         });
     }
@@ -886,10 +887,38 @@ document.addEventListener('DOMContentLoaded', () => {
     declineInviteBtn.addEventListener('click', () => {
         inviteModal.classList.remove('show');
         if (currentInviter) {
+            // Notify server that we declined (so inviter can be informed)
+            socket.emit('declineInvite', { fromUsername: currentInviter });
             showToast(`Đã từ chối lời mời từ ${currentInviter}`, 'info', 'Từ chối thách đấu');
             addChatMessage({ isSystem: true, message: `Đã từ chối lời mời từ ${currentInviter}.` });
             currentInviter = null;
         }
+    });
+
+    // === HANDLE INVITE ACK / FAIL / TIMEOUT ===
+    socket.on('inviteSent', (data) => {
+        showToast(`Đã gửi lời mời tới ${data.targetUsername}`, 'success', 'Lời mời đã gửi');
+        addChatMessage({ isSystem: true, message: `Đã gửi lời mời tới ${data.targetUsername}.` });
+    });
+
+    socket.on('inviteFailed', (data) => {
+        showToast(data.message || `Không thể gửi lời mời tới ${data.targetUsername}`, 'error', 'Lỗi lời mời');
+        addChatMessage({ isSystem: true, message: data.message || `Không thể gửi lời mời tới ${data.targetUsername}` });
+    });
+
+    socket.on('inviteTimeout', (data) => {
+        showToast(data.message || `Lời mời đã hết hạn`, 'warning', 'Lời mời hết hạn');
+        addChatMessage({ isSystem: true, message: data.message || `Lời mời đã hết hạn` });
+    });
+
+    socket.on('inviteDeclined', (data) => {
+        showToast(`${data.by} đã từ chối lời mời`, 'info', 'Lời mời bị từ chối');
+        addChatMessage({ isSystem: true, message: `${data.by} đã từ chối lời mời của bạn.` });
+    });
+
+    socket.on('inviteAccepted', (data) => {
+        showToast(`${data.by} đã chấp nhận lời mời`, 'success', 'Lời mời được chấp nhận');
+        addChatMessage({ isSystem: true, message: `${data.by} đã chấp nhận lời mời.` });
     });
 
     socket.on('matchFound', (data) => {
