@@ -847,13 +847,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Nút sẵn sàng
     readyBtn.addEventListener('click', () => {
-        // Lấy settings từ localStorage (hoặc dùng mặc định)
-        const settings = {
-            turnTimeLimit: parseInt(localStorage.getItem('turnTimeLimit')) || 30,
-            timeoutPenalty: parseInt(localStorage.getItem('timeoutPenalty')) || 50,
-            mistakePenalty: parseInt(localStorage.getItem('mistakePenalty')) || 100
-        };
-        socket.emit('playerReady', { roomId: currentRoomId, settings });
+        socket.emit('playerReady', { roomId: currentRoomId });
         readyBtn.disabled = true;
         readyBtn.innerHTML = '✅ Đã sẵn sàng';
         showToast('Đang chờ đối thủ sẵn sàng...', 'info', 'Bạn đã sẵn sàng');
@@ -1004,6 +998,7 @@ document.addEventListener('DOMContentLoaded', () => {
     socket.on('gameStart', (data) => {
         puzzle = stringToBoard(data.puzzle);
         solution = stringToBoard(data.solution); 
+        
         // Khởi tạo game
         gameStartTime = Date.now();
         myScore = 1000;
@@ -1013,31 +1008,12 @@ document.addEventListener('DOMContentLoaded', () => {
         myPlayerNum = (data.p1.username === myUsername) ? 1 : 2;
         currentTurn = 1; // Player 1 đi trước
         turnTimeLeft = data.turnTimeLeft || 30; // Thời gian lượt đầu
-
-        // Ẩn modal ready nếu đang mở (fix lỗi timer thách đấu)
-        readyModal.style.display = 'none';
-        lobbyScreen.style.display = 'none';
-        gameScreen.style.display = 'flex';
-
-        // Luôn khởi động timer cho lượt hiện tại
-        if (turnTimer) {
-            clearInterval(turnTimer);
-            turnTimer = null;
-        }
-        turnTimer = setInterval(() => {
-            if (turnTimeLeft > 0) {
-                turnTimeLeft--;
-                updateScoreDisplay();
-            } else {
-                clearInterval(turnTimer);
-                turnTimer = null;
-            }
-        }, 1000);
-
+        
         // ✅ Enable lại nút surrender cho game mới
         surrenderBtn.disabled = false;
         surrenderBtn.style.opacity = '1';
         surrenderBtn.style.cursor = 'pointer';
+        
         if(data.p1.username === myUsername) {
             p1Name.textContent = `Bạn (${data.p1.username})`;
             p2Name.textContent = data.p2.username;
@@ -1047,6 +1023,7 @@ document.addEventListener('DOMContentLoaded', () => {
             p2Name.textContent = `Bạn (${data.p2.username})`;
             addChatMessage({ isSystem: true, message: '⏸️ Đối thủ đang suy nghĩ...' });
         }
+        
         createBoard();
         createPalette();
         updateScoreDisplay();
@@ -1280,54 +1257,6 @@ document.addEventListener('DOMContentLoaded', () => {
             clearInterval(turnTimer);
             turnTimer = null;
         }
-        // Gửi lịch sử lên server
-        const username = localStorage.getItem('username');
-        if (username) {
-            let historyPayload = {};
-            if (data.draw) {
-                historyPayload = {
-                    username,
-                    mode: 'PvP',
-                    score: myScore,
-                    mistakes: myMistakes,
-                    opponent: resultOpponent.textContent,
-                    result: 'draw',
-                    reason: 'Hòa! Hết giờ!'
-                };
-            } else if (data.winner === username) {
-                historyPayload = {
-                    username,
-                    mode: 'PvP',
-                    score: data.score,
-                    mistakes: data.winnerMistakes || 0,
-                    opponent: data.loser,
-                    result: 'win',
-                    reason: data.reason || 'Hoàn thành bảng!'
-                };
-            } else {
-                historyPayload = {
-                    username,
-                    mode: 'PvP',
-                    score: myScore,
-                    mistakes: data.loserMistakes || 0,
-                    opponent: data.winner,
-                    result: 'lose',
-                    reason: data.reason || 'Đối thủ hoàn thành trước'
-                };
-            }
-            fetch('/api/save-game', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(historyPayload)
-            }).then(res => res.json()).then(resp => {
-                if (!resp.success) {
-                    showToast('Lỗi lưu lịch sử!', 'error');
-                }
-            }).catch(() => {
-                showToast('Lỗi kết nối server khi lưu lịch sử!', 'error');
-            });
-        }
-        
         if (data.draw) {
             resultBox.className = 'result-box draw';
             resultIcon.textContent = '⏱️';

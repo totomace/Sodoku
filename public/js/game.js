@@ -58,69 +58,11 @@ document.addEventListener('DOMContentLoaded', () => {
     const checkBtn = document.getElementById('check-btn');
     const quitBtn = document.getElementById('quit-btn');
     const timerElement = document.getElementById('timer');
-    // Đã xóa hoàn toàn phần điểm, không cần scoreElement
-
-    // Debug badge hiển thị trạng thái nhanh (hiển thị trên UI nếu console bị ẩn)
-    const debugBadge = document.createElement('div');
-    debugBadge.id = 'debug-badge';
-    debugBadge.style.position = 'fixed';
-    debugBadge.style.right = '12px';
-    debugBadge.style.bottom = '12px';
-    debugBadge.style.background = 'rgba(0,0,0,0.6)';
-    debugBadge.style.color = '#fff';
-    debugBadge.style.padding = '8px 10px';
-    debugBadge.style.borderRadius = '6px';
-    debugBadge.style.fontSize = '12px';
-    debugBadge.style.zIndex = 9999;
-    debugBadge.textContent = 'Debug: init';
-    document.body.appendChild(debugBadge);
-
-    // Audit log for score changes (keeps last 20 entries)
-    window.scoreAudit = window.scoreAudit || [];
-    function pushScoreAudit(entry) {
-        window.scoreAudit.push({ time: Date.now(), ...entry });
-        if (window.scoreAudit.length > 20) window.scoreAudit.shift();
-    }
-
-    // click debugBadge to toggle audit details
-    const auditPopup = document.createElement('div');
-    auditPopup.style.position = 'fixed';
-    auditPopup.style.right = '12px';
-    auditPopup.style.bottom = '48px';
-    auditPopup.style.maxHeight = '240px';
-    auditPopup.style.overflow = 'auto';
-    auditPopup.style.background = 'rgba(0,0,0,0.85)';
-    auditPopup.style.color = '#fff';
-    auditPopup.style.padding = '8px';
-    auditPopup.style.borderRadius = '6px';
-    auditPopup.style.fontSize = '12px';
-    auditPopup.style.zIndex = 10000;
-    auditPopup.style.display = 'none';
-    document.body.appendChild(auditPopup);
-    debugBadge.style.cursor = 'pointer';
-    debugBadge.addEventListener('click', () => {
-        if (auditPopup.style.display === 'none') {
-            // render audit
-            auditPopup.innerHTML = '';
-            const list = document.createElement('div');
-            (window.scoreAudit.slice().reverse() || []).forEach(a => {
-                const d = document.createElement('div');
-                const t = new Date(a.time).toLocaleTimeString();
-                d.textContent = `${t} | change:${a.change} before:${a.before} isSolo:${a.isSolo}`;
-                d.style.marginBottom = '6px';
-                list.appendChild(d);
-            });
-            auditPopup.appendChild(list);
-            auditPopup.style.display = 'block';
-        } else {
-            auditPopup.style.display = 'none';
-        }
-    });
+    const scoreElement = document.getElementById('score');
 
     // --- BIẾN TRẠNG THÁI GAME ---
     let selectedCell = null, puzzle = [], userBoard = [], solution = [];
-    let isSolo = false; // cờ chỉ thị đang chơi đơn
-    let timerInterval = null, timeLeft = 0;
+    let timerInterval = null, timeLeft = 0, currentScore = 0;
     let currentMode = ""; 
     let gameInProgress = false; 
 
@@ -138,28 +80,25 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     // --- HÀM BẮT ĐẦU GAME ---
-    function deepCopyBoard(board) {
-        return board.map(row => [...row]);
-    }
-
     function startGame(newPuzzle, timeLimitInSeconds, mode) {
-        isSolo = true; // khi gọi startGame từ trang solo thì bật cờ
         gameInProgress = true;
         currentMode = mode;
         difficultyScreen.style.display = 'none';
         gameScreen.style.display = 'flex';
-        puzzle = deepCopyBoard(newPuzzle);
-        userBoard = deepCopyBoard(newPuzzle);
-        let puzzleForSolving = deepCopyBoard(newPuzzle);
+        puzzle = newPuzzle.map(row => [...row]);
+        userBoard = newPuzzle.map(row => [...row]);
+        
+        let puzzleForSolving = newPuzzle.map(row => [...row]);
         if (solveSudoku(puzzleForSolving)) {
             solution = puzzleForSolving;
-            console.log("Lời giải Sudoku:", JSON.stringify(solution));
+            console.log("Đã tìm thấy lời giải!"); 
         } else {
-            solution = null;
+            solution = null; 
             console.error("LỖI: BỘ GIẢI KHÔNG TÌM THẤY LỜI GIẢI!");
         }
-        // Không còn cập nhật điểm khi chơi solo
-        try { debugBadge.textContent = `Mode: ${mode} | isSolo: ${isSolo}`; } catch(e) {}
+        
+        currentScore = 5000;
+        scoreElement.textContent = currentScore;
         startTimer(timeLimitInSeconds);
         createBoard();
     }
@@ -183,34 +122,22 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function stopTimer() { clearInterval(timerInterval); }
-    // Cập nhật điểm đúng — updateScore sửa lại cho việc tính điểm kích hoạt
-    // Đã loại bỏ hoàn toàn logic điểm, updateScore chỉ ghi log nếu cần debug
-    function updateScore(points, reason = '') {
-        try {
-            const err = new Error();
-            const stack = (err.stack || '').split('\n').slice(1,6).join('\n');
-            pushScoreAudit({ change: points, isSolo: isSolo, reason, stack });
-            console.log(`[updateScore] change: ${points}, isSolo: ${isSolo}, reason:${reason}`);
-            console.log(stack);
-        } catch (e) {
-            console.log('[updateScore] debug error', e);
-        }
-        // Không còn cập nhật điểm hoặc giao diện điểm
-        try { debugBadge.textContent = `Mode: ${currentMode} | isSolo: ${isSolo}`; } catch(e) {}
+    function updateScore(points) {
+        currentScore = Math.max(0, currentScore + points);
+        scoreElement.textContent = currentScore;
     }
 
     async function saveGameResult(score) {
         // Lấy username từ biến chúng ta đã check ở đầu file
         if (!username || !currentMode) return; 
         try {
-            const scoreToSend = (isSolo) ? null : score;
             await fetch('/api/save-game', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
                     username: username,
                     mode: currentMode,
-                    score: scoreToSend
+                    score: score
                 })
             });
         } catch (error) {
@@ -266,12 +193,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 selectedCell.textContent = num;
                 selectedCell.classList.remove('selected', 'error');
                 selectedCell.classList.add('correct');
-                console.log(`Nhập số: ${num}, Đáp án đúng: ${solution ? solution[r][c] : 'null'}, Tọa độ: (${r},${c})`);
                 selectedCell = null;
-                // Chỉ trừ điểm nếu nhập sai
-                if (solution && num !== solution[r][c]) {
-                    updateScore(-10, 'penalty');
-                }
+                updateScore(-10);
             }
         }
     }
@@ -306,49 +229,37 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- LOGIC NÚT BẤM (DÙNG ALERT) ---
     checkBtn.addEventListener('click', () => {
-        if (!solution || !gameInProgress) return;
+        if (!solution || !gameInProgress) return; 
         let isWin = true, errorsFound = false;
-        let soLoi = 0;
+        
         for (let r = 0; r < 9; r++) {
             for (let c = 0; c < 9; c++) {
-                if (puzzle[r][c] === 0) {
+                if (puzzle[r][c] === 0) { 
                     const cell = boardElement.querySelector(`[data-row='${r}'][data-col='${c}']`);
-                    cell.classList.remove('error');
-                    if (userBoard[r][c] !== 0) {
-                        console.log(`Kiểm tra: (${r},${c}) - Nhập: ${userBoard[r][c]}, Đáp án: ${solution[r][c]}`);
+                    cell.classList.remove('error'); 
+                    if (userBoard[r][c] !== 0) { 
                         if (userBoard[r][c] !== solution[r][c]) {
-                            cell.classList.add('error');
+                            cell.classList.add('error'); 
                             isWin = false; errorsFound = true;
-                            soLoi++;
                         }
                     } else { isWin = false; }
                 }
             }
         }
+        
         if (errorsFound) {
-            updateScore(-250 * soLoi, 'penalty');
-            document.getElementById('win-message').textContent = `Bạn đã nhập sai ${soLoi} ô.`;
-            document.querySelector('#win-modal h2').textContent = 'Thông báo';
-            document.getElementById('win-modal').style.display = 'flex';
-            setTimeout(() => {
-                document.getElementById('win-modal').style.display = 'none';
-            }, 1200);
+            updateScore(-250);
         } else if (isWin) {
             stopTimer();
             gameInProgress = false;
             let timeBonus = timeLeft * 10;
-            updateScore(timeBonus, 'bonus');
-            document.getElementById('win-message').textContent = `Chúc mừng! Bạn đã hoàn thành bảng.`;
-            document.querySelector('#win-modal h2').textContent = '🎉 Chiến thắng!';
+            updateScore(timeBonus);
+            document.getElementById('win-message').textContent = 
+                `Chúc mừng! Điểm: ${currentScore} (Thưởng: +${timeBonus})`;
             document.getElementById('win-modal').style.display = 'flex';
-            saveGameResult(0);
+            saveGameResult(currentScore); 
         } else {
-            document.getElementById('win-message').textContent = `Bạn chưa hoàn thành bảng!`;
-            document.querySelector('#win-modal h2').textContent = 'Thông báo';
-            document.getElementById('win-modal').style.display = 'flex';
-            setTimeout(() => {
-                document.getElementById('win-modal').style.display = 'none';
-            }, 1200);
+             // Im lặng
         }
     });
 
@@ -364,11 +275,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
     window.confirmSolve = function() {
         closeSolveModal();
-        // Do NOT stop timer or exit game; just fill the board with solution
+        stopTimer();
+        gameInProgress = false;
         userBoard = solution.map(row => [...row]);
         createBoard();
-        // Optionally, you can show a message that the board is solved
-        // No redirect, no gameInProgress = false
+        updateScore(-currentScore);
+        saveGameResult(0);
     };
 
     window.closeQuitModal = function() {
@@ -383,7 +295,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     window.closeWinModal = function() {
         document.getElementById('win-modal').style.display = 'none';
-        // Only redirect if true win (can be handled elsewhere if needed)
+        window.location.href = '/index.html';
     };
 
     // --- BỘ NÃO SUDOKU (isValid ĐÃ SỬA) ---
@@ -394,16 +306,16 @@ document.addEventListener('DOMContentLoaded', () => {
     
     function isValid(board, row, col, num) {
         for (let c_i = 0; c_i < 9; c_i++) {
-            if (c_i !== col && board[row][c_i] === num) return false;
+            if (board[row][c_i] === num) return false;
         }
         for (let r_i = 0; r_i < 9; r_i++) {
-            if (r_i !== row && board[r_i][col] === num) return false;
+            if (board[r_i][col] === num) return false;
         }
         const startRow = Math.floor(row / 3) * 3;
         const startCol = Math.floor(col / 3) * 3;
         for (let r_i = startRow; r_i < startRow + 3; r_i++) {
             for (let c_i = startCol; c_i < startCol + 3; c_i++) {
-                if ((r_i !== row || c_i !== col) && board[r_i][c_i] === num) return false;
+                if (board[r_i][c_i] === num) return false;
             }
         }
         return true;
@@ -425,12 +337,4 @@ document.addEventListener('DOMContentLoaded', () => {
     
     // --- KHỞI ĐỘNG ---
     createPalette();
-    // Nếu đang ở trang chơi đơn, tự động bắt đầu với đề dễ
-    if (window.location.pathname.includes('game.html')) {
-        setTimeout(() => {
-            if (difficultyScreen && gameScreen && difficultyScreen.style.display !== 'none') {
-                startGame(EASY_PUZZLE, 1200, "Dễ");
-            }
-        }, 100);
-    }
 });

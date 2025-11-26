@@ -100,15 +100,6 @@ function writeDB(data) {
         console.error("Lỗi ghi DB:", error);
     }
 }
-function addGameHistoryToFile(historyData) {
-    try {
-        const db = readDB();
-        db.gameHistory.push({ ...historyData, date: historyData.date || new Date().toISOString() });
-        writeDB(db);
-    } catch (error) {
-        console.error('Lỗi lưu lịch sử vào file:', error);
-    }
-}
 function readPuzzles() {
     try {
         if (!fs.existsSync(PUZZLE_FILE)) {
@@ -203,8 +194,8 @@ app.post('/api/save-game', apiLimiter, async (req, res) => {
     if (!username || !mode || score === undefined) return res.status(400).json({ success: false, message: 'Thiếu thông tin game' }); 
     
     try {
-        addGameHistoryToFile({ username, mode, score, mistakes: mistakes || 0, opponent, result, reason });
-        res.status(201).json({ success: true, message: 'Đã lưu kết quả' });
+        await postgres.addGameHistory({ username, mode, score, mistakes: mistakes || 0, opponent, result, reason });
+        res.status(201).json({ success: true, message: 'Đã lưu kết quả' }); 
     } catch (error) {
         console.error('Lỗi lưu game:', error);
         res.status(500).json({ success: false, message: 'Lỗi server' });
@@ -214,9 +205,8 @@ app.get('/api/history/:username', apiLimiter, async (req, res) => {
     const { username } = req.params; 
     
     try {
-        const db = readDB();
-        const userHistory = db.gameHistory.filter(h => h.username === username);
-        res.status(200).json({ success: true, data: userHistory });
+        const userHistory = await postgres.getGameHistory(username);
+        res.status(200).json({ success: true, data: userHistory }); 
     } catch (error) {
         console.error('Lỗi lấy lịch sử:', error);
         res.status(500).json({ success: false, message: 'Lỗi server' });
@@ -457,7 +447,7 @@ setInterval(() => {
             
             // Chuyển lượt
             game.currentTurn = (game.currentTurn === 1) ? 2 : 1;
-            game.turnTimeLeft = parseInt(game.settings.turnTimeLimit) || DEFAULT_TURN_TIME; // Reset thời gian lượt mới
+            game.turnTimeLeft = game.settings.turnTimeLimit; // Reset thời gian lượt mới
             game.lastTurnTime = now;
             
             // 1. Thông báo timeout
@@ -711,13 +701,7 @@ io.on('connection', (socket) => {
                 solutionBoard: stringToBoard(gameData.solution),
                 startTime: Date.now(),
                 currentTurn: 1,
-                lastTurnTime: Date.now(),
-                turnTimeLeft: 30, // Luôn gửi timer mặc định cho thách đấu
-                settings: {
-                    turnTimeLimit: 30,
-                    timeoutPenalty: DEFAULT_TIMEOUT_PENALTY,
-                    mistakePenalty: DEFAULT_MISTAKE_PENALTY
-                }
+                lastTurnTime: Date.now()
             };
             activeGames[roomName] = matchData;
             io.to(roomName).emit('matchFound', matchData);
@@ -837,102 +821,6 @@ io.on('connection', (socket) => {
         });
     });
 
-        // SOLO MODE: User kiểm tra đáp án
-        socket.on('checkSolo', () => {
-            const gameRoom = getSocketRoom(socket);
-            if (!gameRoom || !activeGames[gameRoom]) return;
-            const game = activeGames[gameRoom];
-            let errors = [];
-            let isFull = true;
-            for (let r = 0; r < 9; r++) {
-                for (let c = 0; c < 9; c++) {
-                    if (game.boardState[r][c] === 0) { isFull = false; }
-                    else if (game.boardState[r][c] !== game.solutionBoard[r][c] && game.boardState[r][c] !== 0) {
-                        errors.push([r, c]);
-                    }
-                }
-            }
-
-            // Chỉ có 1 người chơi trong solo mode
-            const currentPlayer = game.p1;
-
-            // Nếu có lỗi, trừ điểm
-            if (errors.length > 0) {
-                currentPlayer.mistakes++;
-                currentPlayer.score = calculateScore(STARTING_SCORE, currentPlayer.mistakes, game.settings.mistakePenalty);
-
-                // Kiểm tra nếu hết điểm = THUA
-                if (currentPlayer.score <= 0) {
-                    // Lưu kết quả solo
-                    (async () => {
-                        await postgres.addGameHistory({
-                            username: currentPlayer.username,
-                            mode: 'Solo',
-                            score: 0,
-                            mistakes: currentPlayer.mistakes,
-                            opponent: null,
-                            result: 'lose',
-                            reason: 'Hết điểm'
-                        });
-                    })().catch(err => console.error('Lỗi lưu game history:', err));
-
-                    socket.emit('gameResult', {
-                        winner: null,
-                        loser: currentPlayer.username,
-                        score: 0,
-                        winnerMistakes: 0,
-                        loserMistakes: currentPlayer.mistakes,
-                        reason: `${currentPlayer.username} đã hết điểm!`
-                    });
-                    if (connectedUsers[currentPlayer.id]) connectedUsers[currentPlayer.id].status = 'online';
-                    broadcastUserList();
-                    delete activeGames[gameRoom];
-                    resetRoomAfterGame(gameRoom);
-                    return;
-                }
-
-                // Broadcast điểm mới cho người chơi
-                socket.emit('updateScores', {
-                    score: currentPlayer.score,
-                    mistakes: currentPlayer.mistakes
-                });
-            }
-
-            // Nếu hoàn thành đúng hết = THẮNG
-            if (isFull && errors.length === 0) {
-                // Lưu kết quả solo
-                (async () => {
-                    await postgres.addGameHistory({
-                        username: currentPlayer.username,
-                        mode: 'Solo',
-                        score: currentPlayer.score,
-                        mistakes: currentPlayer.mistakes,
-                        opponent: null,
-                        result: 'win',
-                        reason: 'Hoàn thành bảng'
-                    });
-                })().catch(err => console.error('Lỗi lưu game history:', err));
-
-                socket.emit('gameResult', {
-                    winner: currentPlayer.username,
-                    loser: null,
-                    score: currentPlayer.score,
-                    winnerMistakes: currentPlayer.mistakes,
-                    loserMistakes: 0,
-                    reason: 'Hoàn thành bảng!'
-                });
-                if (connectedUsers[currentPlayer.id]) connectedUsers[currentPlayer.id].status = 'online';
-                broadcastUserList();
-                delete activeGames[gameRoom];
-                resetRoomAfterGame(gameRoom);
-            } else {
-                socket.emit('checkResult', {
-                    errors: errors,
-                    mistakes: currentPlayer.mistakes,
-                    score: currentPlayer.score
-                });
-            }
-        });
     // 7. User kiểm tra
     socket.on('checkGame', () => {
         const gameRoom = getSocketRoom(socket);
@@ -1285,11 +1173,11 @@ io.on('connection', (socket) => {
                 connectedUsers[player2Socket.id].status = 'playing';
                 
                 const gameData = allPuzzles[Math.floor(Math.random() * allPuzzles.length)];
-                // Nếu client truyền settings thì dùng, không thì lấy mặc định
-                let settings = (data && data.settings) ? data.settings : {};
-                settings.turnTimeLimit = parseInt(settings.turnTimeLimit) || DEFAULT_TURN_TIME;
-                settings.timeoutPenalty = parseInt(settings.timeoutPenalty) || DEFAULT_TIMEOUT_PENALTY;
-                settings.mistakePenalty = parseInt(settings.mistakePenalty) || DEFAULT_MISTAKE_PENALTY;
+                const settings = {
+                    turnTimeLimit: DEFAULT_TURN_TIME,
+                    timeoutPenalty: DEFAULT_TIMEOUT_PENALTY,
+                    mistakePenalty: DEFAULT_MISTAKE_PENALTY
+                };
                 
                 const matchData = {
                     room: data.roomId,
@@ -1322,7 +1210,7 @@ io.on('connection', (socket) => {
                         p1: { username: player1Socket.username },
                         p2: { username: player2Socket.username },
                         startingScore: STARTING_SCORE,
-                        turnTimeLeft: settings.turnTimeLimit
+                        turnTimeLimit: settings.turnTimeLimit
                     });
                     
                     broadcastUserList();
@@ -1474,20 +1362,24 @@ io.on('connection', (socket) => {
                 opponentSocket.emit('gameResult', { 
                     winner: opponent.username, 
                     loser: currentPlayer.username,
-                    score: opponent.score
+                    score: opponent.score,
+                    winnerMistakes: opponent.mistakes,
+                    loserMistakes: currentPlayer.mistakes,
+                    reason: `${currentPlayer.username} đã thoát game!`
                 });
+                if(connectedUsers[opponentId]) { connectedUsers[opponentId].status = 'online'; }
             }
             delete activeGames[gameRoom];
             resetRoomAfterGame(gameRoom);
+            
             // Xóa game state khỏi Redis
             await redisClient.deleteGameState(gameRoom);
             await redisClient.deleteMoveHistory(gameRoom);
         }
         
         // Xóa user khỏi Redis
-        // Xóa user khỏi Redis
         if (socket.username) {
-            // Có thể thêm logic xóa user khỏi Redis ở đây nếu cần
+            await redisClient.removeUserOnline(socket.username);
         }
         
         delete connectedUsers[socket.id];
@@ -1504,6 +1396,7 @@ async function startServer() {
         // Kết nối Redis
         await redisClient.connectRedis();
         console.log('✅ Redis đã sẵn sàng!');
+        
         // Kết nối và tạo bảng PostgreSQL
         await postgres.connectDB();
         await postgres.createTables();
